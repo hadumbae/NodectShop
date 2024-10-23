@@ -1,0 +1,36 @@
+{
+  "name": "nodectbackend",
+  "version": "1.0.0",
+  "description": "The Node backend for the NodectShop project.",
+  "main": "dist/app.js",
+  "type": "module",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node dist/app.js",
+    "dev": "node --import=tsx --watch ./src/app.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nodect",
+    "nodectshop",
+    "ecommerce"
+  ],
+  "author": "LSM",
+  "license": "ISC",
+  "dependencies": {
+    "@types/lodash": "^4.17.12",
+    "body-parser": "^1.20.3",
+    "cloudinary": "^2.5.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-validator": "^7.2.0",
+    "http-errors": "^2.0.0",
+    "lodash": "^4.17.21",
+    "mongoose": "^8.7.2",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21"
+  }
+}
