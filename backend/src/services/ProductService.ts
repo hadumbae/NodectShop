@@ -2,6 +2,7 @@ import _ from 'lodash';
 import createError from 'http-errors';
 
 import Product from '../internal/models/Product.js';
+import mongoose from 'mongoose';
 
 const ProductService = {
 	/**
@@ -31,7 +32,18 @@ const ProductService = {
 	 */
 	async findOne(conditions = {}) {
 		const product = await Product.findOne(conditions);
-		if (!product) throw createError(404, 'Product Not Found. Please Try Again.');
+		return product;
+	},
+
+	/**
+	 * Finds the product by ID.
+	 * @param id - The ID of the product.
+	 * @returns The product with matching ID.
+	 */
+	async findByID(id) {
+		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid ID Format.');
+		const product = await Product.findById(id);
+
 		return product;
 	},
 
@@ -41,8 +53,10 @@ const ProductService = {
 	 * @returns The product with matching ID.
 	 */
 	async findByIDOr404(id) {
+		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid ID Format.');
 		const product = await Product.findById(id);
-		if (!product) throw createError(404, 'Product Not Found. Verify Product ID.');
+		if (!product) throw createError(404, 'Product Not Found.');
+
 		return product;
 	},
 
@@ -75,11 +89,11 @@ const ProductService = {
 		if (data.slug) throw createError(400, 'Slug Should Not Be Included In Requests. Please Try Again.');
 		if (!oldProduct) throw createError(404, 'Product Not Found. Verify Product ID.');
 
-		if (data.title != oldProduct.product) {
+		if (data.title != oldProduct.title) {
 			data.slug = await slugify(data.title);
 		}
 
-		await Product.findByIdAndUpdate(productID, data);
+		return await Product.findByIdAndUpdate(productID, data, { new: true });
 	},
 
 	/**
@@ -91,6 +105,7 @@ const ProductService = {
 		if (!product) throw createError(404, 'Product Not Found. Verify Product ID.');
 
 		await Product.findByIdAndDelete(productID);
+		return product;
 	},
 };
 

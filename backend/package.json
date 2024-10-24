@@ -19,6 +19,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/lodash": "^4.17.12",
+    "@types/multer": "^1.4.12",
     "body-parser": "^1.20.3",
     "cloudinary": "^2.5.1",
     "dotenv": "^16.4.5",
@@ -27,6 +28,7 @@
     "http-errors": "^2.0.0",
     "lodash": "^4.17.21",
     "mongoose": "^8.7.2",
+    "multer": "^1.4.5-lts.1",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3"
   },

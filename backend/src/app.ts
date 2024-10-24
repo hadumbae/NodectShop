@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { isHttpError } from 'http-errors';
 import bodyParser from 'body-parser';
+
 import connectDB from './internal/configs/connectDB.js';
 
 import SupplierRoutes from './routing/SupplierRoutes.js';
@@ -21,7 +22,7 @@ app.use('/products', ProductRoutes);
 
 // Express Error Handler
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
-	// console.error('[ERROR HANDLER] | ', error['message']);
+	console.error('[ERROR HANDLER] | ', error['message']);
 
 	let errorMessage: string = 'Oops. Something bad happened!';
 	let statusCode: number = 500;

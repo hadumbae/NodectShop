@@ -1,7 +1,9 @@
 import { body } from 'express-validator';
-import mongoose from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 import ProductService from '../../services/ProductService.js';
 import createError from 'http-errors';
+import Supplier from '../models/Supplier.js';
+import Category from '../models/Category.js';
 
 export const addProductValidator = [
 	body('title')
@@ -46,38 +48,56 @@ export const addProductValidator = [
 	body('unitStock')
 		.not()
 		.isEmpty()
-		.withMessage('Title is required.')
-		.isString()
-		.withMessage('unitStock required.')
+		.withMessage('Unit Stock is required.')
+		.isInt()
+		.withMessage('Unit Stock must be an integer.')
 		.custom((value) => {
 			if (value < 0) {
 				throw createError(400, 'Unit stock may not be negative.');
 			}
 
-			return false;
+			return true;
 		}),
 
 	body('reorderLevel')
 		.not()
 		.isEmpty()
-		.withMessage('Title is required.')
-		.isString()
-		.withMessage('reorderLevel required.')
+		.withMessage('Reorder Level is required.')
+		.isInt()
+		.withMessage('Reorder Level must be an integer.')
 		.custom((value) => {
 			if (value < 0) {
 				throw createError(400, 'Unit stock may not be negative.');
 			}
 
-			return false;
+			return true;
 		}),
+
+	body('isDiscontinued').optional().isBoolean().withMessage('Discontinued status must be a boolean.'),
+
+	body('images').not().exists().withMessage('Please do not include image links.'),
 
 	body('supplier')
 		.not()
 		.isEmpty()
 		.withMessage('Supplier required.')
-		.custom((value) => {
-			if (mongoose.Types.ObjectId.isValid(value)) {
+		.custom(async (value) => {
+			const supplier = await Supplier.findById(value);
+
+			if (!supplier) {
 				throw createError(400, 'Supplier provided is not a valid ID');
+			}
+
+			return true;
+		}),
+
+	body('category')
+		.optional()
+		.custom(async (value) => {
+			const category = await Category.findById(value);
+
+			if (!category) {
+				throw createError(400, 'Category provided is not a valid ID');
 			}
 
 			return true;
