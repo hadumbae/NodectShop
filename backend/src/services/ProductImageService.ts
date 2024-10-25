@@ -13,32 +13,10 @@ const ProductImageService = {
 	 */
 	async uploadMainImage(productID: string, image: any) {
 		const product = await ProductService.findByIDOr404(productID);
-
-		if (product.images.mainImage && product.images.mainImage.public_id) {
-			await cloudinary.uploader.destroy(product.images.mainImage.public_id);
-		}
+		await cloudinary.uploader.destroy(product.images.mainImage.public_id);
 
 		const result = await uploadImage(image);
 		product.images.mainImage = { secure_url: result.secure_url, public_id: result.public_id };
-		await product.save();
-
-		return product;
-	},
-
-	/**
-	 * Upload the main image of the provided image to Cloudinary.
-	 * @param productID The ID of the product to which the image will belong.
-	 * @param image The image data to be uploaded.
-	 * @returns The updated product.
-	 */
-	async removeMainImage(productID: string) {
-		const product = await ProductService.findByIDOr404(productID);
-
-		if (product.images.mainImage && product.images.mainImage.public_id) {
-			await cloudinary.uploader.destroy(product.images.mainImage.public_id);
-		}
-
-		product.images.mainImage = null;
 		await product.save();
 
 		return product;
@@ -98,7 +76,7 @@ const ProductImageService = {
  * @param image The image data to be uploaded.
  * @returns The results of uploading the image.
  */
-const uploadImage = async (image) => {
+export const uploadImage = async (image) => {
 	const imageBuffer = image.buffer;
 	const imageArray = Array.from(new Uint8Array(imageBuffer));
 	const imageData = Buffer.from(imageArray);

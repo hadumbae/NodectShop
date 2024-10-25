@@ -16,19 +16,23 @@ export const getProducts = async (req: Request, res: Response, next: NextFunctio
 };
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
+	const data = req.body;
+	const image = req.file;
+
+	console.log(data.title);
+
 	const errors = validationResult(req);
+
+	console.log('Errors: ', errors.array());
 
 	if (!errors.isEmpty()) {
 		return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
 	}
 
 	try {
-		const data = req.body;
-		const product = await ProductService.create(data);
+		const product = await ProductService.create(data, image);
 		return res.status(200).json({ data: product });
 	} catch (error) {
-		console.log('Error: ', error.message);
-
 		if (!isHttpError(error)) res.status(500);
 		next(error);
 	}
@@ -53,6 +57,8 @@ export const updateProduct = async (req: Request, res: Response, next: NextFunct
 	try {
 		const { productID } = req.params;
 		const data = req.body;
+
+		console.log(data);
 
 		if (!mongoose.Types.ObjectId.isValid(productID)) {
 			return res.status(400).json({ message: 'Invalid ID.' });

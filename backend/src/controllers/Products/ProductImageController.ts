@@ -5,24 +5,12 @@ import ProductImageService from '../../services/ProductImageService.js';
 
 // * Main Images
 
-export const uploadMainImage = async (req: Request, res: Response, next: NextFunction) => {
-	const { productID } = req.params;
-
+export const updateMainImage = async (req: Request, res: Response, next: NextFunction) => {
 	try {
+		const { productID } = req.params;
 		const product = await ProductImageService.uploadMainImage(productID, req.file);
+
 		return res.status(200).json({ message: 'Product Image Uploaded.', data: product });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
-
-export const deleteMainImage = async (req: Request, res: Response, next: NextFunction) => {
-	const { productID } = req.params;
-
-	try {
-		const product = await ProductImageService.removeMainImage(productID);
-		return res.status(200).json({ message: 'Product Image Removed.', data: product });
 	} catch (error) {
 		if (!isHttpError(error)) res.status(500);
 		next(error);

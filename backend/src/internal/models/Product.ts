@@ -4,13 +4,14 @@ import { ProductImageType } from '../types/ProductTypes.js';
 export interface IProduct {
 	title: string;
 	slug: string;
+	barcodeNumber: string;
 	description: string;
 	unitPrice: Number;
 	unitStock: Number;
 	reorderLevel: Number;
 	isDiscontinued: boolean;
 	images: {
-		mainImage?: ProductImageType;
+		mainImage: ProductImageType;
 		subImages: ProductImageType[];
 	};
 
@@ -22,6 +23,7 @@ const ProductSchema = new mongoose.Schema<IProduct>(
 	{
 		title: { type: String, required: true },
 		slug: { type: String, required: true },
+		barcodeNumber: { type: String, required: true, unique: true },
 		description: { type: String, required: true },
 		unitPrice: { type: Number, required: true },
 		unitStock: { type: Number, required: true },
@@ -29,11 +31,8 @@ const ProductSchema = new mongoose.Schema<IProduct>(
 		isDiscontinued: { type: Boolean, default: false },
 		images: {
 			mainImage: {
-				type: {
-					secure_url: { type: String, required: true },
-					public_id: { type: String, required: true },
-				},
-				required: false,
+				secure_url: { type: String, required: true },
+				public_id: { type: String, required: true },
 			},
 			subImages: [
 				{

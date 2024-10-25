@@ -6,6 +6,9 @@ import bodyParser from 'body-parser';
 
 import connectDB from './internal/configs/connectDB.js';
 
+import AuthRoutes from './routing/AuthRoutes.js';
+import UserRoutes from './routing/User/UserRoutes.js';
+
 import SupplierRoutes from './routing/SupplierRoutes.js';
 import CategoryRoutes from './routing/CategoryRoutes.js';
 import ProductRoutes from './routing/ProductRoutes.js';
@@ -15,10 +18,14 @@ const app: Express = express();
 // Parses JSON Requests
 app.use(bodyParser.json());
 
-// Routing
-app.use('/suppliers', SupplierRoutes);
-app.use('/categories', CategoryRoutes);
-app.use('/products', ProductRoutes);
+// User Routing
+app.use('/auth', AuthRoutes);
+
+// Admin Routing
+app.use('/admin/users', UserRoutes);
+app.use('/admin/suppliers', SupplierRoutes);
+app.use('/admin/categories', CategoryRoutes);
+app.use('/admin/products', ProductRoutes);
 
 // Express Error Handler
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {

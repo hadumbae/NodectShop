@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import createError from 'http-errors';
 
-import Product from '../internal/models/Product.js';
 import mongoose from 'mongoose';
+import Product from '../internal/models/Product.js';
+import ProductImageService, { uploadImage } from './ProductImageService.js';
 
 const ProductService = {
 	/**
@@ -65,16 +66,12 @@ const ProductService = {
 	 * @param data The required fields for creating a product.
 	 * @returns The newly created product.
 	 */
-	async create(data: any) {
-		if (!data.title) {
-			throw createError(400, 'Unique Slug Could Not Be Created. Verify That A Similar Product Does Not Exist.');
-		}
-
-		if (data.products) {
-			throw createError(400, 'Product Cannot Be Created With Initial Porudcts. Please Add Them Later.');
-		}
+	async create(data: any, image: any) {
+		const result = await uploadImage(image);
 
 		data.slug = await slugify(data.title);
+		data.images = { mainImage: { secure_url: result.secure_url, public_id: result.public_id }, subImages: [] };
+
 		return await Product.create(data);
 	},
 
