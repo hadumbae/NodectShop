@@ -12,6 +12,7 @@ import UserRoutes from './routing/User/UserRoutes.js';
 import SupplierRoutes from './routing/SupplierRoutes.js';
 import CategoryRoutes from './routing/CategoryRoutes.js';
 import ProductRoutes from './routing/ProductRoutes.js';
+import UserCartRoutes from './routing/User/UserCartRoutes.js';
 
 const app: Express = express();
 
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 
 // User Routing
 app.use('/auth', AuthRoutes);
+app.use('/user/cart', UserCartRoutes);
 
 // Admin Routing
 app.use('/admin/users', UserRoutes);

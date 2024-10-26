@@ -1,12 +1,14 @@
 import mongoose, { mongo, Mongoose } from 'mongoose';
 
+import { ICartItem } from './CartItem.js';
+
 export interface IUser {
 	name: string;
 	email: string;
 	password: string;
 	isAdmin: boolean;
 
-	cart: [];
+	cart: ICartItem[];
 	orders: [];
 	favourites: [];
 	ratings: [];

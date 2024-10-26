@@ -50,7 +50,6 @@ const validateNewPassword = generatePasswordValidators('newPassword');
 
 // Auth
 export const RegisterUserValidator = [validateName, validateEmail, validatePassword, validateIsAdmin];
-export const LoginUserValidator = [validateEmail, validatePassword];
 export const AuthPasswordUpdateValidator = [validateEmailExists, validatePrevPassword, validateNewPassword];
 
 // CRUD
