@@ -2,7 +2,7 @@ import _ from 'lodash';
 import createError from 'http-errors';
 
 import mongoose from 'mongoose';
-import Product from '../internal/models/Product.js';
+import Product from '../internal/models/Product/Product.js';
 import ProductImageService, { uploadImage } from './ProductImageService.js';
 
 const ProductService = {

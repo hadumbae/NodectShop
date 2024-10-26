@@ -5,7 +5,7 @@ import User from '../../internal/models/User/User.js';
 import CartItem from '../../internal/models/User/CartItem.js';
 
 import { ICartItem } from '../../internal/models/User/CartItem.js';
-import Product from '../../internal/models/Product.js';
+import Product from '../../internal/models/Product/Product.js';
 
 export default {
 	/**

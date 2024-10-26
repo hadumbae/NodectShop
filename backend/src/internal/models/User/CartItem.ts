@@ -9,8 +9,8 @@ export interface ICartItem {
 const CartItemSchema = new mongoose.Schema(
 	{
 		quantity: { type: Number, required: [true, 'Cart quantity required.'], min: [1, 'Quantity must be at least 1.'] },
-		userID: { type: mongoose.Types.ObjectId, ref: 'User', required: [true, 'User required.'] },
-		productID: { type: mongoose.Types.ObjectId, ref: 'Product', required: [true, 'Product required.'] },
+		userID: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: [true, 'User required.'] },
+		productID: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: [true, 'Product required.'] },
 	},
 	{ timestamps: true }
 );

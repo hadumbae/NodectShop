@@ -1,4 +1,4 @@
-import Product from '../models/Product.js';
+import Product from '../models/Product/Product.js';
 
 export const find = (conditions = {}) => Product.find(conditions);
 

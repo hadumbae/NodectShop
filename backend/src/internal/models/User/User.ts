@@ -1,4 +1,4 @@
-import mongoose, { mongo, Mongoose } from 'mongoose';
+import mongoose from 'mongoose';
 
 import { ICartItem } from './CartItem.js';
 
@@ -21,10 +21,10 @@ const UserSchema = new mongoose.Schema(
 		password: { type: String, required: true },
 		isAdmin: { type: Boolean, required: true, default: false },
 
-		cart: [{ type: mongoose.Types.ObjectId, ref: 'CartItem' }],
-		favourites: [{ type: mongoose.Types.ObjectId, ref: 'Product' }],
-		ratings: [{ type: mongoose.Types.ObjectId, ref: 'ProductRating' }],
-		orders: [{ type: mongoose.Types.ObjectId, ref: 'UserOrder' }],
+		cart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CartItem' }],
+		favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+		ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProductRating' }],
+		orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserOrder' }],
 	},
 	{ timestamps: true }
 );

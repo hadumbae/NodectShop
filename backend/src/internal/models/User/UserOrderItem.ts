@@ -10,7 +10,7 @@ export interface IUserOrderItem {
 
 const UserOrderItemSchema = new mongoose.Schema(
 	{
-		productID: { type: mongoose.Types.ObjectId, ref: 'Product', required: false },
+		productID: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: false },
 		title: { type: String, required: [true, 'Product title required.'] },
 		description: { type: String, required: [true, 'Product description required.'] },
 		unitPrice: { type: Number, required: [true, 'Product price required.'] },
