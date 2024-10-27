@@ -1,6 +1,13 @@
 import mongoose from 'mongoose';
+import {IProduct} from "./Product/Product.js";
 
-const CategorySchema = new mongoose.Schema(
+export interface ICategory {
+	category: string;
+	slug: string;
+	products: IProduct[];
+}
+
+const CategorySchema = new mongoose.Schema<ICategory>(
 	{
 		category: { type: String, required: true, unique: true },
 		slug: { type: String, required: true, unique: true },
@@ -9,5 +16,5 @@ const CategorySchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-const Category = mongoose.models.Category || mongoose.model('Category', CategorySchema);
+const Category = mongoose.model<ICategory>('Category', CategorySchema);
 export default Category;

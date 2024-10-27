@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import createError from 'http-errors';
-
 import mongoose from 'mongoose';
+
 import Product from '../internal/models/Product/Product.js';
-import ProductImageService, { uploadImage } from './ProductImageService.js';
 
 const ProductService = {
 	/**
@@ -12,7 +11,7 @@ const ProductService = {
 	 * @returns The number of products.
 	 */
 	async countProducts(conditions = {}) {
-		return await Product.countDocuments(conditions);
+		return Product.countDocuments(conditions);
 	},
 
 	/**
@@ -22,8 +21,7 @@ const ProductService = {
 	 * @returns A collection of products.
 	 */
 	async find(conditions = {}) {
-		const products = await Product.find(conditions);
-		return products;
+		return Product.find(conditions);
 	},
 
 	/**
@@ -32,8 +30,7 @@ const ProductService = {
 	 * @returns The first found product.
 	 */
 	async findOne(conditions = {}) {
-		const product = await Product.findOne(conditions);
-		return product;
+		return Product.findOne(conditions);
 	},
 
 	/**
@@ -41,11 +38,9 @@ const ProductService = {
 	 * @param id - The ID of the product.
 	 * @returns The product with matching ID.
 	 */
-	async findByID(id) {
+	async findByID(id: string) {
 		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid ID Format.');
-		const product = await Product.findById(id);
-
-		return product;
+		return Product.findById(id);
 	},
 
 	/**
@@ -53,8 +48,8 @@ const ProductService = {
 	 * @param id - The ID of the product.
 	 * @returns The product with matching ID.
 	 */
-	async findByIDOr404(id) {
-		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid ID Format.');
+	async findByIDOr404(id: string) {
+		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid Product ID Format.');
 		const product = await Product.findById(id);
 		if (!product) throw createError(404, 'Product Not Found.');
 
@@ -66,31 +61,29 @@ const ProductService = {
 	 * @param data The required fields for creating a product.
 	 * @returns The newly created product.
 	 */
-	async create(data: any, image: any) {
-		const result = await uploadImage(image);
-
+	async create(data: any) {
 		data.slug = await slugify(data.title);
-		data.images = { mainImage: { secure_url: result.secure_url, public_id: result.public_id }, subImages: [] };
-
 		return await Product.create(data);
 	},
 
 	/**
-	 * Update a product by it's ID.
+	 * Update a product by its ID.
 	 * @param productID The ID of the product.
 	 * @param data The fields with which to update the product.
 	 */
 	async update(productID: string, data: any) {
-		const oldProduct = await Product.findById(productID);
+		const product = await Product.findById(productID);
 
+		// Checks
 		if (data.slug) throw createError(400, 'Slug Should Not Be Included In Requests. Please Try Again.');
-		if (!oldProduct) throw createError(404, 'Product Not Found. Verify Product ID.');
+		if (!product) throw createError(404, 'Product Not Found. Verify Product ID.');
 
-		if (data.title != oldProduct.title) {
+		// Sluggify
+		if (data.title != product.title) {
 			data.slug = await slugify(data.title);
 		}
 
-		return await Product.findByIdAndUpdate(productID, data, { new: true });
+		return Product.findByIdAndUpdate(productID, data, { new: true });
 	},
 
 	/**

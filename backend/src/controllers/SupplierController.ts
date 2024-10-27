@@ -1,7 +1,7 @@
 import createHttpError, { isHttpError } from 'http-errors';
 import { validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
-import SupplierService from '../services/SupplierService.js';
+import SupplierService from '../services/Supplier/SupplierService.js';
 
 export const getSuppliers = async (req: Request, res: Response, next: NextFunction) => {
 	try {

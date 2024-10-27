@@ -1,23 +1,33 @@
 import express from 'express';
 
 import { upload } from '../internal/configs/multer-config.js';
-import { addProductValidator, updateProductValidator } from '../internal/validators/ProductValidators.js';
 
-import { getProducts, getProductByID, createProduct, updateProduct, deleteProduct } from '../controllers/Products/ProductController.js';
-import { updateMainImage, uploadSubImages, deleteSubImage } from '../controllers/Products/ProductImageController.js';
+import ProductController from '../controllers/Products/ProductController.js';
+import ProductSKUController from "../controllers/Products/ProductSKUController.js";
+import ProductSKUImageController from "../controllers/Products/ProductSKUImageController.js";
+
+import AddProductValidator from "../internal/validators/Product/AddProductValidator.js";
+import AddProductSKUValidator from "../internal/validators/Product/AddProductSKUValidator.js";
+import UpdateProductSKUValidator from "../internal/validators/Product/UpdateProductSKUValidator.js";
+import UploadProductSKUImagesValidator from "../internal/validators/Product/UploadProductSKUImagesValidator.js";
 
 const ProductRoutes = express.Router();
 
-// CRUD
-ProductRoutes.get('/', getProducts);
-ProductRoutes.post('/', [upload.single('image'), ...addProductValidator], createProduct);
-ProductRoutes.get('/:productID', getProductByID);
-ProductRoutes.patch('/:productID', updateProductValidator, updateProduct);
-ProductRoutes.delete('/:productID', deleteProduct);
+// Product SKU
+ProductRoutes.post('/sku', AddProductSKUValidator, ProductSKUController.createProductSKU);
+ProductRoutes.patch('/sku/:skuID', UpdateProductSKUValidator, ProductSKUController.updateProductSKU);
+ProductRoutes.delete('/sku/:skuID', ProductSKUController.destroy);
 
-// Images
-ProductRoutes.post('/:productID/images/main', upload.single('image'), updateMainImage);
-ProductRoutes.post('/:productID/images/sub', upload.array('images', 10), uploadSubImages);
-ProductRoutes.delete('/:productID/images/sub/:subID', deleteSubImage);
+// SKU Images
+ProductRoutes.post('/sku/:skuID/images', [upload.array('images'), ...UploadProductSKUImagesValidator], ProductSKUImageController.uploadSKUImages);
+ProductRoutes.delete('/sku/:skuID/images/:imageID', ProductSKUImageController.deleteSKUImages);
+ProductRoutes.post('/sku/:skuID/images/:imageID/mark-primary', ProductSKUImageController.markAsPrimary);
+
+// Product
+ProductRoutes.get('/', ProductController.getProducts);
+ProductRoutes.post('/', AddProductValidator, ProductController.createProduct);
+ProductRoutes.get('/:productID', ProductController.getProductByID);
+ProductRoutes.patch('/:productID', AddProductValidator, ProductController.updateProduct);
+ProductRoutes.delete('/:productID', ProductController.deleteProduct);
 
 export default ProductRoutes;

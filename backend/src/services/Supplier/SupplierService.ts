@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import createError from 'http-errors';
 
-import Supplier from '../internal/models/Supplier.js';
-import { ContactPersonType } from '../internal/types/SupplierTypes.js';
+import Supplier from '../../internal/models/Supplier.js';
+import { ContactPersonType } from '../../internal/types/SupplierTypes.js';
+import mongoose from "mongoose";
 
 const SupplierService = {
 	/**
@@ -41,9 +42,20 @@ const SupplierService = {
 	 * @param id - The ID of the supplier.
 	 * @returns The supplier with matching ID.
 	 */
+	async findByID(id) {
+		return Supplier.findById(id);
+	},
+
+	/**
+	 * Finds the supplier by ID or throw a 404 error.
+	 * @param id - The ID of the supplier.
+	 * @returns The supplier with matching ID.
+	 */
 	async findByIDOr404(id) {
+		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid Supplier ID Format.');
 		const supplier = await Supplier.findById(id);
-		if (!supplier) throw createError(404, 'Supplier Not Found. Verify Supplier ID.');
+		if (!supplier) throw createError(404, 'Supplier Not Found.');
+
 		return supplier;
 	},
 
