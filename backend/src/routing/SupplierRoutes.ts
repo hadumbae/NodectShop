@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { addSupplierValidator, addSupplierContactPersonValidator } from '../internal/validators/SupplierValidators.js';
+import { addSupplierValidator, addSupplierContactPersonValidator } from '../validators/SupplierValidators.js';
 import { getSuppliers, getSupplierByID, createSupplier, updateSupplier, deleteSupplier, updateSupplierContacts } from '../controllers/SupplierController.js';
 
 const SupplierRoutes = express.Router();

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import createError from 'http-errors';
 import mongoose from 'mongoose';
 
-import Product from '../internal/models/Product/Product.js';
+import Product from '../models/Product/Product.js';
 
 const ProductService = {
 	/**
@@ -44,11 +44,11 @@ const ProductService = {
 	},
 
 	/**
-	 * Finds the product by ID or throw a 404 error.
+	 * Throws a 404 error if product does not exist.
 	 * @param id - The ID of the product.
 	 * @returns The product with matching ID.
 	 */
-	async findByIDOr404(id: string) {
+	async existsOr404(id: string) {
 		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid Product ID Format.');
 		const product = await Product.findById(id);
 		if (!product) throw createError(404, 'Product Not Found.');
@@ -94,7 +94,8 @@ const ProductService = {
 		const product = await Product.findById(productID);
 		if (!product) throw createError(404, 'Product Not Found. Verify Product ID.');
 
-		await Product.findByIdAndDelete(productID);
+		await product.deleteOne();
+
 		return product;
 	},
 };

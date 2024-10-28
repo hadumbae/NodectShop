@@ -39,7 +39,7 @@ export default {
 				return res.status(400).json({ message: 'Invalid ID.' });
 			}
 
-			const product = await ProductService.findByIDOr404(productID);
+			const product = await ProductService.existsOr404(productID);
 			return res.status(200).json({ data: product });
 		} catch (error) {
 			if (!isHttpError(error)) res.status(500);

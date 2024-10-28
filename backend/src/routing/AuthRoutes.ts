@@ -1,10 +1,10 @@
 import express from 'express';
 
 import { register, signin, updatePassword } from '../controllers/AuthController.js';
-import { RegisterUserValidator, AuthPasswordUpdateValidator } from '../internal/validators/UserValidators.js';
+import { RegisterUserValidator, AuthPasswordUpdateValidator } from '../validators/UserValidators.js';
 
 // Validator
-import AuthLoginValidator from '../internal/validators/Auth/AuthLoginValidator.js';
+import AuthLoginValidator from '../validators/Auth/AuthLoginValidator.js';
 
 const AuthRoutes = express.Router();
 

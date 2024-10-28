@@ -1,5 +1,5 @@
 import { check, body } from 'express-validator';
-import ProductService from '../../services/ProductService.js';
+import ProductService from '../services/ProductService.js';
 import createError from 'http-errors';
 import Supplier from '../models/Supplier.js';
 import Category from '../models/Category.js';

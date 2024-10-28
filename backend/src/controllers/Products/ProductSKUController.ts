@@ -10,8 +10,9 @@ export default {
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({message: "Validation failed.", errors: errors.array()});
 
+            const {productID} = req.params;
             const data = req.body;
-            const sku = await ProductSKUService.create(data);
+            const sku = await ProductSKUService.create(productID, data);
             return res.status(200).json({ message: "Product SKU created successfully.", data: sku });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);

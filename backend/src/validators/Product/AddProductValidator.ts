@@ -2,7 +2,7 @@ import { body } from 'express-validator';
 import Category from "../../models/Category.js";
 import createError from "http-errors";
 
-import ProductService from "../../../services/ProductService.js";
+import ProductService from "../../services/ProductService.js";
 
 export default [
     body('title')

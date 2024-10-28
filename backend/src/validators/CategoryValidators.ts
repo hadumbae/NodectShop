@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import CategoryService from '../../services/CategoryService.js';
+import CategoryService from '../services/CategoryService.js';
 import createError from 'http-errors';
 
 export const addCategoryValidator = [

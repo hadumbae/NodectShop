@@ -2,7 +2,7 @@ import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import createError from 'http-errors';
 
-import User from '../../internal/models/User/User.js';
+import User from '../../models/User/User.js';
 
 const UserService = {
 	/**

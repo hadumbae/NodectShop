@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { getCategories, getCategoryByID, createCategory, updateCategory, deleteCategory } from '../controllers/CategoryController.js';
-import { addCategoryValidator } from '../internal/validators/CategoryValidators.js';
+import { addCategoryValidator } from '../validators/CategoryValidators.js';
 
 const CategoryRoutes = express.Router();
 

@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import UserService from '../../services/User/UserService.js';
+import UserService from '../services/User/UserService.js';
 
 // Name
 const validateName = body('name')

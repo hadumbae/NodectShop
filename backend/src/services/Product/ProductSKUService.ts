@@ -1,15 +1,15 @@
 import {Types} from "mongoose";
 
-import ProductSKU, {IProductSKU} from "../../internal/models/Product/ProductSKU.js";
+import ProductSKU, {IProductSKU} from "../../models/Product/ProductSKU.js";
 
 import ProductService from "../ProductService.js";
 import SupplierService from "../Supplier/SupplierService.js";
 import ProductSKUImageService from "./ProductSKUImageService.js";
 import createError from "http-errors";
-import {IProductSKUImage} from "../../internal/models/Product/ProductSKUImage.js";
+import {IProductSKUImage} from "../../models/Product/ProductSKUImage.js";
+import Product from "../../models/Product/Product.js";
 
 interface ProductSKUInputData {
-    product: string;
     supplier: string;
     code: string;
     unitPrice: number;
@@ -46,10 +46,10 @@ export default {
      * @param data The data with which to create the product SKU.
      * @return The newly created product SKU.
      */
-    async create(data: ProductSKUInputData) {
+    async create(productID: string, data: ProductSKUInputData) {
         // Checks
-        const product = await ProductService.findByIDOr404(data.product);
-        const supplier = await SupplierService.findByIDOr404(data.supplier);
+        const product = await ProductService.existsOr404(productID);
+        const supplier = await SupplierService.existsOr404(data.supplier);
 
         // Create
         const sku = await ProductSKU.create({
@@ -78,21 +78,12 @@ export default {
      * @return The updated product SKU.
      */
     async update(id: string, data: ProductSKUInputData) {
+        // Checks
         const sku = await this.findByIDOr404(id);
-        const product = await ProductService.findByIDOr404(data.product);
-        const supplier = await SupplierService.findByIDOr404(data.supplier);
+        await SupplierService.existsOr404(data.supplier);
 
-        sku.product = product._id;
-        sku.supplier = supplier._id;
-        sku.code = data.code;
-        sku.unitPrice = data.unitPrice;
-        sku.unitStock = data.unitStock;
-        sku.reorderLevel = data.reorderLevel;
-        sku.isDiscontinued = data.isDiscontinued;
-
-        await sku.save();
-
-        return sku;
+        // Update
+        return await ProductSKU.findByIdAndUpdate(sku._id, data, {new: true});
     },
 
     /**
@@ -109,6 +100,23 @@ export default {
         }
 
         await ProductSKU.deleteOne({_id: id});
+    },
+
+    /**
+     * Remove the specified SKU from a product.
+     * @param skuID The ID of the SKU.
+     * @param productID The ID of the product.
+     */
+    async removeSKUFromProduct(skuID: string, productID: string) {
+        await Product.updateOne({_id: productID}, {$pull: {skus: skuID}});
+    },
+
+    /**
+     * Delete all SKUs belonging to the product.
+     * @param skuID
+     */
+    async deleteSKUByProduct(productID: string){
+        await ProductSKU.deleteMany({product: productID});
     }
 };
 

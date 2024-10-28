@@ -1,11 +1,11 @@
 import createError from 'http-errors';
 
 // Models
-import User from '../../internal/models/User/User.js';
-import CartItem from '../../internal/models/User/CartItem.js';
+import User from '../../models/User/User.js';
+import CartItem from '../../models/User/CartItem.js';
 
-import { ICartItem } from '../../internal/models/User/CartItem.js';
-import Product from '../../internal/models/Product/Product.js';
+import { ICartItem } from '../../models/User/CartItem.js';
+import Product from '../../models/Product/Product.js';
 
 export default {
 	/**

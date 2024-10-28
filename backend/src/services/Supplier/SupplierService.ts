@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import createError from 'http-errors';
 
-import Supplier from '../../internal/models/Supplier.js';
-import { ContactPersonType } from '../../internal/types/SupplierTypes.js';
+import Supplier from '../../models/Supplier.js';
+import { ContactPersonType } from '../../types/SupplierTypes.js';
 import mongoose from "mongoose";
 
 const SupplierService = {
@@ -32,9 +32,7 @@ const SupplierService = {
 	 * @returns The first found supplier.
 	 */
 	async findOne(conditions = {}) {
-		const supplier = await Supplier.findOne(conditions);
-		if (!supplier) throw createError(404, 'Supplier Not Found. Please Try Again.');
-		return supplier;
+		return Supplier.findOne(conditions);
 	},
 
 	/**
@@ -47,11 +45,11 @@ const SupplierService = {
 	},
 
 	/**
-	 * Finds the supplier by ID or throw a 404 error.
+	 * Throws a 404 error if supplier does not exist.
 	 * @param id - The ID of the supplier.
 	 * @returns The supplier with matching ID.
 	 */
-	async findByIDOr404(id) {
+	async existsOr404(id) {
 		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid Supplier ID Format.');
 		const supplier = await Supplier.findById(id);
 		if (!supplier) throw createError(404, 'Supplier Not Found.');

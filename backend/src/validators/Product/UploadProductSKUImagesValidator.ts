@@ -1,9 +1,9 @@
 import {check, body} from "express-validator";
 import {Types} from "mongoose";
 
-import ProductService from "../../../services/ProductService.js";
-import SupplierService from "../../../services/Supplier/SupplierService.js";
-import ProductSKUService from "../../../services/Product/ProductSKUService.js";
+import ProductService from "../../services/ProductService.js";
+import SupplierService from "../../services/Supplier/SupplierService.js";
+import ProductSKUService from "../../services/Product/ProductSKUService.js";
 import createError from "http-errors";
 
 export default [

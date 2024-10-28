@@ -1,6 +1,7 @@
 import mongoose, {Schema, Types} from 'mongoose';
 
 import {IProductSKU} from "./ProductSKU.js";
+import ProductSKUService from "../../services/Product/ProductSKUService.js";
 
 export interface IProduct {
 	title: string;
@@ -20,6 +21,12 @@ const ProductSchema = new mongoose.Schema<IProduct>(
 	},
 	{ timestamps: true }
 );
+
+ProductSchema.pre('deleteOne', {document: true, query: false}, function(next) {
+	console.log(this._id);
+	next();
+	// await ProductSKUService.deleteSKUByProduct(doc._id)
+});
 
 const Product = mongoose.model<IProduct>('Product', ProductSchema);
 export default Product;

@@ -4,15 +4,16 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import { isHttpError } from 'http-errors';
 import bodyParser from 'body-parser';
 
-import connectDB from './internal/configs/connectDB.js';
+import connectDB from './configs/connectDB.js';
 
 import AuthRoutes from './routing/AuthRoutes.js';
 import UserRoutes from './routing/User/UserRoutes.js';
 
 import SupplierRoutes from './routing/SupplierRoutes.js';
 import CategoryRoutes from './routing/CategoryRoutes.js';
-import ProductRoutes from './routing/ProductRoutes.js';
+import ProductRoutes from './routing/Product/ProductRoutes.js';
 import UserCartRoutes from './routing/User/UserCartRoutes.js';
+import ProductAttributeRoutes from "./routing/Product/ProductAttributeRoutes.js";
 
 const app: Express = express();
 
@@ -28,6 +29,7 @@ app.use('/admin/users', UserRoutes);
 app.use('/admin/suppliers', SupplierRoutes);
 app.use('/admin/categories', CategoryRoutes);
 app.use('/admin/products', ProductRoutes);
+app.use('/admin/product-attributes', ProductAttributeRoutes);
 
 // Express Error Handler
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {

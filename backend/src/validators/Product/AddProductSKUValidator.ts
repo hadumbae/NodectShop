@@ -1,25 +1,12 @@
 import {check, body} from "express-validator";
 import {Types} from "mongoose";
 
-import ProductService from "../../../services/ProductService.js";
-import SupplierService from "../../../services/Supplier/SupplierService.js";
-import ProductSKUService from "../../../services/Product/ProductSKUService.js";
+import ProductService from "../../services/ProductService.js";
+import SupplierService from "../../services/Supplier/SupplierService.js";
+import ProductSKUService from "../../services/Product/ProductSKUService.js";
 import createError from "http-errors";
 
 export default [
-    body('product')
-        .exists().withMessage("product is required")
-        .isString().withMessage("product ID must be a string.")
-        .custom(async (value) => {
-            if(! Types.ObjectId.isValid(value)) {
-                return Promise.reject("Product ID is not a valid ID.")
-            }
-
-            const product = await ProductService.findByID(value);
-            if (!product) {
-                return Promise.reject('Product not found.');
-            }
-        }),
     body('supplier')
         .exists().withMessage("supplier is required")
         .isString().withMessage("supplier ID must be a string.")

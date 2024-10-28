@@ -1,10 +1,10 @@
 import createError from 'http-errors';
-import cloudinary from '../../internal/configs/cloudinary-config.js';
-import { ProductImageType } from '../../internal/types/ProductTypes.js';
+import cloudinary from '../../configs/cloudinary-config.js';
+import { ProductImageType } from '../../types/ProductTypes.js';
 import ProductService from '../ProductService.js';
 import mongoose, {Types} from 'mongoose';
 import ProductSKUService from "./ProductSKUService.js";
-import ProductSKUImage, {IProductSKUImage} from "../../internal/models/Product/ProductSKUImage.js";
+import ProductSKUImage, {IProductSKUImage} from "../../models/Product/ProductSKUImage.js";
 
 const ProductSKUImageService = {
 
@@ -83,6 +83,10 @@ const ProductSKUImageService = {
 		image.save();
 
 		return image;
+	},
+
+	async deleteMany(conditions = {}) {
+		await ProductSKUImage.deleteMany(conditions);
 	}
 };
 

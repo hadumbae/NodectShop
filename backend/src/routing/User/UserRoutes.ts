@@ -3,7 +3,7 @@ import express from 'express';
 import isAuth from '../../middleware/isAuth.js';
 import { getUsers, getUserByID, createUser, updateUser, deleteUser } from '../../controllers/Users/UserController.js';
 
-import { CreateUserValidator, UpdateUserValidator } from '../../internal/validators/UserValidators.js';
+import { CreateUserValidator, UpdateUserValidator } from '../../validators/UserValidators.js';
 
 const UserRoutes = express.Router();
 

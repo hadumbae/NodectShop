@@ -1,5 +1,5 @@
 import { body } from 'express-validator';
-import SupplierService from '../../services/Supplier/SupplierService.js';
+import SupplierService from '../services/Supplier/SupplierService.js';
 
 export const addSupplierValidator = [
 	body('name')

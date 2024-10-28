@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import createError from 'http-errors';
 
-import Category from '../internal/models/Category.js';
+import Category from '../models/Category.js';
 
 const CategoryService = {
 	/**

@@ -34,7 +34,7 @@ export const createSupplier = async (req: Request, res: Response, next: NextFunc
 export const getSupplierByID = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const supplierID = req.params.id;
-		const supplier = await SupplierService.findByIDOr404({ _id: supplierID });
+		const supplier = await SupplierService.existsOr404({ _id: supplierID });
 
 		return res.status(200).json({ data: supplier });
 	} catch (error) {

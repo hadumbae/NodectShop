@@ -2,7 +2,7 @@ import express from 'express';
 
 // Middleware
 import isAuth from '../../middleware/isAuth.js';
-import CartItemValidator from '../../internal/validators/User/Cart/CartItemValidator.js';
+import CartItemValidator from '../../validators/User/Cart/CartItemValidator.js';
 
 // Controller
 import UserCartController from '../../controllers/Users/UserCartController.js';
