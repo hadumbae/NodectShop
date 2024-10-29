@@ -15,11 +15,4 @@ export default [
                 if (option && option._id.toString() != req.params.optionID) return Promise.reject("Option with the same name and attribute already exists");
             }
         ),
-    body('attribute')
-        .exists().withMessage('Attribute is required.')
-        .custom(async (value) => {
-            if (!Types.ObjectId.isValid(value)) return Promise.reject(createError(400, 'Invalid Attribute ID.'));
-            const attribute = await ProductAttributeService.findByID(value);
-            if (!attribute) return Promise.reject('Attribute Not Found.');
-        })
 ];

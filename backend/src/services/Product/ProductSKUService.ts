@@ -21,6 +21,15 @@ interface ProductSKUInputData {
 export default {
 
     /**
+     * Find products by conditions.
+     * @param conditions The conditions by which to find products.
+     * @returns The matching products.
+     */
+    async find(conditions = {}) {
+        return ProductSKU.find(conditions);
+    },
+
+    /**
      * Finds the product by ID.
      * @param id - The ID of the product.
      * @returns The product with matching ID.
@@ -30,11 +39,11 @@ export default {
     },
 
     /**
-     * Finds the supplier by ID or throw a 404 error.
+     * Throws a 404 error if product SKU does not exist.
      * @param id - The ID of the supplier.
      * @returns The supplier with matching ID.
      */
-    async findByIDOr404(id) {
+    async existsOr404(id) {
         if (!Types.ObjectId.isValid(id)) throw createError(400, "Invalid SKU ID.");
         const sku = await ProductSKU.findById(id).populate('images.mainImage');
         if (!sku) throw createError(404, 'Product SKU Not Found.');
@@ -48,13 +57,13 @@ export default {
      */
     async create(productID: string, data: ProductSKUInputData) {
         // Checks
-        const product = await ProductService.existsOr404(productID);
-        const supplier = await SupplierService.existsOr404(data.supplier);
+        await ProductService.existsOr404(productID);
+        await SupplierService.existsOr404(data.supplier);
 
         // Create
-        const sku = await ProductSKU.create({
-            product: product._id,
-            supplier: supplier._id,
+        return ProductSKU.create({
+            product: productID,
+            supplier: data.supplier,
             code: data.code,
             unitPrice: data.unitPrice,
             unitStock: data.unitStock,
@@ -63,12 +72,6 @@ export default {
             options: [],
             images: [],
         });
-
-        // Update
-        product.skus.push(sku);
-        await product.save();
-
-        return sku;
     },
 
     /**
@@ -79,11 +82,11 @@ export default {
      */
     async update(id: string, data: ProductSKUInputData) {
         // Checks
-        const sku = await this.findByIDOr404(id);
+        await this.findByIDOr404(id);
         await SupplierService.existsOr404(data.supplier);
 
         // Update
-        return await ProductSKU.findByIdAndUpdate(sku._id, data, {new: true});
+        return await ProductSKU.findByIdAndUpdate(id, data, {new: true});
     },
 
     /**
@@ -91,14 +94,7 @@ export default {
      * @param id The ID of the product SKU to be deleted.
      */
     async delete(id: string): Promise<void> {
-        if (!Types.ObjectId.isValid(id)) throw createError(400, "Invalid SKU ID.");
-        const productSKU: IProductSKU = await ProductSKU.findById(id).populate('images');
-        if (!productSKU) throw createError(404, "Product SKU Not Found.");
-
-        for (let image of productSKU.images) {
-            await ProductSKUImageService.deleteProductSKUImage(image._id);
-        }
-
+        await this.existsOr404(id);
         await ProductSKU.deleteOne({_id: id});
     },
 
@@ -110,13 +106,5 @@ export default {
     async removeSKUFromProduct(skuID: string, productID: string) {
         await Product.updateOne({_id: productID}, {$pull: {skus: skuID}});
     },
-
-    /**
-     * Delete all SKUs belonging to the product.
-     * @param skuID
-     */
-    async deleteSKUByProduct(productID: string){
-        await ProductSKU.deleteMany({product: productID});
-    }
 };
 

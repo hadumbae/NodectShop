@@ -1,4 +1,6 @@
 import mongoose, {Schema, Types} from 'mongoose';
+import ProductAttribute from "./ProductAttribute.js";
+import ProductSKU from "./ProductSKU.js";
 
 export interface IProductAttributeOption {
 	readonly _id?: Types.ObjectId;
@@ -13,6 +15,17 @@ const ProductAttributeOptionSchema = new mongoose.Schema<IProductAttributeOption
 	},
 	{ timestamps: true }
 );
+
+// Middleware
+
+ProductAttributeOptionSchema.post('save', {document: true, query: false}, async function(next) {
+	await ProductAttribute.updateOne({_id: this.attribute}, {$push: {options: this._id}});
+});
+
+ProductAttributeOptionSchema.post('deleteOne', {document: true, query: false}, async function(next) {
+	await ProductAttribute.updateOne({_id: this.attribute}, {$pull: {options: this._id}});
+	await ProductSKU.updateMany({}, {$pull: {options: this._id}});
+});
 
 const ProductAttributeOption = mongoose.model<IProductAttributeOption>('ProductAttributeOption', ProductAttributeOptionSchema);
 

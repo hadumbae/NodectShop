@@ -29,7 +29,7 @@ app.use('/admin/users', UserRoutes);
 app.use('/admin/suppliers', SupplierRoutes);
 app.use('/admin/categories', CategoryRoutes);
 app.use('/admin/products', ProductRoutes);
-app.use('/admin/product-attributes', ProductAttributeRoutes);
+app.use('/admin/attributes', ProductAttributeRoutes);
 
 // Express Error Handler
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {

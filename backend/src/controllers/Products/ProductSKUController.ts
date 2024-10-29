@@ -5,6 +5,23 @@ import {validationResult} from "express-validator";
 import ProductSKUService from "../../services/Product/ProductSKUService.js";
 
 export default {
+
+
+    async getProductSKUs(req: Request, res: Response, next: NextFunction): Promise<Response> {
+        try{
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) return res.status(400).json({message: "Validation failed.", errors: errors.array()});
+
+            const {productID} = req.params;
+            const data = req.body;
+            const skus = await ProductSKUService.find({product: productID});
+            return res.status(200).json({ data: skus });
+        } catch (error) {
+            if (!isHttpError(error)) res.status(500);
+            next(error);
+        }
+    },
+
     async createProductSKU(req: Request, res: Response, next: NextFunction): Promise<Response> {
         try{
             const errors = validationResult(req);

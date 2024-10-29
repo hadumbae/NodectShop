@@ -1,9 +1,7 @@
 import mongoose from 'mongoose';
 import ProductAttributeOption, { IProductAttributeOption } from './ProductAttributeOption.js';
-import ProductAttributeService from "../../services/Product/ProductAttributeService.js";
 
 export interface IProductAttribute {
-	// Name (e.g. 'Colour', 'Material', 'Size')
 	name: string;
 	options: IProductAttributeOption[];
 }
@@ -18,13 +16,9 @@ const ProductAttributeSchema = new mongoose.Schema<IProductAttribute>(
 
 // Middleware
 
-const deleteFunction = async (doc) => {
-	await ProductAttributeService.deleteAttributeOptions(doc._id.toString());
-};
-
-ProductAttributeSchema.post("deleteOne", deleteFunction );
-ProductAttributeSchema.post("deleteMany", deleteFunction );
-ProductAttributeSchema.post("findOneAndDelete", deleteFunction );
+ProductAttributeSchema.post("deleteOne", {document: true, query: false}, async function () {
+	this.options.forEach(async (option) => {await ProductAttributeOption.deleteOne(option);})
+} );
 
 const ProductAttribute = mongoose.model<IProductAttribute>('ProductAttribute', ProductAttributeSchema);
 export default ProductAttribute;

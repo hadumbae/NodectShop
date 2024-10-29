@@ -37,32 +37,32 @@ const ProductSKUImageService = {
 
 	/**
 	 * Upload product SKU images.
+	 * @param productID ID of the associated product.
 	 * @param skuID ID of the associated product SKU.
 	 * @param images An array of images to be uploaded.
-	 * @returns The updated SKU with images.
+	 * @returns The uploaded SKU images.
 	 */
-	async createProductSKUImage(skuID: string, images: any): Promise<any> {
-		const sku = await ProductSKUService.findByIDOr404(skuID);
-		const skuImages = [];
+	async createProductSKUImage(productID: string, skuID: string, images: any): Promise<any> {
+		await ProductService.existsOr404(productID);
+		await ProductSKUService.existsOr404(skuID);
 
+		const skuImages = [];
 
 		for (let [index, image] of images.entries()) {
 			const result = await this.uploadImage(image);
 			const skuImage = new ProductSKUImage({
+				product: productID,
+				sku: skuID,
+				isPrimary: false,
 				public_id: result.public_id,
 				secure_url: result.secure_url,
-				isPrimary: false,
-				sku: sku._id,
 			});
 
 			await skuImage.save();
 			skuImages.push(skuImage);
 		}
 
-		sku.images = [...sku.images, ...skuImages];
-		await sku.save();
-
-		return sku;
+		return skuImages;
 	},
 
 	/**

@@ -40,7 +40,7 @@ const ProductService = {
 	 */
 	async findByID(id: string) {
 		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid ID Format.');
-		return Product.findById(id);
+		return Product.findById(id).populate('skus').populate('skus.options');
 	},
 
 	/**

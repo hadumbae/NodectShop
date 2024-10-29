@@ -1,8 +1,7 @@
 import mongoose, {Schema, Types} from 'mongoose';
 import {IProductAttributeOption} from "./ProductAttributeOption.js";
-import {IProductSKUImage} from "./ProductSKUImage.js";
-import ProductSKUImageService from "../../services/Product/ProductSKUImageService.js";
-import ProductSKUService from "../../services/Product/ProductSKUService.js";
+import ProductSKUImage, {IProductSKUImage} from "./ProductSKUImage.js";
+import Product from "./Product.js";
 
 export interface IProductSKU {
     readonly id?: string;
@@ -28,20 +27,21 @@ const ProductSKUSchema = new Schema<IProductSKU>({
     isDiscontinued: {type: Boolean, default: false, required: [true, "Discontinued Status required."]},
 
     images: {type: [{type: Schema.Types.ObjectId, ref: 'ProductSKUImage'}], required: true},
-    options: [{type: Schema.Types.ObjectId, ref: 'ProductAttributeOption'}],
+    options: {type: [{type: Schema.Types.ObjectId, ref: 'ProductAttributeOption'}]},
 
 },{timestamps: true});
 
 // Middleware
 
-const deleteCallback = async (doc) => {
-    console.log(doc);
-    await ProductSKUImageService.deleteMany({sku: doc._id});
-    await ProductSKUService.removeSKUFromProduct(doc._id.toString(), doc.product.toString());
-};
+ProductSKUSchema.post('save', {document: true, query: false}, async function(next) {
+    await Product.updateOne({_id: this.product}, {$push: {skus: this._id}});
+});
 
-ProductSKUSchema.pre('deleteMany', deleteCallback);
-ProductSKUSchema.pre('deleteOne', deleteCallback);
+ProductSKUSchema.pre('deleteOne', {document: true, query: false}, async function(next) {
+    await Product.updateOne({_id: this.product}, {$pull: {skus: this._id}});
+    const images = await ProductSKUImage.where({sku: this._id});
+    images.forEach(async (image) => await image.deleteOne());
+});
 
 // Model
 const ProductSKU = mongoose.model<IProductSKU>("ProductSKU", ProductSKUSchema);

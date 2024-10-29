@@ -41,17 +41,16 @@ export default {
 
 	async addToUserCart(req: Request, res: Response, next: NextFunction) {
 		try {
-			const userID = req.params.userID;
-			if (!userID) throw createError(400, 'User ID required.');
-
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
 				return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
 			}
 
-			const { productID, quantity } = req.body;
-			const cartItem = await UserCartService.addToUserCart(userID, productID, quantity);
-			return res.status(200).json({ message: 'Added to cart successfully.', cartItem: cartItem });
+			const userID = req.params.userID;
+			const { skuID, quantity } = req.body;
+
+			const { cart } = await UserCartService.addToUserCart(userID, skuID, quantity);
+			return res.json({ message: 'Added to cart successfully.', userID: userID, cart: cart });
 		} catch (error) {
 			if (!isHttpError(error)) res.status(500);
 			next(error);
@@ -68,9 +67,9 @@ export default {
 				return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
 			}
 
-			const { productID, quantity } = req.body;
-			const cartItem = await UserCartService.removeFromUserCart(userID, productID, quantity);
-			return res.status(200).json({ message: 'Removed from cart successfully.', cartItem: cartItem });
+			const { skuID, quantity } = req.body;
+			const { cart } = await UserCartService.removeFromUserCart(userID, skuID, quantity);
+			return res.status(200).json({ message: 'Removed from cart successfully.', userID: userID, cart: cart });
 		} catch (error) {
 			if (!isHttpError(error)) {
 				error = createError(error.status, error.message);

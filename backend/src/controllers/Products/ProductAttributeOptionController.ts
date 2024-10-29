@@ -8,7 +8,8 @@ import ProductAttributeOptionService from "../../services/Product/ProductAttribu
 export default {
     async getAttributeOptions(req: Request, res: Response, next: NextFunction) {
         try {
-            const options = await ProductAttributeOptionService.find();
+            const {attributeID} = req.params;
+            const options = await ProductAttributeOptionService.find({attribute: attributeID});
             return res.status(200).json({ message: "Attribute options fetched.", data: options });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -21,8 +22,10 @@ export default {
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
 
-            const data = req.body;
-            const option = await ProductAttributeOptionService.create(data);
+            const { attributeID } = req.params;
+            const { name } = req.body;
+
+            const option = await ProductAttributeOptionService.create(name, attributeID);
             return res.status(200).json({ message: "Attribute option created successfully.", data: option });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -37,7 +40,7 @@ export default {
                 return res.status(400).json({ message: 'Invalid ID.' });
             }
 
-            const option = await ProductAttributeOptionService.findByIDOr404(optionID);
+            const option = await ProductAttributeOptionService.existsOr404(optionID);
             return res.status(200).json({ message: "Attribute option retrieved.", data: option });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -47,13 +50,14 @@ export default {
 
     async updateAttributeOption(req: Request, res: Response, next: NextFunction)  {
         try {
+
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
 
             const { optionID } = req.params;
-            const data = req.body;
+            const { name } = req.body;
 
-            const option = await ProductAttributeOptionService.update(optionID, data);
+            const option = await ProductAttributeOptionService.update(optionID, name);
             res.status(200).json({ message: 'Attribute option Updated.', data: option });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);

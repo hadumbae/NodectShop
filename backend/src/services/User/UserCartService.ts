@@ -2,10 +2,9 @@ import createError from 'http-errors';
 
 // Models
 import User from '../../models/User/User.js';
-import CartItem from '../../models/User/CartItem.js';
-
-import { ICartItem } from '../../models/User/CartItem.js';
-import Product from '../../models/Product/Product.js';
+import UserService from "./UserService.js";
+import ProductSKUService from "../Product/ProductSKUService.js";
+import {Types} from "mongoose";
 
 export default {
 	/**
@@ -13,7 +12,7 @@ export default {
 	 * @param userID The ID of the user to whom the cart belongs.
 	 * @returns The cart of the user.
 	 */
-	async fetchUserCart(userID): Promise<ICartItem[]> {
+	async fetchUserCart(userID) {
 		const user = await User.findById(userID);
 		if (!user) throw createError(404, 'User not found.');
 		return user.cart;
@@ -34,51 +33,58 @@ export default {
 	/**
 	 * Add an item to the specified shoppig cart.
 	 * @param userID The ID of the cart's owner.
-	 * @param productID The ID of the product to be added.
+	 * @param skuID The SKU ID of the cart item to be added.
 	 * @param quantity The quantity of the product to be added.
-	 * @returns The updated shopping cart and the cart item.
+	 * @returns The updated user.
 	 */
-	async addToUserCart(userID: string, productID: string, quantity: number): Promise<any> {
-		const user = await User.findById(userID).populate('cart');
-		if (!user) throw createError(404, 'User not found.');
+	async addToUserCart(userID: string, skuID: string, quantity: number): Promise<any> {
+		try {
+			const user = await UserService.existsOr404(userID);
+			const sku = await ProductSKUService.existsOr404(skuID);
 
-		const product = await Product.findById(productID);
-		if (!product) throw createError(404, 'Product not found.');
+			const itemIndex = user.cart.findIndex(i => i.sku.toString() == skuID);
 
-		const itemIndex = user.cart.findIndex((i) => i.productID.toString() == productID);
-		let cartItem;
+			if (itemIndex < 0) {
+				console.log('SKU: ', sku);
+				user.cart.push({quantity: quantity, sku: sku._id});
+			} else {
+				user.cart[itemIndex].quantity += +quantity;
+			}
 
-		if (itemIndex >= 0) {
-			cartItem = user.cart[itemIndex];
-			cartItem.quantity += +quantity;
-			cartItem.save();
-		} else {
-			cartItem = new CartItem({ quantity: quantity, userID: user._id, productID: product._id });
-			cartItem.save();
+			user.save();
+			return user.populate('cart.sku');
+		} catch (error) {
+			throw createError(error.status, error.message);
 		}
-
-		return cartItem;
 	},
 
 	/**
 	 * Remove an item from the specified shoppig cart.
 	 * @param userID The ID of the cart's owner.
-	 * @param productID The ID of the product to be remoed.
+	 * @param skuID The SKU ID of the cart item to be remoed.
 	 * @param quantity The quantity of the product to be removed.
-	 * @returns The updated shopping cart.
+	 * @returns The updated user.
 	 */
-	async removeFromUserCart(userID, productID, quantity) {
-		const cartItem = await CartItem.findOne({ userID, productID });
-		if (!cartItem) throw createError('Cart Item Not Found.');
+	async removeFromUserCart(userID, skuID, quantity) {
+		try {
+			const sku = await ProductSKUService.existsOr404(skuID);
+			const user = await User.findOne({_id: userID, "cart.sku": skuID});
+			if (!user) throw createError(404, 'Item not found.');
 
-		if (cartItem.quantity <= quantity) {
-			await CartItem.deleteOne({ _id: cartItem._id });
-			return null;
-		} else {
-			cartItem.quantity -= +quantity;
-			cartItem.save();
+			const itemIndex = user.cart.findIndex(i => i.sku.toString() == skuID);
 
-			return cartItem;
+			console.log(quantity);
+
+			if (user.cart[itemIndex].quantity <= +quantity) {
+				user.cart.splice(itemIndex, 1);
+			} else {
+				user.cart[itemIndex].quantity -= +quantity;
+			}
+
+			await user.save();
+			return user.populate('cart.sku');
+		} catch (error) {
+			throw createError(error.status, error.message);
 		}
 	},
 };

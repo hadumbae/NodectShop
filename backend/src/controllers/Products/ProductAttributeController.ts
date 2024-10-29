@@ -37,7 +37,7 @@ export default {
                 return res.status(400).json({ message: 'Invalid ID.' });
             }
 
-            const attribute = await ProductAttributeService.findByIDOr404(attributeID);
+            const attribute = await ProductAttributeService.existsOr404(attributeID);
             return res.status(200).json({ message: "Product attribute retrieved.", data: attribute });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);

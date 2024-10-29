@@ -34,7 +34,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 export const getUserByID = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const userID = req.params.id;
-		const user = await UserService.findByIDOr404({ _id: userID });
+		const user = await UserService.existsOr404({ _id: userID });
 
 		return res.status(200).json({ data: user });
 	} catch (error) {

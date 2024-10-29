@@ -47,7 +47,7 @@ const UserService = {
 	 * @param id - The ID of the user.
 	 * @returns The user with matching ID.
 	 */
-	async findByIDOr404(id) {
+	async existsOr404(id) {
 		const user = await User.findById(id);
 		if (!user) throw createError(404, 'User Not Found. Verify User ID.');
 		return user;

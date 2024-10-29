@@ -10,9 +10,9 @@ export default {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) return res.status(400).json({message: "Validation failed.", errors: errors.array()});
 
-			const {skuID} = req.params;
+			const {productID, skuID} = req.params;
 			const images = req.files;
-			const sku = await ProductSKUImageService.createProductSKUImage(skuID, images);
+			const sku = await ProductSKUImageService.createProductSKUImage(productID, skuID, images);
 
 			return res.status(200).json({ message: "Product SKU created successfully.", data: sku });
 		} catch (error) {

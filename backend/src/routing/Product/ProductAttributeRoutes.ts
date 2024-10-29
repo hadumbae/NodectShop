@@ -12,16 +12,16 @@ import UpdateProductAttributeOptionValidator from "../../validators/Product/Upda
 const ProductAttributeRoutes = express.Router();
 
 // Product SKU
-ProductAttributeRoutes.get('/attributes', ProductAttributeController.getAttributes);
-ProductAttributeRoutes.post('/attributes', AddProductAttributeValidator, ProductAttributeController.createAttribute);
-ProductAttributeRoutes.get('/attributes/:attributeID', ProductAttributeController.getAttributeByID);
-ProductAttributeRoutes.patch('/attributes/:attributeID', UpdateProductAttributeValidatorProduct, ProductAttributeController.updateAttribute);
-ProductAttributeRoutes.delete('/attributes/:attributeID', ProductAttributeController.deleteAttribute);
+ProductAttributeRoutes.get('/', ProductAttributeController.getAttributes);
+ProductAttributeRoutes.post('/', AddProductAttributeValidator, ProductAttributeController.createAttribute);
+ProductAttributeRoutes.get('/:attributeID', ProductAttributeController.getAttributeByID);
+ProductAttributeRoutes.patch('/:attributeID', UpdateProductAttributeValidatorProduct, ProductAttributeController.updateAttribute);
+ProductAttributeRoutes.delete('/:attributeID', ProductAttributeController.deleteAttribute);
 
-ProductAttributeRoutes.get('/options', ProductAttributeOptionController.getAttributeOptions);
-ProductAttributeRoutes.post('/options', AddProductAttributeOptionValidator, ProductAttributeOptionController.createAttributeOption);
-ProductAttributeRoutes.get('/options/:optionID', ProductAttributeOptionController.getAttributeOptionByID);
-ProductAttributeRoutes.patch('/options/:optionID', UpdateProductAttributeOptionValidator, ProductAttributeOptionController.updateAttributeOption);
-ProductAttributeRoutes.delete('/options/:optionID', ProductAttributeOptionController.deleteAttributeOption);
+// Attribute Options
+ProductAttributeRoutes.get('/:attributeID/options', ProductAttributeOptionController.getAttributeOptions);
+ProductAttributeRoutes.post('/:attributeID/options', AddProductAttributeOptionValidator, ProductAttributeOptionController.createAttributeOption);
+ProductAttributeRoutes.patch('/:attributeID/options/:optionID', UpdateProductAttributeOptionValidator, ProductAttributeOptionController.updateAttributeOption);
+ProductAttributeRoutes.delete('/:attributeID/options/:optionID', ProductAttributeOptionController.deleteAttributeOption);
 
 export default ProductAttributeRoutes;

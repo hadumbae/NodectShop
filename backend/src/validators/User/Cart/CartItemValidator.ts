@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
 import mongoose from 'mongoose';
 import createError from 'http-errors';
 
@@ -17,18 +17,14 @@ export default [
 
 			return true;
 		}),
-	body('productID')
-		.exists()
-		.withMessage('Product ID is required')
+	body('skuID')
+		.exists().withMessage('Product SKU ID is required')
 		.custom(async (value, { req }) => {
-			if (!mongoose.Types.ObjectId.isValid(value)) {
-				return Promise.reject('Please include a valid product ID.');
-			}
-
-			const product = ProductService.findByID(value);
-
-			if (!product) {
-				return Promise.reject('Product not found.');
-			}
+			if (!mongoose.Types.ObjectId.isValid(value)) return Promise.reject('Invalid SKU ID Format.');
+		}),
+	param('userID')
+		.exists().withMessage('User ID is required')
+		.custom(async (value, { req }) => {
+			if (!mongoose.Types.ObjectId.isValid(value)) return Promise.reject('Invalid User ID Format.');
 		}),
 ];

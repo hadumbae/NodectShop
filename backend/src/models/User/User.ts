@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 
-import { ICartItem } from './CartItem.js';
+export interface ICartItem {
+	quantity: number;
+	sku: mongoose.Types.ObjectId;
+}
 
 export interface IUser {
 	name: string;
@@ -14,6 +17,13 @@ export interface IUser {
 	ratings: [];
 }
 
+const CartItemSchema = new mongoose.Schema<ICartItem>(
+	{
+		quantity: { type: Number, required: [true, 'Cart quantity required.'], min: [1, 'Quantity must be at least 1.'] },
+		sku: { type: mongoose.Schema.Types.ObjectId, ref: 'ProductSKU', required: [true, 'Product SKU required.'] },
+	}
+);
+
 const UserSchema = new mongoose.Schema(
 	{
 		name: { type: String, required: true },
@@ -21,7 +31,7 @@ const UserSchema = new mongoose.Schema(
 		password: { type: String, required: true },
 		isAdmin: { type: Boolean, required: true, default: false },
 
-		cart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'CartItem' }],
+		cart: {type: [CartItemSchema] },
 		favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
 		ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProductRating' }],
 		orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserOrder' }],

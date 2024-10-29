@@ -39,9 +39,9 @@ export default {
      * @param id - The ID of the attribute.
      * @returns The attribute with matching ID.
      */
-    async findByIDOr404(id: string) {
+    async existsOr404(id: string) {
         if (!Types.ObjectId.isValid(id)) throw createError(400, 'Invalid Attribute ID Format.');
-        const attribute = await ProductAttribute.findById(id).populate('options');
+        const attribute = await ProductAttribute.findById(id);
         if (!attribute) throw createError(404, 'Attribute Not Found.');
 
         return attribute;
@@ -72,8 +72,8 @@ export default {
      * @param attributeID The ID of the attribute.
      */
     async destroy(attributeID: string) {
-        await this.findByIDOr404(attributeID);
-        await ProductAttribute.findByIdAndDelete(attributeID);
+        const attribute = await this.existsOr404(attributeID);
+        await attribute.deleteOne();
     },
 
     async deleteAttributeOptions(id: string) {

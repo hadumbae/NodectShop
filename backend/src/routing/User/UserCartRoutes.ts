@@ -11,7 +11,8 @@ import UserCartController from '../../controllers/Users/UserCartController.js';
 const UserCartRoutes = express.Router();
 
 // ? Get User Cart
-UserCartRoutes.get('/:userID', isAuth, UserCartController.fetchUserCart);
+UserCartRoutes.get('/:userID', UserCartController.fetchUserCart);
+// UserCartRoutes.get('/:userID', isAuth, UserCartController.fetchUserCart);
 // ? Get User Cart
 UserCartRoutes.delete('/:userID', isAuth, UserCartController.clearUserCart);
 // ? Add To User Cart
