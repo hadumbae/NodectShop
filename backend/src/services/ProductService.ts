@@ -57,6 +57,19 @@ const ProductService = {
 	},
 
 	/**
+	 * Throws a 404 error if product does not exist.
+	 * @param id - The ID of the product.
+	 * @returns The lean product with matching ID.
+	 */
+	async existsLeanOr404(id: string) {
+		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid Product ID Format.');
+		const product = await Product.findById(id).lean();
+		if (!product) throw createError(404, 'Product Not Found.');
+
+		return product;
+	},
+
+	/**
 	 * Create a new product.
 	 * @param data The required fields for creating a product.
 	 * @returns The newly created product.

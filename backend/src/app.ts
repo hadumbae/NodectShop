@@ -7,13 +7,13 @@ import bodyParser from 'body-parser';
 import connectDB from './configs/connectDB.js';
 
 import AuthRoutes from './routing/AuthRoutes.js';
-import UserRoutes from './routing/User/UserRoutes.js';
+import UserRoutes from './routing/Admin/User/UserRoutes.js';
 
-import SupplierRoutes from './routing/SupplierRoutes.js';
-import CategoryRoutes from './routing/CategoryRoutes.js';
-import ProductRoutes from './routing/Product/ProductRoutes.js';
-import UserCartRoutes from './routing/User/UserCartRoutes.js';
-import ProductAttributeRoutes from "./routing/Product/ProductAttributeRoutes.js";
+import SupplierRoutes from './routing/Admin/SupplierRoutes.js';
+import CategoryRoutes from './routing/Admin/CategoryRoutes.js';
+import ProductRoutes from './routing/Admin/Product/ProductRoutes.js';
+import ProductAttributeRoutes from "./routing/Admin/Product/ProductAttributeRoutes.js";
+import UserProfileRoutes from "./routing/Client/User/UserProfileRoutes.js";
 
 const app: Express = express();
 
@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 // User Routing
 app.use('/auth', AuthRoutes);
-app.use('/user/cart', UserCartRoutes);
+app.use('/user', UserProfileRoutes);
 
 // Admin Routing
 app.use('/admin/users', UserRoutes);
@@ -32,7 +32,7 @@ app.use('/admin/products', ProductRoutes);
 app.use('/admin/attributes', ProductAttributeRoutes);
 
 // Express Error Handler
-app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 	console.error('[ERROR HANDLER] | ', error['message']);
 
 	let errorMessage: string = 'Oops. Something bad happened!';
@@ -43,7 +43,7 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
 		statusCode = error.status;
 	}
 
-	res.status(statusCode).json({ message: errorMessage });
+	return res.status(statusCode).json({ message: errorMessage });
 });
 
 connectDB()

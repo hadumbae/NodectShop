@@ -1,7 +1,8 @@
+import {Request, Response, NextFunction} from "express";
 import jwt from 'jsonwebtoken';
 import createError from 'http-errors';
 
-export default (req, res, next) => {
+export default (req: Request, res: Response, next: NextFunction) => {
 	const authHeader = req.get('Authorization');
 
 	if (!authHeader) {
@@ -27,6 +28,7 @@ export default (req, res, next) => {
 	req.userID = decodedToken.userID;
 	req.userName = decodedToken.name;
 	req.userEmail = decodedToken.email;
+	req.isAdmin = decodedToken.isAdmin;
 
 	req.isAuth = true;
 	return next();

@@ -6,8 +6,6 @@ import Product from "./Product.js";
 export interface IProductSKUImage {
     readonly _id?: string;
     sku: Types.ObjectId;
-    product: Types.ObjectId;
-
     isPrimary: boolean;
 
     secure_url: string;
@@ -16,8 +14,6 @@ export interface IProductSKUImage {
 
 const ProductSKUImageSchema = new Schema<IProductSKUImage>({
     sku: {type: Schema.Types.ObjectId, ref: 'ProductSKU', required: true},
-    product: {type: Schema.Types.ObjectId, ref: 'Product', required: true},
-
     isPrimary: {type: Boolean, default: false},
 
     secure_url: {type: String, required: true},

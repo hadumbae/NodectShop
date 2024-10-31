@@ -1,10 +1,9 @@
 import mongoose, {Schema, Types} from 'mongoose';
 import UserOrder from "./UserOrder.js";
-import {IProduct} from "../Product/Product.js";
-import {IProductSKU} from "../Product/ProductSKU.js";
+import {IProduct} from "../../Product/Product.js";
+import {IProductSKU} from "../../Product/ProductSKU.js";
 
 export interface IUserOrderItem {
-	order: Types.ObjectId;
 	title: string;
 	description: string;
 	unitPrice: number;
@@ -16,7 +15,6 @@ export interface IUserOrderItem {
 
 const UserOrderItemSchema = new mongoose.Schema<IUserOrderItem>(
 	{
-		order: {type: Schema.Types.ObjectId, ref: 'UserOrder', required: [true, 'Order required.'] },
 		title: { type: String, required: [true, 'Product title required.'] },
 		description: { type: String, required: [true, 'Product description required.'] },
 		unitPrice: { type: Number, required: [true, 'Product price required.'] },
@@ -26,10 +24,6 @@ const UserOrderItemSchema = new mongoose.Schema<IUserOrderItem>(
 	},
 	{ timestamps: true }
 );
-
-UserOrderItemSchema.post('save', async function () {
-	await UserOrder.findByIdAndUpdate({_id: this.order}, {$push: {items: this}});
-})
 
 const UserOrderItem = mongoose.model<IUserOrderItem>('UserOrderItem', UserOrderItemSchema);
 

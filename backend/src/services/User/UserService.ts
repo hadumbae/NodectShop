@@ -54,6 +54,17 @@ const UserService = {
 	},
 
 	/**
+	 * Finds the user lean by ID or throw a 404 error.
+	 * @param id - The ID of the user.
+	 * @returns The lean user with matching ID.
+	 */
+	async existsLeanOr404(id) {
+		const user = await User.findById(id).lean();
+		if (!user) throw createError(404, 'User Not Found. Verify User ID.');
+		return user;
+	},
+
+	/**
 	 * Create a new user.
 	 * @param data The required fields for creating a user.
 	 * @returns The newly created user.

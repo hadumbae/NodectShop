@@ -1,4 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose, {Types} from 'mongoose';
+import {IProductSKU} from "../Product/ProductSKU.js";
+import {IProductRating} from "./ProductRating.js";
+import {IUserOrder} from "./Order/UserOrder.js";
 
 export interface ICartItem {
 	quantity: number;
@@ -10,11 +13,13 @@ export interface IUser {
 	email: string;
 	password: string;
 	isAdmin: boolean;
+	dob: string;
+	gender: string;
 
-	cart: ICartItem[];
-	orders: [];
-	favourites: [];
-	ratings: [];
+	cart: (ICartItem|Types.ObjectId)[];
+	orders: (IUserOrder|Types.ObjectId)[];
+	favourites: (IProductSKU|Types.ObjectId)[];
+	ratings: (IProductRating|Types.ObjectId)[];
 }
 
 const CartItemSchema = new mongoose.Schema<ICartItem>(
@@ -29,10 +34,12 @@ const UserSchema = new mongoose.Schema(
 		name: { type: String, required: true },
 		email: { type: String, required: true },
 		password: { type: String, required: true },
+		dob: {type: String, required: false, default: null },
+		gender: { type: String, required: false, default: null },
 		isAdmin: { type: Boolean, required: true, default: false },
 
 		cart: {type: [CartItemSchema] },
-		favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+		favourites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProductSKU' }],
 		ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ProductRating' }],
 		orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserOrder' }],
 	},

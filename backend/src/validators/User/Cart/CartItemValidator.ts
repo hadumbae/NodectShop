@@ -22,9 +22,4 @@ export default [
 		.custom(async (value, { req }) => {
 			if (!mongoose.Types.ObjectId.isValid(value)) return Promise.reject('Invalid SKU ID Format.');
 		}),
-	param('userID')
-		.exists().withMessage('User ID is required')
-		.custom(async (value, { req }) => {
-			if (!mongoose.Types.ObjectId.isValid(value)) return Promise.reject('Invalid User ID Format.');
-		}),
 ];

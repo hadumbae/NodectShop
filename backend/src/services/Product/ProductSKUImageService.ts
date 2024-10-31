@@ -37,13 +37,11 @@ const ProductSKUImageService = {
 
 	/**
 	 * Upload product SKU images.
-	 * @param productID ID of the associated product.
 	 * @param skuID ID of the associated product SKU.
 	 * @param images An array of images to be uploaded.
 	 * @returns The uploaded SKU images.
 	 */
-	async createProductSKUImage(productID: string, skuID: string, images: any): Promise<any> {
-		await ProductService.existsOr404(productID);
+	async createProductSKUImage(skuID: string, images: any): Promise<any> {
 		await ProductSKUService.existsOr404(skuID);
 
 		const skuImages = [];
@@ -51,7 +49,6 @@ const ProductSKUImageService = {
 		for (let [index, image] of images.entries()) {
 			const result = await this.uploadImage(image);
 			const skuImage = new ProductSKUImage({
-				product: productID,
 				sku: skuID,
 				isPrimary: false,
 				public_id: result.public_id,
@@ -81,13 +78,8 @@ const ProductSKUImageService = {
 
 		image.isPrimary = !image.isPrimary;
 		image.save();
-
 		return image;
 	},
-
-	async deleteMany(conditions = {}) {
-		await ProductSKUImage.deleteMany(conditions);
-	}
 };
 
 export default ProductSKUImageService;

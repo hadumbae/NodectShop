@@ -45,7 +45,19 @@ export default {
      */
     async existsOr404(id) {
         if (!Types.ObjectId.isValid(id)) throw createError(400, "Invalid SKU ID.");
-        const sku = await ProductSKU.findById(id).populate('images.mainImage');
+        const sku = await ProductSKU.findById(id).populate('images');
+        if (!sku) throw createError(404, 'Product SKU Not Found.');
+        return sku;
+    },
+
+    /**
+     * Throws a 404 error if product SKU does not exist.
+     * @param id - The ID of the supplier.
+     * @returns The supplier with matching ID.
+     */
+    async existsLeanOr404(id) {
+        if (!Types.ObjectId.isValid(id)) throw createError(400, "Invalid SKU ID.");
+        const sku = await ProductSKU.findById(id).populate('images').lean();
         if (!sku) throw createError(404, 'Product SKU Not Found.');
         return sku;
     },

@@ -91,7 +91,7 @@ const validateSupplier = body('supplier')
 	.notEmpty()
 	.withMessage('Supplier required.')
 	.custom(async (value) => {
-		const supplier = await Supplier.findById(value);
+		const supplier = await Supplier.findOne({_id: value});
 
 		if (!supplier) {
 			throw createError(400, 'Supplier provided is not a valid ID');

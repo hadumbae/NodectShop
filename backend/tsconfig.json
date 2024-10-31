@@ -10,4 +10,7 @@
         "allowSyntheticDefaultImports": true
     },
     "include": ["src/**/*"],
+    "files": [
+        "custom.d.ts"
+    ]
   }

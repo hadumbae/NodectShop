@@ -1,18 +1,18 @@
 import {check, body} from "express-validator";
 import {Types} from "mongoose";
 
-import ProductService from "../../services/ProductService.js";
-import SupplierService from "../../services/Supplier/SupplierService.js";
-import ProductSKUService from "../../services/Product/ProductSKUService.js";
 import createError from "http-errors";
 
 export default [
+    body("skuID")
+        .exists().withMessage("SKU ID is required")
+        .custom((value) => {
+            if(! Types.ObjectId.isValid(value)) throw createError('Invalid SKU ID Format.');
+            return true;
+        }),
     check('image')
-        .custom((value, {req}) => {
-            // Express Validate Does Not Validate Files
-            if (req.files.length <= 0) {
-                throw createError(400, "Image required.")
-            }
+        .custom(({req}) => {
+            if (req.files.length <= 0) throw createError(400, "Image required.");
 
             const acceptedTypes = [
                 'image/png',
@@ -21,11 +21,11 @@ export default [
                 'image/avif',
             ];
 
-            for (const file of req.files) {
+            req.files.forEach((file: any) => {
                 if(!acceptedTypes.includes(file.mimetype)) {
-                    throw createError(400, "Invalid File Type. Only png, jpg, jpeg, and avif files accepted.")
+                    throw createError(400, "Invalid File Type. Only png, jpg, jpeg, and avif files accepted.");
                 }
-            }
+            });
 
             return true;
         }),

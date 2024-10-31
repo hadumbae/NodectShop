@@ -22,22 +22,18 @@ const AuthService = {
 		if (!user) throw createError(404, 'User not found.');
 
 		const isEqual = bcrypt.compare(password, user.password);
+		if (!isEqual) throw createError(401, 'Invalid password!');
 
-		if (!isEqual) {
-			throw createError(401, 'Invalid password!');
-		}
-
-		const token = jwt.sign(
+		return jwt.sign(
 			{
 				userID: user._id.toString(),
 				name: user.name,
 				email: email,
+				isAdmin: user.isAdmin,
 			},
 			'somesupersecretsecret',
-			{ expiresIn: '5h' }
+			{ expiresIn: '6h' }
 		);
-
-		return token;
 	},
 
 	async changePassword(email: string, oldPassword: string, newPassword: string) {
