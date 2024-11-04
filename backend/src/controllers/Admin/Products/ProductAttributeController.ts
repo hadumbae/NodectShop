@@ -1,14 +1,21 @@
 import mongoose from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-import { isHttpError } from 'http-errors';
+import createError, { isHttpError } from 'http-errors';
 
 import ProductAttributeService from "../../../services/Product/ProductAttributeService.js";
+import ProductAttributeRepository from "../../../repositories/ProductAttributeRepository.js";
 
 export default {
     async getAttributes(req: Request, res: Response, next: NextFunction) {
         try {
-            const attributes = await ProductAttributeService.find();
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) return res.status(400).json({message: "Validation failed.", errors: errors.array()});
+
+            const currentPage = req.query.page || 1;
+            const perPage = req.query.perPage || 15;
+
+            const attributes = await ProductAttributeService.fetchPaginatedAttributes(currentPage, perPage);
             return res.status(200).json({ message: "Product attributes fetched.", data: attributes });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -22,7 +29,7 @@ export default {
             if (!errors.isEmpty()) return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
 
             const data = req.body;
-            const attribute = await ProductAttributeService.create(data);
+            const attribute = await ProductAttributeRepository.create(data);
             return res.status(200).json({ message: "Product attribute created successfully.", data: attribute });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -37,7 +44,7 @@ export default {
                 return res.status(400).json({ message: 'Invalid ID.' });
             }
 
-            const attribute = await ProductAttributeService.existsOr404(attributeID);
+            const attribute = await ProductAttributeRepository.existsOr404Lean(attributeID);
             return res.status(200).json({ message: "Product attribute retrieved.", data: attribute });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -53,7 +60,7 @@ export default {
             const { attributeID } = req.params;
             const data = req.body;
 
-            const attribute = await ProductAttributeService.update(attributeID, data);
+            const attribute = await ProductAttributeRepository.findByIdAndUpdate(attributeID, data);
             res.status(200).json({ message: 'Product attribute updated.', data: attribute });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -65,7 +72,7 @@ export default {
         try {
             const { attributeID } = req.params;
 
-            await ProductAttributeService.destroy(attributeID);
+            await ProductAttributeRepository.findByIdAndDelete(attributeID);
             res.status(200).json({ message: 'Product attribute deleted.' });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);

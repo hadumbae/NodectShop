@@ -3,6 +3,7 @@ import 'dotenv/config';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { isHttpError } from 'http-errors';
 import bodyParser from 'body-parser';
+import cors from "cors";
 
 import connectDB from './configs/connectDB.js';
 
@@ -17,8 +18,14 @@ import UserProfileRoutes from "./routing/Client/User/UserProfileRoutes.js";
 
 const app: Express = express();
 
+// const corsOptions = {
+// 	origin: 'http://localhost:8080',
+// 	optionsSuccessStatus: 200,
+// };
+
 // Parses JSON Requests
 app.use(bodyParser.json());
+app.use(cors());
 
 // User Routing
 app.use('/auth', AuthRoutes);
@@ -48,8 +55,8 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 
 connectDB()
 	.then((result) => {
-		app.listen(3000, () => {
-			console.log('App is listening on PORT 3000...');
+		app.listen(8080, () => {
+			console.log('App is listening on PORT 8080...');
 		});
 	})
 	.catch((err) => {

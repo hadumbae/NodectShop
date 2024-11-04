@@ -1,8 +1,7 @@
 import ProductAttributeOption from "../../models/Product/ProductAttributeOption.js";
 import createError from "http-errors";
 import {Types} from "mongoose";
-import ProductAttributeService from "./ProductAttributeService.js";
-import ProductAttribute from "../../models/Product/ProductAttribute.js";
+import ProductAttributeRepository from "../../repositories/ProductAttributeRepository.js";
 
 export default {
     /**
@@ -44,7 +43,7 @@ export default {
      * @returns The newly created attribute option.
      */
     async create(name: string, attributeID: string) {
-        await ProductAttributeService.existsOr404(attributeID);
+        await ProductAttributeRepository.existsOr404Lean(attributeID);
         const option = new ProductAttributeOption({name: name, attribute: attributeID});
         await option.save();
 

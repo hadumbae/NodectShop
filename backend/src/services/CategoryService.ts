@@ -2,48 +2,32 @@ import _ from 'lodash';
 import createError from 'http-errors';
 
 import Category from '../models/Category.js';
+import Product from "../models/Product/Product.js";
+import ProductSKU from "../models/Product/ProductSKU.js";
 
 const CategoryService = {
-	/**
-	 * Count the number of categories with the given parameters in the database.
-	 * @param conditions Object
-	 * @returns The number of categories.
-	 */
-	async countCategories(conditions = {}) {
-		return await Category.countDocuments(conditions);
+	async fetchPaginatedCategories(currentPage: any = 1, perPage: any = 15, conditions = {}, sort = {}) {
+		if (isNaN(currentPage) || isNaN(perPage)) throw createError(400, "Invalid Pagination Error.");
+
+		const paginated = await Category.find(conditions)
+			.sort(sort)
+			.skip((currentPage - 1) * perPage)
+			.limit(perPage)
+			.populate('products')
+			.lean();
+
+		// TODO
+		// Create Product Collections
 	},
 
-	/**
-	 * Find categories with the given parameters in the database.
-	 * If no parameters are given, all categories are returned.
-	 * @param conditions - A collection of database queries.
-	 * @returns A collection of categories.
-	 */
-	async find(conditions = {}) {
-		const categories = await Category.find(conditions);
-		return categories;
-	},
+	async fetchCategoryWithData(categoryID: string) {
+		const category = await Category.findById(categoryID).lean();
+		if (!category) createError(404, "Category Not Found.");
 
-	/**
-	 * Finds the first category that matches the given parameters.
-	 * @param conditions - A collection of database queries.
-	 * @returns The first found category.
-	 */
-	async findOne(conditions = {}) {
-		const category = await Category.findOne(conditions);
-		if (!category) throw createError(404, 'Category Not Found. Please Try Again.');
-		return category;
-	},
+		const products = await Product.find({category: categoryID}).populate('skus').lean();
+		const skus = await  ProductSKU.find({product: {$in: category.products}}).populate('product').populate('supplier').lean();
 
-	/**
-	 * Finds the category by ID or throw a 404 error.
-	 * @param id - The ID of the category.
-	 * @returns The category with matching ID.
-	 */
-	async findByIDOr404(id) {
-		const category = await Category.findById(id);
-		if (!category) throw createError(404, 'Category Not Found. Verify Category ID.');
-		return category;
+		return {category, products, skus};
 	},
 
 	/**
@@ -60,7 +44,7 @@ const CategoryService = {
 			throw createError(400, 'Category Cannot Be Created With Initial Porudcts. Please Add Them Later.');
 		}
 
-		data.slug = await slugify(data.category);
+		// data.slug = await slugify(data.category);
 		data.products = [];
 
 		return await Category.create(data);
@@ -72,16 +56,10 @@ const CategoryService = {
 	 * @param data The fields with which to update the category.
 	 */
 	async update(categoryID: string, data: any) {
-		const oldCategory = await Category.findById(categoryID);
+		const category = await Category.findById(categoryID).lean();
+		if (!category) throw createError(404, 'Category Not Found.');
 
-		if (data.slug) throw createError(400, 'Slug Should Not Be Included In Requests. Please Try Again.');
-		if (!oldCategory) throw createError(404, 'Category Not Found. Verify Category ID.');
-
-		if (data.category != oldCategory.category) {
-			data.slug = await slugify(data.category);
-		}
-
-		await Category.findByIdAndUpdate(categoryID, data);
+		return Category.findByIdAndUpdate(categoryID, data, {new: true});
 	},
 
 	/**
@@ -94,6 +72,75 @@ const CategoryService = {
 
 		await Category.findByIdAndDelete(categoryID);
 	},
+
+	async build() {
+		const categories = [
+			"Electronics",
+			"Home Appliances",
+			"Fashion",
+			"Beauty and Personal Care",
+			"Sports and Fitness",
+			"Toys and Games (board",
+			"Books",
+			"Automotive",
+			"Furniture",
+			"Home Decor",
+			"Office Supplies",
+			"Groceries",
+			"Jewelry and Watches",
+			"Pet Supplies",
+			"Baby Products",
+			"Garden and Outdoor",
+			"Health and Wellness",
+			"Kitchen and Dining",
+			"Travel and Luggage",
+			"Music Instruments",
+			"Arts and Crafts",
+			"Photography and Video",
+			"Computer Components",
+			"Software",
+			"Industrial Supplies",
+			"Wedding Supplies",
+			"Collectibles",
+			"Educational Supplies",
+			"Eco-friendly Products",
+			"Luxury Items",
+			"Outdoor Gear",
+			"Fitness Apparel",
+			"Camping Equipment",
+			"Cleaning Supplies",
+			"Smart Home Devices",
+			"Virtual Reality Gear",
+			"DIY and Home Improvement",
+			"Fishing Equipment",
+			"Cycling Gear",
+			"Video Games",
+			"Protective Gear",
+			"Small Kitchen Appliances",
+			"Lighting Fixtures",
+			"Seasonal Decor",
+			"Event Supplies",
+			"Hobby Supplies",
+			"Subscription Boxes",
+			"Medical Supplies",
+			"Eco-friendly Packaging",
+			"Office Electronics",
+			"Home Security Systems",
+			"Renewable Energy Products",
+			"Survival Gear",
+			"Exotic Foods",
+			"Organic Groceries",
+			"Vintage Clothing",
+			"High-tech Gadgets",
+			"Educational Toys",
+			"Child Safety Products",
+			"Professional Equipment",
+		];
+
+		for (const category of categories) {
+			await Category.create({category: category, slug: await slugify(category)});
+		}
+	}
 };
 
 export default CategoryService;

@@ -1,9 +1,10 @@
 import mongoose, {Schema, Types} from 'mongoose';
 
 import ProductSKU, {IProductSKU} from "./ProductSKU.js";
-import ProductSKUService from "../../services/Product/ProductSKUService.js";
+import Category from "../Category.js";
 
 export interface IProduct {
+	readonly _id: Types.ObjectId;
 	title: string;
 	slug: string;
 	description: string;
@@ -21,6 +22,24 @@ const ProductSchema = new mongoose.Schema<IProduct>(
 	},
 	{ timestamps: true }
 );
+
+ProductSchema.pre('save', {document: true, query: false}, function (next) {
+	console.log(this);
+	next();
+})
+
+ProductSchema.post('save', {document: true, query: false}, async function () {
+	const category = await Category.findOne({products: this._id});
+
+	if (!category || category._id.toString() != this.category.toString()) {
+		if (category) {
+			category.products = category.products.filter(p => p._id.toString() !== this._id.toString());
+			category.save();
+		}
+
+		await Category.findByIdAndUpdate(this.category, {$push: {products: this}});
+	}
+});
 
 ProductSchema.pre('deleteOne', {document: true, query: false}, async function(next) {
 	const skus = await ProductSKU.where({product: this._id});

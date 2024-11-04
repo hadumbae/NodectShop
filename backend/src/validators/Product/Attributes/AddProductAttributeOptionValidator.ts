@@ -1,8 +1,8 @@
 import {body} from "express-validator";
-import ProductAttributeService from "../../services/Product/ProductAttributeService.js";
+import ProductAttributeService from "../../../services/Product/ProductAttributeService.js";
 import {Types} from "mongoose";
 import createError from "http-errors";
-import ProductAttributeOptionService from "../../services/Product/ProductAttributeOptionService.js";
+import ProductAttributeOptionService from "../../../services/Product/ProductAttributeOptionService.js";
 
 export default [
     body('name')

@@ -20,17 +20,17 @@ import isAuthAdmin from "../../../middleware/isAuthAdmin.js";
 const ProductRoutes = express.Router();
 
 // Product
-ProductRoutes.get('/products/', isAuth, ProductController.getProducts);
-ProductRoutes.post('/products/', [isAuth, ...AddProductValidator], ProductController.createProduct);
+ProductRoutes.get('/products', isAuth, ProductController.getProducts);
+ProductRoutes.post('/products', [isAuth, ...AddProductValidator], ProductController.createProduct);
 ProductRoutes.get('/products/:productID', isAuth, ProductController.getProductByID);
 ProductRoutes.patch('/products/:productID', [isAuth, ...AddProductValidator], ProductController.updateProduct);
 ProductRoutes.delete('/products/:productID', isAuth, ProductController.deleteProduct);
 
 // Product SKU
-ProductRoutes.get('/products/:productID/sku', isAuth, ProductSKUController.getProductSKUs);
-ProductRoutes.post('/products/:productID/sku', [isAuth, ...AddProductSKUValidator], ProductSKUController.createProductSKU);
-ProductRoutes.patch('/products/:productID/sku/:skuID', [isAuth, ...UpdateProductSKUValidator], ProductSKUController.updateProductSKU);
-ProductRoutes.delete('/products/:productID/sku/:skuID', isAuth, ProductSKUController.destroy);
+ProductRoutes.get('/product-sku/:productID/sku', isAuth, ProductSKUController.getProductSKUs);
+ProductRoutes.post('/product-sku/:productID/sku', [isAuth, ...AddProductSKUValidator], ProductSKUController.createProductSKU);
+ProductRoutes.patch('/product-sku/:productID/sku/:skuID', [isAuth, ...UpdateProductSKUValidator], ProductSKUController.updateProductSKU);
+ProductRoutes.delete('/product-sku/:productID/sku/:skuID', isAuth, ProductSKUController.destroy);
 
 // SKU Images
 ProductRoutes.post('/sku-images', [isAuth, upload.array('images'), ...UploadProductSKUImagesValidator], ProductSKUImageController.uploadSKUImages);

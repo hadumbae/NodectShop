@@ -25,6 +25,25 @@ export default class BaseRepository {
         this.model = model;
     }
 
+    async count(conditions = {}) {
+        return this.model.countDocuments(conditions);
+    }
+
+    async paginated(currentPage: number = 1, perPage: number = 15, conditions = {}, sort = {}) {
+        return this.model.find(conditions)
+            .sort(sort)
+            .skip((currentPage - 1) * perPage)
+            .limit(perPage);
+    }
+
+    async paginatedLean(currentPage: any = 1, perPage: any = 15, conditions = {}, sort = {}) {
+        return this.model.find(conditions)
+            .sort(sort)
+            .skip((currentPage - 1) * perPage)
+            .limit(perPage)
+            .lean();
+    }
+
     async find(conditions = {}) {
         return this.model.find(conditions);
     }

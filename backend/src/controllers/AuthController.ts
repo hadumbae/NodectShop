@@ -3,6 +3,7 @@ import createError, { isHttpError } from 'http-errors';
 import { validationResult } from 'express-validator';
 
 import AuthService from '../services/Auth/AuthService.js';
+import UserRepository from "../repositories/UserRepository.js";
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -31,8 +32,11 @@ export const signin = async (req, res, next) => {
 		if (!errors.isEmpty()) return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
 
 		const { email, password } = req.body;
+
 		const token = await AuthService.signin(email, password);
-		return res.json({ message: 'Login successful.', token: token });
+		const user = await UserRepository.findOne({ email });
+
+		return res.json({ message: 'Login successful.', token: token, isAdmin: user.isAdmin  });
 	} catch (error) {
 		if (!isHttpError) res.status(500);
 		next(error);
