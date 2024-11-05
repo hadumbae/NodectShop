@@ -36,6 +36,7 @@ const AdminLayout = () => {
                     <NavLink to="/admin/dashboard" className="hover:underline hover:underline-offset-8 hover:text-black">Dashboard</NavLink>
                     <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Categories</NavLink>
                     <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Suppliers</NavLink>
+                    <NavLink to="/admin/product/attribute/list" className="hover:underline hover:underline-offset-8 hover:text-black">Attributes</NavLink>
                     <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Products</NavLink>
                     <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Orders</NavLink>
                 </div>

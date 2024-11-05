@@ -17,7 +17,7 @@ export const getCategories = async (req: Request, res: Response, next: NextFunct
 		const totalItems = await CategoryRepository.count();
 		const categories = await CategoryRepository.paginatedLean(currentPage, perPage);
 
-		return res.json({ totalItems: totalItems, data: categories });
+		return res.json({ totalItems, data: categories });
 	} catch (error) {
 		if (!isHttpError(error)) res.status(500);
 		next(error);

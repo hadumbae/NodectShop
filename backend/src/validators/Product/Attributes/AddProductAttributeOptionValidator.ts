@@ -11,7 +11,7 @@ export default [
         .isLength({min: 3}).withMessage('Name must be at least 3 characters.')
         .custom(
             async (value, {req}) => {
-                const option = await ProductAttributeOptionService.findOne({name: value, attribute: req.body.attribute});
+                const option = await ProductAttributeOptionService.findOne({name: value, attribute: req.params.attributeID});
                 if (option) return Promise.reject("Option with the same name and attribute already exists");
             }
         )

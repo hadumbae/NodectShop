@@ -9,10 +9,13 @@ import {toast} from "react-toastify";
 
 
 const LoginPage: FC = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState();
     const dispatch = useDispatch();
     const navigate = useNavigate()
+
+    const [error, setError] = useState();
+    const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const submitHandler = async (event: any) => {
         event.preventDefault();
@@ -42,7 +45,11 @@ const LoginPage: FC = () => {
             setIsLoading(false);
             toast.success("Logged In Successfully!");
 
-            return navigate("/user/profile/");
+            if (result.isAdmin) {
+                return navigate("/admin/dashboard");
+            }
+
+            return navigate("/user/profile");
         } catch (error) {
             console.log(error);
         }
@@ -58,6 +65,8 @@ const LoginPage: FC = () => {
                         <FormInput label="Email"
                                    inputType="email"
                                    name="email"
+                                   value={email}
+                                   changeHandler={setEmail}
                                    disabled={isLoading}
                                    required={true}/>
                     </div>
@@ -65,6 +74,8 @@ const LoginPage: FC = () => {
                         <FormInput label="Password"
                                    inputType="password"
                                    name="password"
+                                   value={password}
+                                   changeHandler={setPassword}
                                    disabled={isLoading}
                                    required={true}/>
                     </div>

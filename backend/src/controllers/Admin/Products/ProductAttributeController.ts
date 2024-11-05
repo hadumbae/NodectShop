@@ -15,8 +15,9 @@ export default {
             const currentPage = req.query.page || 1;
             const perPage = req.query.perPage || 15;
 
+            const totalItems = await ProductAttributeRepository.count();
             const attributes = await ProductAttributeService.fetchPaginatedAttributes(currentPage, perPage);
-            return res.status(200).json({ message: "Product attributes fetched.", data: attributes });
+            return res.status(200).json({ message: "Product attributes fetched.", totalItems, data: attributes });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
             next(error);
@@ -30,6 +31,7 @@ export default {
 
             const data = req.body;
             const attribute = await ProductAttributeRepository.create(data);
+
             return res.status(200).json({ message: "Product attribute created successfully.", data: attribute });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
