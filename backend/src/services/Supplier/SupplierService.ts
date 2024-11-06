@@ -4,37 +4,10 @@ import createError from 'http-errors';
 import Supplier from '../../models/Supplier.js';
 import { ContactPersonType } from '../../types/SupplierTypes.js';
 import mongoose from "mongoose";
+import Product from "../../models/Product/Product.js";
+import ProductSKU from "../../models/Product/ProductSKU.js";
 
 const SupplierService = {
-	/**
-	 * Count the number of suppliers with the given parameters in the database.
-	 * @param conditions Object
-	 * @returns The number of suppliers.
-	 */
-	async countSuppliers(conditions = {}) {
-		return await Supplier.countDocuments(conditions);
-	},
-
-	/**
-	 * Find suppliers with the given parameters in the database.
-	 * If no parameters are given, all suppliers are returned.
-	 * @param conditions - A collection of database queries.
-	 * @returns A collection of suppliers.
-	 */
-	async find(conditions = {}) {
-		const suppliers = await Supplier.find(conditions);
-		return suppliers;
-	},
-
-	/**
-	 * Finds the first supplier that matches the given parameters.
-	 * @param conditions - A collection of database queries.
-	 * @returns The first found supplier.
-	 */
-	async findOne(conditions = {}) {
-		return Supplier.findOne(conditions);
-	},
-
 	/**
 	 * Finds the supplier by ID or throw a 404 error.
 	 * @param id - The ID of the supplier.
@@ -42,33 +15,6 @@ const SupplierService = {
 	 */
 	async findByID(id) {
 		return Supplier.findById(id);
-	},
-
-	/**
-	 * Throws a 404 error if supplier does not exist.
-	 * @param id - The ID of the supplier.
-	 * @returns The supplier with matching ID.
-	 */
-	async existsOr404(id) {
-		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid Supplier ID Format.');
-		const supplier = await Supplier.findById(id);
-		if (!supplier) throw createError(404, 'Supplier Not Found.');
-
-		return supplier;
-	},
-
-	/**
-	 * Create a new supplier.
-	 * @param data The required fields for creating a supplier.
-	 * @returns The newly created supplier.
-	 */
-	async create(data: any) {
-		if (!data.name) {
-			throw createError(400, 'Unique Slug Could Not Be Created. Verify That A Similar Supplier Does Not Exist.');
-		}
-
-		data.slug = await slugify(data.name);
-		return await Supplier.create(data);
 	},
 
 	/**
@@ -89,32 +35,13 @@ const SupplierService = {
 		await Supplier.findByIdAndUpdate(supplierID, data);
 	},
 
-	/**
-	 * Delete the supplier.
-	 * @param supplierID The ID of the supplier.
-	 */
-	async destroy(supplierID: string) {
-		const supplier = await Supplier.findById(supplierID);
-		if (!supplier) throw createError(404, 'Supplier Not Found. Verify Supplier ID.');
-
-		await Supplier.findByIdAndDelete(supplierID);
-	},
-
-	/**
-	 * Update the given supplier's contact persons.
-	 * @param supplierID The ID of the supplier to be modified.
-	 * @param contactPersons The data of the supplier's (new) contact persons.
-	 * @returns The updated supplier.
-	 */
-	async updateContactPersons(supplierID: string, contactPersons: ContactPersonType[]) {
-		const supplier = await Supplier.findById(supplierID);
-		if (!supplier) throw createError(404, 'Supplier Not Found. Verify Supplier ID.');
-
-		supplier.contactPersons = contactPersons;
-		supplier.save();
-
-		return supplier;
-	},
+	async fetchProducts(supplierID: string) {
+		return ProductSKU
+			.where({supplier: supplierID})
+			.populate("product")
+			.populate("options")
+			.populate("images");
+	}
 };
 
 export default SupplierService;

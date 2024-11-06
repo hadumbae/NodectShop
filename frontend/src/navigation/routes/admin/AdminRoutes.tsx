@@ -5,6 +5,10 @@ import AdminDashboardPage from "../../../pages/admin/AdminDashboardPage.tsx";
 import CategoryShowPage from "../../../pages/admin/category/CategoryShowPage.tsx";
 import CategoryUpdatePage from "../../../pages/admin/category/CategoryUpdatePage.tsx";
 import AttributeListPage from "../../../pages/admin/attributes/AttributeListPage.tsx";
+import SupplierListPage from "../../../pages/admin/supplier/SupplierListPage.tsx";
+import SupplierDetailsPage from "../../../pages/admin/supplier/SupplierDetailsPage.tsx";
+import SupplierCreateContactPersonPage from "../../../pages/admin/supplier/SupplierCreateContactPersonPage.tsx";
+import SupplierEditPage from "../../../pages/admin/supplier/SupplierEditPage.tsx";
 
 export default [
     // Admin
@@ -26,6 +30,19 @@ export default [
             { path: "/admin/category/list", element: <CategoryListPage />, errorElement: <ErrorPage /> },
             { path: "/admin/category/find/:categoryID/:categorySlug", element: <CategoryShowPage />, errorElement: <ErrorPage /> },
             { path: "/admin/category/edit/:categoryID/:categorySlug", element: <CategoryUpdatePage />, errorElement: <ErrorPage /> },
+        ]
+    },
+
+    // Supplier
+    {
+        path: "/admin",
+        element: <AdminLayout />,
+        errorElement: <ErrorPage />,
+        children: [
+            { path: "/admin/supplier/list", element: <SupplierListPage />, errorElement: <ErrorPage />},
+            { path: "/admin/supplier/find/:supplierID", element: <SupplierDetailsPage />, errorElement: <ErrorPage />},
+            { path: "/admin/supplier/edit/:supplierID", element: <SupplierEditPage />, errorElement: <ErrorPage />},
+            { path: "/admin/supplier/find/:supplierID/create-contact/", element: <SupplierCreateContactPersonPage />, errorElement: <ErrorPage />},
         ]
     },
 

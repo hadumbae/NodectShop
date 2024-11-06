@@ -29,7 +29,7 @@ export default class BaseRepository {
         return this.model.countDocuments(conditions);
     }
 
-    async paginated(currentPage: number = 1, perPage: number = 15, conditions = {}, sort = {}) {
+    async paginated(currentPage: any = 1, perPage: any = 15, conditions = {}, sort = {}) {
         return this.model.find(conditions)
             .sort(sort)
             .skip((currentPage - 1) * perPage)
@@ -92,6 +92,11 @@ export default class BaseRepository {
 
     async findByIdAndUpdate(_id: Types.ObjectId | string, data: any) {
         return this.model.findByIdAndUpdate(_id, data, {new: true});
+    }
+
+    async deleteOne(_id: Types.ObjectId | string) {
+        const entity = await this.existsOr404(_id);
+        await entity.deleteOne();
     }
 
     async findByIdAndDelete(_id: Types.ObjectId | string) {

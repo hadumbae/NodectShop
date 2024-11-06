@@ -23,7 +23,7 @@ const Pagination: FC<PaginationProps> = ({totalItems, currentPage, perPage, setP
     );
 
     return (
-        <div className="flex justify-center items-center space-x-8">
+        <div className="flex flex-wrap justify-center items-center space-x-8">
             {hasPreviousPage && <button
                 className={`${baseButtonClasses} font-bold text-gray-400 hover:text-gray-600`}
                 onClick={() => setPage(currentPage - 1)}> &lt; </button>}

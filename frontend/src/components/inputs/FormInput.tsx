@@ -1,7 +1,8 @@
 import {FC, useId} from 'react';
 
 interface FormInputProps {
-    label?: string;
+    className?: string;
+    label: string;
     inputType: string;
     name: string;
     id?: string;
@@ -15,13 +16,13 @@ interface FormInputProps {
     disabled?: boolean;
 }
 
-const FormInput: FC<FormInputProps> = ({label, inputType, name, value, changeHandler, errors = [], required = false, disabled = false, id, placeholder}) => {
+const FormInput: FC<FormInputProps> = ({className, label, inputType, name, value, changeHandler, errors = [], required = false, disabled = false, id, placeholder}) => {
     const forID = id ? `${id}-${useId()}` : useId();
 
     return (
-        <div>
-            {label && <label htmlFor={forID}
-                            className="block mb-2 text-sm font-medium text-gray-900">{label}</label>}
+        <div className={className}>
+            <label htmlFor={forID}
+                            className="block mb-2 text-sm font-medium text-gray-900">{label}</label>
             <input type={inputType} id={forID}
                    name={name}
                    value={value}
@@ -31,19 +32,9 @@ const FormInput: FC<FormInputProps> = ({label, inputType, name, value, changeHan
 
                    onChange={(e) => changeHandler(e.target.value)}
 
-                   className="
-                        bg-gray-50
-                        border
-                        border-gray-300
-                        text-gray-900
-                        disabled:text-gray-400
-                        text-sm
-                        rounded-lg
-                        focus:ring-blue-500
-                        focus:border-blue-500
-                        block
-                        w-full
-                        p-2.5"
+                   className={
+                       "bg-gray-50 border border-gray-300 text-gray-900 disabled:text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                   }
             />
             {errors.length > 0 &&
                 <span className="text-red-500 text-sm">{ errors[0] }</span>}

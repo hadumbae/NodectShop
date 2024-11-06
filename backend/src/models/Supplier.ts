@@ -1,14 +1,40 @@
-import mongoose from 'mongoose';
+import mongoose, {Types} from 'mongoose';
+import ProductSKU from "./Product/ProductSKU.js";
 
-const SupplierSchema = new mongoose.Schema(
+interface IContactPerson {
+	readonly _id?: Types.ObjectId
+	name: string;
+	title: string;
+	email: string;
+	phone: string;
+}
+
+interface ISupplier {
+	name: string;
+	website: string;
+	contact: {
+		email: string;
+		phone: string;
+		fax: string;
+	},
+	contactPersons: IContactPerson[],
+	address: {
+		street: string;
+		city: string;
+		state: string;
+		country: string;
+		postalCode: string;
+	}
+}
+
+const SupplierSchema = new mongoose.Schema<ISupplier>(
 	{
 		name: { type: String, required: true, unique: true },
-		slug: { type: String, required: true, unique: true },
 		website: { type: String, required: true },
 		contact: {
-			email: { type: String, required: false },
-			phone: { type: String, required: false },
-			fax: { type: String, required: false },
+			email: { type: String, required: false, default: "" },
+			phone: { type: String, required: false, default: "" },
+			fax: { type: String, required: false, default: ""},
 		},
 		contactPersons: [
 			{
@@ -20,9 +46,8 @@ const SupplierSchema = new mongoose.Schema(
 		],
 		address: {
 			street: { type: String, required: true },
-			district: { type: String, required: false },
 			city: { type: String, required: true },
-			region: { type: String, required: false },
+			state: { type: String, required: true },
 			country: { type: String, required: true },
 			postalCode: { type: String, required: true },
 		},
@@ -30,5 +55,9 @@ const SupplierSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-const Supplier = mongoose.models.Supplier || mongoose.model('Supplier', SupplierSchema);
+SupplierSchema.post('deleteOne', {document: true, query: false}, async function(next) {
+	await ProductSKU.updateMany({supplier: this._id}, {supplier: null});
+})
+
+const Supplier = mongoose.model<ISupplier>('Supplier', SupplierSchema);
 export default Supplier;

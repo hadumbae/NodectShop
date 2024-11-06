@@ -2,94 +2,56 @@ import createHttpError, { isHttpError } from 'http-errors';
 import { validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
 import SupplierService from '../../services/Supplier/SupplierService.js';
+import SupplierRepository from "../../repositories/SupplierRepository.js";
+import asyncHandler from "../../middleware/asyncHandler.js";
+import ProductService from "../../services/ProductService.js";
 
-export const getSuppliers = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const suppliers = await SupplierService.find();
-		return res.status(200).json({ data: suppliers });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
+export const getSuppliers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+	const page = req.query.page || 1;
+	const perPage = req.query.perPage || 15;
 
-export const createSupplier = async (req: Request, res: Response, next: NextFunction) => {
-	const errors = validationResult(req);
+	const totalItems = await SupplierRepository.count();
+	const suppliers = await SupplierRepository.paginatedLean(page, perPage);
 
-	if (!errors.isEmpty()) {
-		res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
-	}
+	return res.status(200).json({ message: "Suppliers fetched successfully.", data: {suppliers: suppliers, totalItems: totalItems} });
+});
 
-	try {
-		const data = req.body;
-		const supplier = await SupplierService.create(data);
+export const createSupplier = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+	const data = req.body;
 
-		return res.status(200).json({ data: supplier });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
+	console.log(data);
 
-export const getSupplierByID = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const supplierID = req.params.id;
-		const supplier = await SupplierService.existsOr404({ _id: supplierID });
+	const supplier = await SupplierRepository.create(data);
+	return res.status(200).json({ message: "Supplier created successfully.", data: supplier });
+});
 
-		return res.status(200).json({ data: supplier });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
+export const getSupplierByID = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+	const supplierID = req.params.supplierID;
+	const supplier = await SupplierRepository.existsOr404Lean(supplierID);
 
-export const updateSupplier = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const supplierID = req.params.id;
-		const data = req.body;
+	return res.status(200).json({ message: "Supplier fetched sucessfully.", data: supplier });
+});
 
-		await SupplierService.update(supplierID, data);
-		res.status(200).json({ message: 'Supplier Updated.' });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
+export const updateSupplier = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+	const supplierID = req.params.supplierID;
+	const data = req.body;
 
-export const deleteSupplier = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const supplierID = req.params.id;
-		await SupplierService.destroy(supplierID);
+	await SupplierRepository.findByIdAndUpdate(supplierID, data);
+	res.status(200).json({ message: 'Supplier Updated.' });
+});
 
-		res.status(200).json({ message: 'Supplier Deleted.' });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
+export const deleteSupplier = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+	const supplierID = req.params.supplierID;
+	await SupplierRepository.deleteOne(supplierID);
 
-export const updateSupplierContacts = async (req: Request, res: Response, next: NextFunction) => {
-	const errors = validationResult(req);
+	res.status(200).json({ message: 'Supplier Deleted.' });
+});
 
-	if (!errors.isEmpty()) {
-		res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
-	}
+export const getSupplierProducts = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+	const supplierID = req.params.supplierID;
+	const products = await SupplierService.fetchProducts(supplierID);
 
-	try {
-		const supplierID = req.params.id;
-		const data = req.body;
+	return res.status(200).json({message: 'Supplier Products Retrieved.', data: products});
+});
 
-		console.log(data.contactPersons);
 
-		if (!data.contactPersons || Object.prototype.toString.call(data.contactPersons) != '[object Array]') {
-			throw createHttpError(400, "Invalid Data. Required Format : '{contactPersons: []}' ");
-		}
-
-		const supplier = await SupplierService.updateContactPersons(supplierID, data.contactPersons);
-
-		return res.status(200).json({ message: 'Contact Person Details Updated.', supplier: supplier });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};

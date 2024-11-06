@@ -31,8 +31,8 @@ const CategoryListPgae = () => {
             const {response, result} = await CategoryService.fetchPaginatedCategories(page, perPage, token);
             if (response.status != 200) return toast.error("Error! Please Try Again!");
 
-            setTotalCount(result.totalItems);
-            setCategories(result.data);
+            setTotalCount(result.data.totalItems);
+            setCategories(result.data.categories);
         } catch (error) {
             console.error(error);
         }
@@ -50,7 +50,22 @@ const CategoryListPgae = () => {
                             <h1 className="text-xl font-bold mb-2">Category</h1>
                             <p>List of categories with a count of their products.</p>
                         </div>
-                        <div>Select</div>
+                        <div>
+                            <select
+                                name="perPage"
+                                id="perPage"
+                                value={perPage}
+                                className="p-2 shadow-md bg-white border"
+                                onChange={(e) => setPerPage(parseInt(e.target.value))}
+                            >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="25">25</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
                     </div>
 
                     <ListTable accessors={accessors.current} data={categories} />
