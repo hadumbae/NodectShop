@@ -7,6 +7,7 @@ import {FaMagnifyingGlass} from "react-icons/fa6";
 import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import SupplierService from "../../services/supplier/SupplierService.ts";
+import _ from "lodash";
 
 interface Props {
     supplier: Supplier;
@@ -58,7 +59,7 @@ const SupplierDetailsCard: FC<Props> = ({supplier, onDelete}) => {
                 {/* Details And Delete */}
 
                 <div className="flex justify-end space-x-1 items-center">
-                    <Link to={`/admin/supplier/find/${supplier._id}`}
+                    <Link to={`/admin/supplier/find/${supplier._id}/${_.kebabCase(supplier.name)}`}
                           className="text-gray-400 hover:text-yellow-500 p-3">
                         <FaMagnifyingGlass/>
                     </Link>
@@ -91,9 +92,8 @@ const SupplierDetailsCard: FC<Props> = ({supplier, onDelete}) => {
             {/* Supplier Address */}
             <div className="text-sm mt-3 flex justify-center space-x-3">
                 <span>{supplier.address.street}, </span>
-                {supplier.address.district && <span>{supplier.address.district}</span>}
                 <span>{supplier.address.city}, </span>
-                {supplier.address.region && <span>{supplier.address.region}</span>}
+                <span>{supplier.address.state}</span>
                 <span>{supplier.address.country}</span>
             </div>
         </div>

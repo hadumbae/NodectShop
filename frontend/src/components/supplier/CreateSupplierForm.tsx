@@ -1,10 +1,10 @@
 import {FC, useState} from 'react';
-import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import FormInput from "../inputs/FormInput.tsx";
 import SupplierService from "../../services/supplier/SupplierService.ts";
 import {fetchValidationError} from "../../utils/FormUtils.ts";
 import Button from "../inputs/Button.tsx";
+import useAdminToken from "../../hooks/useAdminToken.ts";
 
 interface Props {
     onSuccess: Function;
@@ -12,7 +12,7 @@ interface Props {
 
 const CreateSupplierForm: FC<Props> = ({onSuccess}) => {
     // token, isAdmin
-    const {token, isAdmin} = useSelector((state: any) => state.authUser);
+    const {token} = useAdminToken();
     const [validationErrors, setValidationErrors] = useState([]);
 
     const [name, setName] = useState("");
@@ -30,8 +30,6 @@ const CreateSupplierForm: FC<Props> = ({onSuccess}) => {
 
     const submitHandler = async (event: any) => {
         event.preventDefault();
-
-        if (!token || !isAdmin) return toast.error("Unauthorized!");
 
         try {
             const formData = new FormData(event.target)
@@ -53,9 +51,6 @@ const CreateSupplierForm: FC<Props> = ({onSuccess}) => {
             };
 
             const { status, payload } = await SupplierService.createSupplier(data, token);
-
-            console.log(status);
-            console.log(payload);
 
             if (status === 200) {
                 toast.success("Supplier created.");

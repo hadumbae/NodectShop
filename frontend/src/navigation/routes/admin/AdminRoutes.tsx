@@ -7,8 +7,9 @@ import CategoryUpdatePage from "../../../pages/admin/category/CategoryUpdatePage
 import AttributeListPage from "../../../pages/admin/attributes/AttributeListPage.tsx";
 import SupplierListPage from "../../../pages/admin/supplier/SupplierListPage.tsx";
 import SupplierDetailsPage from "../../../pages/admin/supplier/SupplierDetailsPage.tsx";
-import SupplierCreateContactPersonPage from "../../../pages/admin/supplier/SupplierCreateContactPersonPage.tsx";
+import SupplierCreateContactPersonPage from "../../../pages/admin/supplier/contacts/SupplierCreateContactPersonPage.tsx";
 import SupplierEditPage from "../../../pages/admin/supplier/SupplierEditPage.tsx";
+import SupplierEditContactPersonPage from "../../../pages/admin/supplier/contacts/SupplierEditContactPersonPage.tsx";
 
 export default [
     // Admin
@@ -40,9 +41,13 @@ export default [
         errorElement: <ErrorPage />,
         children: [
             { path: "/admin/supplier/list", element: <SupplierListPage />, errorElement: <ErrorPage />},
-            { path: "/admin/supplier/find/:supplierID", element: <SupplierDetailsPage />, errorElement: <ErrorPage />},
-            { path: "/admin/supplier/edit/:supplierID", element: <SupplierEditPage />, errorElement: <ErrorPage />},
-            { path: "/admin/supplier/find/:supplierID/create-contact/", element: <SupplierCreateContactPersonPage />, errorElement: <ErrorPage />},
+            { path: "/admin/supplier/find/:supplierID/:slug", element: <SupplierDetailsPage />, errorElement: <ErrorPage />},
+            { path: "/admin/supplier/edit/:supplierID/:slug", element: <SupplierEditPage />, errorElement: <ErrorPage />},
+            { path: "/admin/supplier/find/:supplierID/:slug/create-contact", element: <SupplierCreateContactPersonPage />, errorElement: <ErrorPage />},
+            {
+                path: "/admin/supplier/find/:supplierID/:supplierSlug/update-contact/:contactID/:contactSlug",
+                element: <SupplierEditContactPersonPage />,
+                errorElement: <ErrorPage />},
         ]
     },
 

@@ -42,10 +42,3 @@ export const supplierValidator = [
 	body('contactPersons.*.email').exists().withMessage("Contact person's email required.").normalizeEmail(),
 	body('contactPersons.*.phone').exists().withMessage("Contact person's phone required."),
 ];
-
-export const addSupplierContactPersonValidator = [
-	body('contactPersons.*.name').exists().withMessage("Contact person's name required."),
-	body('contactPersons.*.title').exists().withMessage("Contact person's title required."),
-	body('contactPersons.*.email').exists().withMessage("Contact person's email required.").normalizeEmail(),
-	body('contactPersons.*.phone').exists().withMessage("Contact person's phone required."),
-];

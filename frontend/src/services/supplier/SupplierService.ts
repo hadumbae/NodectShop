@@ -27,4 +27,9 @@ export default {
         const link = `${baseURL}/${supplierID}`;
         return queryAPI(link, "DELETE", authToken);
     },
+
+    async fetchPaginatedProducts(supplierID: string, page: number, perPage: number, authToken: string) {
+        const link = `${baseURL}/${supplierID}/products?page=${page}&perPage=${perPage}`;
+        return queryAPI(link, "GET", authToken);
+    },
 }

@@ -6,6 +6,7 @@ import SupplierService from "../../../services/supplier/SupplierService.ts";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import Loader from "../../../components/utils/Loader.tsx";
 import UpdateSupplierForm from "../../../components/supplier/UpdateSupplierForm.tsx";
+import _ from "lodash";
 
 const SupplierEditPage: FC = () => {
     const navigate = useNavigate();
@@ -52,7 +53,7 @@ const SupplierEditPage: FC = () => {
             <div className="mt-2 flex justify-between items-center">
                 <h1 className="text-2xl">{supplier ? supplier.name : "Edit Supplier"}</h1>
 
-                <Link to={`/admin/supplier/find/${supplierID}`}
+                <Link to={`/admin/supplier/find/${supplierID}/${_.kebabCase(supplier?.name)}`}
                 className="text-xl text-gray-400 hover:underline hover:underline-offset-8 hover:text-black">
                     &lt; Back
                 </Link>

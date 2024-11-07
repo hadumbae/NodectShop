@@ -1,5 +1,5 @@
 export interface ContactPerson {
-    readonly _id?: string;
+    readonly _id: string;
     name: string;
     title: string;
     email: string;
@@ -7,7 +7,7 @@ export interface ContactPerson {
 }
 
 export interface Supplier {
-    readonly _id?: string;
+    readonly _id: string;
     name: string;
     website: string;
     contact: {

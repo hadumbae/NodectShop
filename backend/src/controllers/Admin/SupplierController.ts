@@ -5,6 +5,7 @@ import SupplierService from '../../services/Supplier/SupplierService.js';
 import SupplierRepository from "../../repositories/SupplierRepository.js";
 import asyncHandler from "../../middleware/asyncHandler.js";
 import ProductService from "../../services/ProductService.js";
+import ProductRepository from "../../repositories/ProductRepository.js";
 
 export const getSuppliers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 	const page = req.query.page || 1;
@@ -49,9 +50,14 @@ export const deleteSupplier = asyncHandler(async (req: Request, res: Response, n
 
 export const getSupplierProducts = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 	const supplierID = req.params.supplierID;
-	const products = await SupplierService.fetchProducts(supplierID);
 
-	return res.status(200).json({message: 'Supplier Products Retrieved.', data: products});
+	const page = req.query.page || 1;
+	const perPage = req.query.perPage || 15;
+
+	const totalItems = await ProductRepository.count({supplier: supplierID});
+	const products = await SupplierService.fetchPaginatedProducts(supplierID, page, perPage, totalItems);
+
+	return res.status(200).json({message: 'Supplier Products Retrieved.', data: {totalItems, products}});
 });
 
 

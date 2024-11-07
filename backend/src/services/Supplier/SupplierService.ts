@@ -35,12 +35,20 @@ const SupplierService = {
 		await Supplier.findByIdAndUpdate(supplierID, data);
 	},
 
-	async fetchProducts(supplierID: string) {
-		return ProductSKU
-			.where({supplier: supplierID})
-			.populate("product")
+	async fetchPaginatedProducts(supplierID: string, currentPage: any = 1, perPage: any = 15, conditions = {}, sort = {}) {
+		return ProductSKU.where({supplier: supplierID})
+			.sort(sort)
+			.skip((currentPage - 1) * perPage)
+			.limit(perPage)
 			.populate("options")
-			.populate("images");
+			.populate("images")
+			.populate({
+				path: "product",
+				populate: {
+					path: "category",
+					model: "Category"
+				}
+			});
 	}
 };
 

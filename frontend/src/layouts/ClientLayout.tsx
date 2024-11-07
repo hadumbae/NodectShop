@@ -7,11 +7,22 @@ import {RiUserAddFill, RiLoginCircleFill, RiLogoutCircleRFill} from "react-icons
 
 import {logout} from "../state/slices/authUserSlice.ts";
 import {toast} from "react-toastify";
+import {expired} from "../utils/TimeUtils.ts";
 
 const ClientLayout = () => {
-    const { token, isAdmin } = useSelector((state: any) => state.authUser);
+    const { token, isAdmin, expiresIn } = useSelector((state: any) => state.authUser);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    console.log(Date.now());
+    console.log(expiresIn);
+
+    if (token) {
+        if (expired(expiresIn)) {
+            dispatch(logout());
+            toast.success("Login Expired. Please try again.");
+        }
+    }
 
     const logoutHandler = () => {
         dispatch(logout());

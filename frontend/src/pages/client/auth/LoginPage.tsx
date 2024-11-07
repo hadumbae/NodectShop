@@ -6,6 +6,7 @@ import FormInput from "../../../components/inputs/FormInput.tsx";
 import Button from "../../../components/inputs/Button.tsx";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
+import {getExpiryDate} from "../../../utils/TimeUtils.ts";
 
 
 const LoginPage: FC = () => {
@@ -41,7 +42,12 @@ const LoginPage: FC = () => {
                 return;
             }
 
-            dispatch(login(result));
+            dispatch(login({
+                token: result.token,
+                isAdmin: result.isAdmin,
+                expiresIn: getExpiryDate(6).getTime()
+            }));
+
             setIsLoading(false);
             toast.success("Logged In Successfully!");
 

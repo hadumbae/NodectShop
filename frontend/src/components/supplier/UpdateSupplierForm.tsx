@@ -7,6 +7,7 @@ import Button from "../inputs/Button.tsx";
 import {Supplier} from "../../types/SupplierTypes.ts";
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import _ from "lodash";
 
 interface Props {
     supplier: Supplier;
@@ -58,7 +59,7 @@ const UpdateSupplierForm: FC<Props> = ({supplier}) => {
 
             if (status === 200) {
                 toast.success("Supplier updated.");
-                navigate(`/admin/supplier/find/${supplier._id}`);
+                navigate(`/admin/supplier/find/${supplier._id}/${_.kebabCase(supplier.name)}`);
             } else {
                 payload.errors && setValidationErrors(payload.errors);
                 console.error(`${status} : ${payload.message}`)
