@@ -1,11 +1,17 @@
 import mongoose, {Schema, Types} from 'mongoose';
+import {IProduct} from "./Product.js";
+import {postSave, preDeleteImageOne, preDeleteOne, primaryImage} from "./ProductSKU.methods.js";
 import {IProductAttributeOption} from "./ProductAttributeOption.js";
-import ProductSKUImage, {IProductSKUImage} from "./ProductSKUImage.js";
-import Product, {IProduct} from "./Product.js";
-import {postSave, preDeleteOne, primaryImage} from "./ProductSKUMethods.js";
+
+export interface IProductSKUImage {
+    readonly _id?: string;
+    isPrimary: boolean;
+    secure_url: string;
+    public_id: string;
+}
 
 export interface IProductSKU {
-    readonly id?: string;
+    readonly id?: Types.ObjectId;
     product: Types.ObjectId | IProduct;
     supplier: Types.ObjectId;
     code: string;
@@ -13,9 +19,16 @@ export interface IProductSKU {
     unitStock: number;
     reorderLevel: number;
     isDiscontinued: boolean;
-    images?: IProductSKUImage[];
-    options?: IProductAttributeOption[];
+    images: IProductSKUImage[];
+    options: IProductAttributeOption[];
+    save: () => void;
 }
+
+const ProductSKUImageSchema = new Schema<IProductSKUImage>({
+    isPrimary: {type: Boolean, default: false},
+    secure_url: {type: String, required: true},
+    public_id: {type: String, required: true},
+},{timestamps: true});
 
 const ProductSKUSchema = new Schema<IProductSKU>({
     product: {type: Schema.Types.ObjectId, ref: 'Product', required: true},
@@ -27,8 +40,8 @@ const ProductSKUSchema = new Schema<IProductSKU>({
     reorderLevel: {type: Number, required: [true, "Reorder Level required."]},
     isDiscontinued: {type: Boolean, default: false, required: [true, "Discontinued Status required."]},
 
-    images: {type: [{type: Schema.Types.ObjectId, ref: 'ProductSKUImage'}], required: true},
-    options: {type: [{type: Schema.Types.ObjectId, ref: 'ProductAttributeOption'}]},
+    images: {type: [ProductSKUImageSchema], default: []},
+    options: {type: [{type: Schema.Types.ObjectId, ref: 'ProductAttributeOption'}], default: []},
 
 },{timestamps: true});
 
@@ -40,6 +53,7 @@ ProductSKUSchema.methods.primaryImage = primaryImage;
 
 ProductSKUSchema.post('save', {document: true, query: false}, postSave);
 ProductSKUSchema.pre('deleteOne', {document: true, query: false}, preDeleteOne);
+ProductSKUImageSchema.pre('deleteOne', {document: true, query: false}, preDeleteImageOne);
 
 // Model
 const ProductSKU = mongoose.model<IProductSKU>("ProductSKU", ProductSKUSchema);

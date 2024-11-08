@@ -12,9 +12,9 @@ export default {
 
 			const {skuID} = req.body;
 			const images = req.files;
-			const sku = await ProductSKUImageService.createProductSKUImage(skuID, images);
+			const sku = await ProductSKUImageService.createProductSKUImages(skuID, images);
 
-			return res.status(200).json({ message: "Product SKU created successfully.", data: sku });
+			return res.status(200).json({ message: "Product SKU images uploaded successfully.", data: sku });
 		} catch (error) {
 			if (!isHttpError(error)) res.status(500);
 			next(error);
@@ -23,8 +23,8 @@ export default {
 
 	async deleteSKUImages(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try{
-			await ProductSKUImageService.deleteProductSKUImage(req.params.imageID);
-			return res.status(200).json({ message: "Product SKU image deleted successfully." });
+			const sku = await ProductSKUImageService.deleteProductSKUImage(req.params.imageID);
+			return res.status(200).json({ message: "Product SKU image deleted successfully.", data: sku });
 		} catch (error) {
 			if (!isHttpError(error)) res.status(500);
 			next(error);
@@ -33,8 +33,8 @@ export default {
 
 	async markAsPrimary(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try{
-			const image = await ProductSKUImageService.markAsPrimary(req.params.imageID);
-			return res.status(200).json({ message: "Product SKU image marked as primary.", data: image });
+			const sku = await ProductSKUImageService.markAsPrimary(req.params.imageID);
+			return res.status(200).json({ message: "Product SKU image marked as primary.", data: sku });
 		} catch (error) {
 			if (!isHttpError(error)) res.status(500);
 			next(error);

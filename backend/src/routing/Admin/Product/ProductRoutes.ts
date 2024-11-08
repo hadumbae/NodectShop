@@ -2,7 +2,7 @@ import express from 'express';
 
 import { upload } from '../../../configs/multer-config.js';
 
-import ProductController from '../../../controllers/Admin/Products/ProductController.js';
+import {getProducts, createProduct, getProductByID, updateProduct,deleteProduct} from '../../../controllers/Admin/Products/ProductController.js';
 import ProductSKUController from "../../../controllers/Admin/Products/ProductSKUController.js";
 import ProductSKUImageController from "../../../controllers/Admin/Products/ProductSKUImageController.js";
 import ProductSKUOptionController from "../../../controllers/Admin/Products/ProductSKUOptionController.js";
@@ -12,19 +12,17 @@ import AddProductSKUValidator from "../../../validators/Product/AddProductSKUVal
 import UpdateProductSKUValidator from "../../../validators/Product/UpdateProductSKUValidator.js";
 import UploadProductSKUImagesValidator from "../../../validators/Product/UploadProductSKUImagesValidator.js";
 import ProductSKUOptionValidator from "../../../validators/Product/ProductSKUOptionValidator.js";
-import ProductRatingController from "../../../controllers/Client/Product/ProductRatingController.js";
-import CreateProductRatingValidator from "../../../validators/Product/AddProductRatingValidator.js";
 import isAuth from "../../../middleware/isAuth.js";
-import isAuthAdmin from "../../../middleware/isAuthAdmin.js";
+import getPaginatedValidator from "../../../validators/GetPaginatedValidator.js";
 
 const ProductRoutes = express.Router();
 
 // Product
-ProductRoutes.get('/products', isAuth, ProductController.getProducts);
-ProductRoutes.post('/products', [isAuth, ...AddProductValidator], ProductController.createProduct);
-ProductRoutes.get('/products/:productID', isAuth, ProductController.getProductByID);
-ProductRoutes.patch('/products/:productID', [isAuth, ...AddProductValidator], ProductController.updateProduct);
-ProductRoutes.delete('/products/:productID', isAuth, ProductController.deleteProduct);
+ProductRoutes.get('/products', [isAuth, ...getPaginatedValidator], getProducts);
+ProductRoutes.post('/products', [isAuth, ...AddProductValidator], createProduct);
+ProductRoutes.get('/products/:productID', isAuth, getProductByID);
+ProductRoutes.patch('/products/:productID', [isAuth, ...AddProductValidator], updateProduct);
+ProductRoutes.delete('/products/:productID', isAuth, deleteProduct);
 
 // Product SKU
 ProductRoutes.get('/product-sku/:productID/sku', isAuth, ProductSKUController.getProductSKUs);

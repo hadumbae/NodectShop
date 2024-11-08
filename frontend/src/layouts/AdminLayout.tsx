@@ -6,13 +6,25 @@ import {RiLogoutCircleRFill} from "react-icons/ri";
 import {logout} from "../state/slices/authUserSlice.ts";
 import {toast} from "react-toastify";
 import {GrCycle} from "react-icons/gr";
+import {expired} from "../utils/TimeUtils.ts";
 
 const AdminLayout = () => {
-    const { token } = useSelector((state: any) => state.authUser);
+    const { token, isAdmin, expiresIn } = useSelector((state: any) => state.authUser);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    if (!token) {
+    if (token) {
+        if (expired(expiresIn)) {
+            dispatch(logout());
+            toast.success("Login Expired. Please try again.");
+        }
+
+        if (!isAdmin) {
+            toast.error("Unauthorized.");
+            navigate("/");
+        }
+    } else {
+        toast.error("Unauthorized.");
         navigate("/auth/login")
     }
 
@@ -37,7 +49,7 @@ const AdminLayout = () => {
                     <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Categories</NavLink>
                     <NavLink to="/admin/supplier/list" className="hover:underline hover:underline-offset-8 hover:text-black">Suppliers</NavLink>
                     <NavLink to="/admin/product/attribute/list" className="hover:underline hover:underline-offset-8 hover:text-black">Attributes</NavLink>
-                    <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Products</NavLink>
+                    <NavLink to="/admin/product/list" className="hover:underline hover:underline-offset-8 hover:text-black">Products</NavLink>
                     <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Orders</NavLink>
                 </div>
                 <div className="hidden md:flex space-x-6 items-center">

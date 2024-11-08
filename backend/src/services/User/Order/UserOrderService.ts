@@ -1,10 +1,9 @@
 import User, {ICartItem} from "../../../models/User/User.js";
-import {IProductSKUImage} from "../../../models/Product/ProductSKUImage.js";
 
 import createError from "http-errors";
 import UserOrderItem, {IUserOrderItem} from "../../../models/User/Order/UserOrderItem.js";
 import UserOrder, {IUserOrderAddressDetails} from "../../../models/User/Order/UserOrder.js";
-import ProductSKU from "../../../models/Product/ProductSKU.js";
+import ProductSKU, {IProductSKUImage} from "../../../models/Product/ProductSKU.js";
 
 export default {
     async createUserOrder(userID: string, data) {

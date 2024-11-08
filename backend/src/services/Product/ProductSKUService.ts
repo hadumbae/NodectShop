@@ -6,8 +6,9 @@ import ProductService from "../ProductService.js";
 import SupplierService from "../Supplier/SupplierService.js";
 import ProductSKUImageService from "./ProductSKUImageService.js";
 import createError from "http-errors";
-import {IProductSKUImage} from "../../models/Product/ProductSKUImage.js";
 import Product from "../../models/Product/Product.js";
+import SupplierRepository from "../../repositories/SupplierRepository.js";
+import ProductRepository from "../../repositories/ProductRepository.js";
 
 interface ProductSKUInputData {
     supplier: string;
@@ -69,8 +70,8 @@ export default {
      */
     async create(productID: string, data: ProductSKUInputData) {
         // Checks
-        await ProductService.existsOr404(productID);
-        await SupplierService.existsOr404(data.supplier);
+        await ProductRepository.existsOr404Lean(productID);
+        await SupplierRepository.existsOr404Lean(data.supplier);
 
         // Create
         return ProductSKU.create({
@@ -95,7 +96,7 @@ export default {
     async update(id: string, data: ProductSKUInputData) {
         // Checks
         await this.findByIDOr404(id);
-        await SupplierService.existsOr404(data.supplier);
+        await SupplierRepository.existsOr404Lean(data.supplier);
 
         // Update
         return await ProductSKU.findByIdAndUpdate(id, data, {new: true});

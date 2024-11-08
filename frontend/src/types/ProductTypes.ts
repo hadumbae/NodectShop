@@ -1,6 +1,13 @@
 import {Supplier} from "./SupplierTypes.ts";
 import CategoryType from "./CategoryType.ts";
 
+export interface ProductSKUImage {
+    _id: string;
+    isPrimary: boolean;
+    secure_url: string;
+    public_id: string;
+}
+
 export interface ProductSKU {
     _id: string;
     product: Product;
@@ -10,7 +17,7 @@ export interface ProductSKU {
     unitStock: number;
     reorderLevel: number;
     isDiscontinued: boolean;
-    images: [];
+    images: ProductSKUImage[];
     options: [];
 }
 

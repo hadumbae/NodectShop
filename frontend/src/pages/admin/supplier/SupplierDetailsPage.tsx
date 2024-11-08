@@ -7,9 +7,9 @@ import {FaPlus} from "react-icons/fa";
 import _ from "lodash";
 import SupplierContactPersonsList from "../../../components/supplier/contactperson/SupplierContactPersonsList.tsx";
 import SupplierProductList from "../../../components/supplier/products/SupplierProductList.tsx";
-import useSupplierParam from "../../../hooks/Supplier/useSupplierParam.ts";
+import useSupplierParam from "../../../hooks/supplier/useSupplierParam.ts";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
-import useFetchSupplier from "../../../hooks/Supplier/useFetchSupplier.ts";
+import useFetchSupplier from "../../../hooks/supplier/useFetchSupplier.ts";
 
 const SupplierDetailsPage: FC = () => {
     const navigate = useNavigate();

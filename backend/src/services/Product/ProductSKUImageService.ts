@@ -1,26 +1,9 @@
 import createError from 'http-errors';
 import cloudinary from '../../configs/cloudinary-config.js';
-import { ProductImageType } from '../../types/ProductTypes.js';
-import ProductService from '../ProductService.js';
-import mongoose, {Types} from 'mongoose';
-import ProductSKUService from "./ProductSKUService.js";
-import ProductSKUImage, {IProductSKUImage} from "../../models/Product/ProductSKUImage.js";
+import ProductSKURepository from "../../repositories/ProductSKURepository.js";
+import ProductSKU from "../../models/Product/ProductSKU.js";
 
 const ProductSKUImageService = {
-
-	/**
-	 * Find the product SKU image by ID or throw a 404 error.
-	 * @param id The ID of the product SKU image to be found.
-	 * @return The product SKU image.
-	 */
-	async findByIDOr404(id: string): Promise<any> {
-		if (!Types.ObjectId.isValid(id)) throw createError(400, "Invalid Image ID.");
-		const image = await ProductSKUImage.findById(id).populate('sku');
-		if (!image) throw createError("Sub Image Not FOund.");
-
-		return image;
-	},
-
 	/**
 	 * Upload image to Cloudinary.
 	 * @param image The image data to be uploaded.
@@ -41,25 +24,18 @@ const ProductSKUImageService = {
 	 * @param images An array of images to be uploaded.
 	 * @returns The uploaded SKU images.
 	 */
-	async createProductSKUImage(skuID: string, images: any): Promise<any> {
-		await ProductSKUService.existsOr404(skuID);
+	async createProductSKUImages(skuID: string, images: any): Promise<any> {
+		const sku = await ProductSKURepository.existsOr404(skuID);
 
-		const skuImages = [];
-
-		for (let [index, image] of images.entries()) {
+		for (let image of images) {
 			const result = await this.uploadImage(image);
-			const skuImage = new ProductSKUImage({
-				sku: skuID,
-				isPrimary: false,
-				public_id: result.public_id,
-				secure_url: result.secure_url,
-			});
-
-			await skuImage.save();
-			skuImages.push(skuImage);
+			const isPrimary = sku.images.length === 0 ? true : false;
+			sku.images.push({isPrimary: isPrimary, public_id: result.public_id, secure_url: result.secure_url});
 		}
 
-		return skuImages;
+		await sku.save();
+
+		return sku;
 	},
 
 	/**
@@ -67,18 +43,29 @@ const ProductSKUImageService = {
 	 * @param imageID ID of the product SKU image to be destroyed.
 	 */
 	async deleteProductSKUImage(imageID: string): Promise<void> {
-		const skuImage: IProductSKUImage = await this.findByIDOr404(imageID);
-		await cloudinary.uploader.destroy(skuImage.public_id);
-		await ProductSKUImage.deleteOne({_id: skuImage._id});
+		const sku: any = await ProductSKU.findOne({"images._id": imageID});
+		if (!sku) throw createError(404, "Product SKU Image Not Found.");
+
+		const image = sku.images.id(imageID);
+		await cloudinary.uploader.destroy(image.public_id);
+
+		sku.images.id(imageID).deleteOne();
+		await sku.save();
+
+		return sku;
 	},
 
 	async markAsPrimary(imageID: string) {
-		const image = await this.findByIDOr404(imageID);
-		await ProductSKUImage.updateMany({sku: image.sku._id}, {isPrimary: false});
+		const sku: any = await ProductSKU.findOne({"images._id": imageID});
+		if (!sku) throw createError(404, "Product SKU Image Not Found.");
 
-		image.isPrimary = !image.isPrimary;
-		image.save();
-		return image;
+		sku.images = sku.images.map((image) => {
+			image.isPrimary = image._id.toString() === imageID;
+			return image;
+		});
+
+		await sku.save();
+		return sku;
 	},
 };
 

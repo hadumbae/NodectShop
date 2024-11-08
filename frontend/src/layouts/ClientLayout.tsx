@@ -14,14 +14,13 @@ const ClientLayout = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    console.log(Date.now());
-    console.log(expiresIn);
-
     if (token) {
         if (expired(expiresIn)) {
             dispatch(logout());
             toast.success("Login Expired. Please try again.");
         }
+    } else {
+        navigate("/auth/login")
     }
 
     const logoutHandler = () => {

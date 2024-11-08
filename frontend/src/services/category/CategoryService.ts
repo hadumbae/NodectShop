@@ -7,7 +7,7 @@ export default {
      * @returns The response from the API call and the parsed body.
      */
     async fetchPaginatedCategories (page: number, perPage: number, authToken: string) {
-        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories?page=${page}&perPage=${perPage}`;
+        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/paginated?page=${page}&perPage=${perPage}`;
         const response = await fetch(apiLink, {
             method: "GET",
             headers: {Authorization: `Bearer ${authToken}`, "Content-Type": "application/json"}
@@ -17,8 +17,19 @@ export default {
         return {response, result};
     },
 
+    async fetchCategories(authToken: string) {
+        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories`;
+        const response = await fetch(apiLink, {
+            method: "GET",
+            headers: {Authorization: `Bearer ${authToken}`, "Content-Type": "application/json"}
+        });
+
+        const payload = await response.json();
+        return {status: response.status, payload};
+    },
+
     async fetchCategory(categoryID: string, authToken: string) {
-        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/${categoryID}`;
+        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/category/${categoryID}`;
         const response = await fetch(apiLink, {
             method: "GET",
             headers: {Authorization: `Bearer ${authToken}`, "Content-Type": "application/json"}
@@ -29,7 +40,7 @@ export default {
     },
 
     async fetchCategoryWithData(categoryID: string, authToken: string) {
-        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/${categoryID}/data`;
+        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/category/${categoryID}/data`;
         const response = await fetch(apiLink, {
             method: "GET",
             headers: {Authorization: `Bearer ${authToken}`, "Content-Type": "application/json"}
@@ -40,7 +51,7 @@ export default {
     },
 
     async updateCategory(categoryID: string, formData: FormData, authToken: string) {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories/${categoryID}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories/category/${categoryID}`, {
             method: "PATCH", headers: { "Authorization": `Bearer ${authToken}`, "Content-Type": "application/json" },
             body: JSON.stringify({category: formData.get('category')})
         });
@@ -50,7 +61,7 @@ export default {
     },
 
     async deleteCategory(categoryID: string, authToken: string) {
-        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/${categoryID}`;
+        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/category/${categoryID}`;
         const response = await fetch(apiLink, {
             method: "DELETE",
             headers: {Authorization: `Bearer ${authToken}`, "Content-Type": "application/json"}

@@ -4,9 +4,24 @@ interface Props {
     value: number;
     setValue: (value: number) => void;
     paddingClass?: string;
+    step?: number;
+    init?: number;
+    count?: number;
 }
 
-const PaginatedPerPageSelect: FC<Props> = ({value, setValue, paddingClass = "p-2"}) => {
+const PaginatedPerPageSelect: FC<Props> = ({value, setValue, paddingClass = "p-2", step = 5, init = 5, count = 5}) => {
+    const options = [
+        <option value={init}>{init}</option>
+    ];
+
+    for (let i = 1; i <= count; i++) {
+
+        options.push(
+            <option value={init + (step * i)}>{init + (step * i)}</option>
+        );
+    }
+
+
     return (
         <select
             name="perPage"
@@ -15,12 +30,7 @@ const PaginatedPerPageSelect: FC<Props> = ({value, setValue, paddingClass = "p-2
             className={ `${paddingClass} shadow-md bg-white border rounded-lg` }
             onChange={(e) => setValue(parseInt(e.target.value))}
         >
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="15">15</option>
-            <option value="20">20</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
+            {...options}
         </select>
     );
 };

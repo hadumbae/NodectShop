@@ -7,6 +7,12 @@ import CategoryService from '../../services/CategoryService.js';
 import CategoryRepository from "../../repositories/CategoryRepository.js";
 
 export const getCategories = async (req: Request, res: Response, next: NextFunction) => {
+		const categories = await CategoryRepository.findLean();
+		return res.json({ message: "Categories fetched successfully.", data: categories });
+
+};
+
+export const getPaginatedCategories = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });

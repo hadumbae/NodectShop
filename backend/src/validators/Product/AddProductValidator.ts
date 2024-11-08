@@ -22,6 +22,7 @@ export default [
         .isLength({ min: 10 }).withMessage('Description must be at least ten letters long.'),
     body('category')
         .exists().withMessage('Category is required.')
+        .isLength({min: 1}).withMessage('Category is required.')
         .custom(async (value) => {
             const category = await Category.findById(value);
 

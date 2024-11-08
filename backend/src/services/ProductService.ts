@@ -5,23 +5,22 @@ import mongoose from 'mongoose';
 import Product from '../models/Product/Product.js';
 
 const ProductService = {
-	/**
-	 * Count the number of products with the given parameters in the database.
-	 * @param conditions Object
-	 * @returns The number of products.
-	 */
-	async countProducts(conditions = {}) {
-		return Product.countDocuments(conditions);
-	},
 
-	/**
-	 * Find products with the given parameters in the database.
-	 * If no parameters are given, all products are returned.
-	 * @param conditions - A collection of database queries.
-	 * @returns A collection of products.
-	 */
-	async find(conditions = {}) {
-		return Product.find(conditions);
+	async fetchPaginatedProducts(currentPage: any = 1, perPage: any = 15, conditions = {}, sort = {}) {
+		if (isNaN(currentPage) || isNaN(perPage)) throw createError(400, "Invalid Pagination Error.");
+
+		return Product.find(conditions)
+			.sort(sort)
+			.skip((currentPage - 1) * perPage)
+			.limit(perPage)
+			.populate('category')
+			.populate(
+				{
+					path: "skus",
+					populate: {path: "options", model: "ProductAttributeOption" },
+				}
+			)
+			.lean();
 	},
 
 	/**
@@ -38,9 +37,9 @@ const ProductService = {
 	 * @param id - The ID of the product.
 	 * @returns The product with matching ID.
 	 */
-	async findByID(id: string) {
+	async fetchPopulatedProduct(id: string) {
 		if (!mongoose.Types.ObjectId.isValid(id)) throw createError('Invalid ID Format.');
-		return Product.findById(id).populate('skus').populate('skus.options');
+		return Product.findById(id).populate("category").populate('skus').populate('skus.options');
 	},
 
 	/**

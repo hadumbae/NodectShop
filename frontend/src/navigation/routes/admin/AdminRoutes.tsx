@@ -10,6 +10,11 @@ import SupplierDetailsPage from "../../../pages/admin/supplier/SupplierDetailsPa
 import SupplierCreateContactPersonPage from "../../../pages/admin/supplier/contacts/SupplierCreateContactPersonPage.tsx";
 import SupplierEditPage from "../../../pages/admin/supplier/SupplierEditPage.tsx";
 import SupplierEditContactPersonPage from "../../../pages/admin/supplier/contacts/SupplierEditContactPersonPage.tsx";
+import isAdminAuthLoader from "../../loaders/auth/isAdminAuthLoader.tsx";
+import ProductListPage from "../../../pages/admin/product/ProductListPage.tsx";
+import ProductCreatePage from "../../../pages/admin/product/ProductCreatePage.tsx";
+import ProductDetailsPage from "../../../pages/admin/product/ProductDetailsPage.tsx";
+import ProductEditPage from "../../../pages/admin/product/ProductEditPage.tsx";
 
 export default [
     // Admin
@@ -17,6 +22,7 @@ export default [
         path: "/admin",
         element: <AdminLayout />,
         errorElement: <ErrorPage />,
+        loader: isAdminAuthLoader,
         children: [
             { path: "/admin/dashboard", element: <AdminDashboardPage />, errorElement: <ErrorPage /> },
         ]
@@ -27,6 +33,7 @@ export default [
         path: "/admin",
         element: <AdminLayout />,
         errorElement: <ErrorPage />,
+        loader: isAdminAuthLoader,
         children: [
             { path: "/admin/category/list", element: <CategoryListPage />, errorElement: <ErrorPage /> },
             { path: "/admin/category/find/:categoryID/:categorySlug", element: <CategoryShowPage />, errorElement: <ErrorPage /> },
@@ -39,6 +46,7 @@ export default [
         path: "/admin",
         element: <AdminLayout />,
         errorElement: <ErrorPage />,
+        loader: isAdminAuthLoader,
         children: [
             { path: "/admin/supplier/list", element: <SupplierListPage />, errorElement: <ErrorPage />},
             { path: "/admin/supplier/find/:supplierID/:slug", element: <SupplierDetailsPage />, errorElement: <ErrorPage />},
@@ -51,11 +59,26 @@ export default [
         ]
     },
 
+    // Products
+    {
+        path: "/admin",
+        element: <AdminLayout />,
+        errorElement: <ErrorPage />,
+        loader: isAdminAuthLoader,
+        children: [
+            { path: "/admin/product/list", element: <ProductListPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/product/create", element: <ProductCreatePage />, errorElement: <ErrorPage /> },
+            { path: "/admin/product/find/:productID/:productSlug", element: <ProductDetailsPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/product/edit/:productID/:productSlug", element: <ProductEditPage />, errorElement: <ErrorPage /> },
+        ]
+    },
+
     // Attributes
     {
         path: "/admin",
         element: <AdminLayout />,
         errorElement: <ErrorPage />,
+        loader: isAdminAuthLoader,
         children: [
             { path: "/admin/product/attribute/list", element: <AttributeListPage />, errorElement: <ErrorPage /> },
         ]

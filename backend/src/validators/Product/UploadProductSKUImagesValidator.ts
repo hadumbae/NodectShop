@@ -10,8 +10,8 @@ export default [
             if(! Types.ObjectId.isValid(value)) throw createError('Invalid SKU ID Format.');
             return true;
         }),
-    check('image')
-        .custom(({req}) => {
+    check('images')
+        .custom((value, {req}) => {
             if (req.files.length <= 0) throw createError(400, "Image required.");
 
             const acceptedTypes = [

@@ -2,7 +2,7 @@ import {FC, useId, useState} from 'react';
 
 interface FormInputProps {
     className?: string;
-    label: string;
+    label?: string;
     inputType: string;
     name: string;
     id?: string;
@@ -22,8 +22,8 @@ const FormInput: FC<FormInputProps> = ({className, label, inputType, name, value
 
     return (
         <div className={className}>
-            <label htmlFor={forID}
-                            className="block mb-0 text-sm font-medium text-gray-900">{label}</label>
+            {label && <label htmlFor={forID}
+                             className="block mb-0 text-sm font-medium text-gray-900">{label}</label>}
             <input type={inputType} id={forID}
                    name={name}
                    value={value ? value : inputValue}

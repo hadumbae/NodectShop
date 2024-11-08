@@ -1,5 +1,5 @@
 import Product from "./Product.js";
-import ProductSKUImage from "./ProductSKUImage.js";
+import cloudinary from "../../configs/cloudinary-config.js";
 
 export const primaryImage = function () {
     if (this.images.length > 0) {
@@ -16,6 +16,11 @@ export const postSave = async function() {
 
 export const preDeleteOne = async function() {
     await Product.updateOne({_id: this.product}, {$pull: {skus: this._id}});
-    const images = await ProductSKUImage.where({sku: this._id});
-    images.forEach(async (image) => await image.deleteOne());
+    this.images.forEach(async (image) => image.deleteOne);
 };
+
+export const preDeleteImageOne = async function() {
+    await cloudinary.uploader.destroy(this.public_id);
+
+};
+
