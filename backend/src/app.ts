@@ -15,6 +15,7 @@ import CategoryRoutes from './routing/Admin/CategoryRoutes.js';
 import ProductRoutes from './routing/Admin/Product/ProductRoutes.js';
 import ProductAttributeRoutes from "./routing/Admin/Product/ProductAttributeRoutes.js";
 import UserProfileRoutes from "./routing/Client/User/UserProfileRoutes.js";
+import ProductSKURoutes from "./routing/Admin/Product/ProductSKURoutes.js";
 
 const app: Express = express();
 
@@ -36,6 +37,7 @@ app.use('/admin/users', UserRoutes);
 app.use('/admin/suppliers', SupplierRoutes);
 app.use('/admin/categories', CategoryRoutes);
 app.use('/admin/products', ProductRoutes);
+app.use('/admin/products', ProductSKURoutes);
 app.use('/admin/attributes', ProductAttributeRoutes);
 
 // Express Error Handler

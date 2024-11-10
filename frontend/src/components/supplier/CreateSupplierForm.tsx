@@ -24,7 +24,7 @@ const CreateSupplierForm: FC<Props> = ({onSuccess}) => {
 
     const [addressStreet, setAddressStreet] = useState("");
     const [addressCity, setAddressCity] = useState("");
-    const [addressRegion, setAddressRegion] = useState("");
+    const [addressState, setAddressState] = useState("");
     const [addressCountry, setAddressCountry] = useState("");
     const [addressPostalCode, setAddressPostalCode] = useState("");
 
@@ -44,7 +44,7 @@ const CreateSupplierForm: FC<Props> = ({onSuccess}) => {
                 address: {
                     street: formData.get("addressStreet"),
                     city: formData.get("addressCity"),
-                    region: formData.get("addressRegion"),
+                    state: formData.get("addressState"),
                     country: formData.get("addressCountry"),
                     postalCode: formData.get("addressPostalCode"),
                 }
@@ -106,9 +106,9 @@ const CreateSupplierForm: FC<Props> = ({onSuccess}) => {
                             <FormInput errors={fetchValidationError("address.city", validationErrors)} label="City"
                                        inputType="text" name="addressCity" value={addressCity}
                                        changeHandler={setAddressCity} required={true}/>
-                            <FormInput errors={fetchValidationError("address.region", validationErrors)} label="Region"
-                                       inputType="text" name="addressRegion" value={addressRegion}
-                                       changeHandler={setAddressRegion} required={true}/>
+                            <FormInput errors={fetchValidationError("address.state", validationErrors)} label="State"
+                                       inputType="text" name="addressState" value={addressState}
+                                       changeHandler={setAddressState} required={true}/>
                             <FormInput errors={fetchValidationError("address.country", validationErrors)}
                                        label="Country" inputType="text" name="addressCountry" value={addressCountry}
                                        changeHandler={setAddressCountry} required={true}/>

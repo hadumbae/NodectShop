@@ -27,7 +27,6 @@ const FormSelect: FC<PropsWithChildren<FormSelectProps>> = ({children, className
                    value={value ? value : inputValue}
                    disabled={disabled}
                    required={required}
-
                    onChange={(e) => changeHandler ? changeHandler(e.target.value) : setInputValue(e.target.value)}
 
                    className={

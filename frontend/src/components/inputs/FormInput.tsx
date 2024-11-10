@@ -7,6 +7,7 @@ interface FormInputProps {
     name: string;
     id?: string;
     placeholder?: string;
+    step?: number;
 
     value?: string | number | readonly string[] | undefined;
     changeHandler?: Function;
@@ -16,7 +17,7 @@ interface FormInputProps {
     disabled?: boolean;
 }
 
-const FormInput: FC<FormInputProps> = ({className, label, inputType, name, value, changeHandler, errors = [], required = false, disabled = false, id, placeholder}) => {
+const FormInput: FC<FormInputProps> = ({className, label, inputType, name, value, changeHandler, errors = [], required = false, disabled = false, id, placeholder, step}) => {
     const forID = id ? `${id}-${useId()}` : useId();
     const [inputValue, setInputValue] = useState<string | number>("");
 
@@ -29,6 +30,7 @@ const FormInput: FC<FormInputProps> = ({className, label, inputType, name, value
                    value={value ? value : inputValue}
                    placeholder={placeholder}
                    disabled={disabled}
+                   step={step}
                    required={required}
 
                    onChange={(e) => changeHandler ? changeHandler(e.target.value) : setInputValue(e.target.value)}

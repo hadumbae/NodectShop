@@ -9,6 +9,7 @@ import createError from "http-errors";
 import Product from "../../models/Product/Product.js";
 import SupplierRepository from "../../repositories/SupplierRepository.js";
 import ProductRepository from "../../repositories/ProductRepository.js";
+import Category from "../../models/Category.js";
 
 interface ProductSKUInputData {
     supplier: string;
@@ -21,14 +22,33 @@ interface ProductSKUInputData {
 
 export default {
 
-    /**
-     * Find products by conditions.
-     * @param conditions The conditions by which to find products.
-     * @returns The matching products.
-     */
-    async find(conditions = {}) {
-        return ProductSKU.find(conditions);
+    async fetchSinglePopulatedSKULean(conditions = {}) {
+      return ProductSKU.findOne(conditions)
+          .populate("product")
+          .populate("options")
+          .populate("supplier");
     },
+
+    async fetchMultiPopulatedSKULean(conditions = {}) {
+      return ProductSKU.find(conditions)
+          .populate("product")
+          .populate("options")
+          .populate("supplier");
+    },
+
+    async fetchPaginatedSKUs(currentPage: any = 1, perPage: any = 15, conditions = {}, sort = {}) {
+        if (isNaN(currentPage) || isNaN(perPage)) throw createError(400, "Invalid Pagination Error.");
+
+        return ProductSKU.find(conditions)
+            .sort(sort)
+            .skip((currentPage - 1) * perPage)
+            .limit(perPage)
+            .populate("product")
+            .populate('options')
+            .populate('supplier')
+            .lean();
+    },
+
 
     /**
      * Finds the product by ID.
@@ -95,7 +115,7 @@ export default {
      */
     async update(id: string, data: ProductSKUInputData) {
         // Checks
-        await this.findByIDOr404(id);
+        await this.existsOr404(id);
         await SupplierRepository.existsOr404Lean(data.supplier);
 
         // Update

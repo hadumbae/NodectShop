@@ -1,116 +1,51 @@
 import mongoose from 'mongoose';
 import { Request, Response, NextFunction } from 'express';
-import { validationResult } from 'express-validator';
-import createError, { isHttpError } from 'http-errors';
 
 import CategoryService from '../../services/CategoryService.js';
 import CategoryRepository from "../../repositories/CategoryRepository.js";
+import asyncHandler from "../../middleware/asyncHandler.js";
 
-export const getCategories = async (req: Request, res: Response, next: NextFunction) => {
+export const getCategories = async (req: Request, res: Response) => {
 		const categories = await CategoryRepository.findLean();
 		return res.json({ message: "Categories fetched successfully.", data: categories });
 
 };
 
-export const getPaginatedCategories = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
+export const getPaginatedCategories = asyncHandler(async (req: Request, res: Response) => {
+	const currentPage = req.query.page || 1;
+	const perPage = req.query.perPage || 15;
 
-		const currentPage = req.query.page || 1;
-		const perPage = req.query.perPage || 15;
+	const totalItems = await CategoryRepository.count();
+	const categories = await CategoryRepository.paginatedLean(currentPage, perPage);
 
-		const totalItems = await CategoryRepository.count();
-		const categories = await CategoryRepository.paginatedLean(currentPage, perPage);
+	return res.json({ data: {categories, totalItems} });
+});
 
-		return res.json({ data: {categories, totalItems} });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
+export const createCategory = asyncHandler(async (req: Request, res: Response) => {
+	const data = req.body;
+	const category = await CategoryService.create(data);
 
-export const createCategory = async (req: Request, res: Response, next: NextFunction) => {
-	const errors = validationResult(req);
+	return res.status(200).json({ data: category });
+});
 
-	if (!errors.isEmpty()) {
-		return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
-	}
+export const getCategoryByID = asyncHandler(async (req: Request, res: Response) => {
+	const categoryID = req.params.id;
+	if (!mongoose.Types.ObjectId.isValid(categoryID)) return res.status(400).json({ message: 'Invalid ID.' });
 
-	try {
-		const data = req.body;
-		const category = await CategoryService.create(data);
+	const {category, products, skus} = await CategoryService.fetchCategoryWithData(categoryID);
+	return res.status(200).json({ data: {category, products, skus} });
+});
 
-		return res.status(200).json({ data: category });
-	} catch (error) {
-		console.log('Error: ', error.message);
+export const updateCategory = asyncHandler(async (req: Request, res: Response) => {
+	const categoryID = req.params.id;
+	const data = req.body;
 
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
+	const category = await CategoryService.update(categoryID, data);
+	return res.status(200).json({ message: 'Category Updated.', data: category });
+});
 
-export const getCategoryByID = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const categoryID = req.params.id;
-		if (!mongoose.Types.ObjectId.isValid(categoryID)) return res.status(400).json({ message: 'Invalid ID.' });
-
-		const {category, products, skus} = await CategoryService.fetchCategoryWithData(categoryID);
-		return res.status(200).json({ data: {category, products, skus} });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
-
-export const getCategoryWithData = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const categoryID = req.params.id;
-		if (!mongoose.Types.ObjectId.isValid(categoryID)) return res.status(400).json({ message: 'Invalid ID.' });
-
-		const {category, products, skus} = await CategoryService.fetchCategoryWithData(categoryID);
-		return res.status(200).json({ message: "Category Data Fetched.", data: {category, products, skus} });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
-
-export const updateCategory = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const categoryID = req.params.id;
-		const data = req.body;
-
-		const category = await CategoryService.update(categoryID, data);
-		return res.status(200).json({ message: 'Category Updated.', data: category });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
-
-export const deleteCategory = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		const categoryID = req.params.id;
-
-		if (!mongoose.Types.ObjectId.isValid(categoryID)) {
-			return res.status(400).json({ message: 'Invalid ID.' });
-		}
-
-		await CategoryRepository.findByIdAndDelete(categoryID);
-		res.status(200).json({ message: 'Category Deleted.' });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
-
-export const buildCategories = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		await CategoryService.build();
-		res.status(200).json({ message: 'Categories Built.' });
-	} catch (error) {
-		if (!isHttpError(error)) res.status(500);
-		next(error);
-	}
-};
+export const deleteCategory = asyncHandler(async (req: Request, res: Response) => {
+	const categoryID = req.params.id;
+	await CategoryRepository.findByIdAndDelete(categoryID);
+	res.status(200).json({ message: 'Category Deleted.' });
+});

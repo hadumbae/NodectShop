@@ -15,6 +15,11 @@ import ProductListPage from "../../../pages/admin/product/ProductListPage.tsx";
 import ProductCreatePage from "../../../pages/admin/product/ProductCreatePage.tsx";
 import ProductDetailsPage from "../../../pages/admin/product/ProductDetailsPage.tsx";
 import ProductEditPage from "../../../pages/admin/product/ProductEditPage.tsx";
+import ProductSKUCreatePage from "../../../pages/admin/product/sku/ProductSKUCreatePage.tsx";
+import ProductSKUEditPage from "../../../pages/admin/product/sku/ProductSKUEditPage.tsx";
+import ProductSKUDetailsPage from "../../../pages/admin/product/sku/ProductSKUDetailsPage.tsx";
+import ProductSKUImagePage from "../../../pages/admin/product/sku/ProductSKUImagePage.tsx";
+import ProductSKUOptionPage from "../../../pages/admin/product/sku/ProductSKUOptionPage.tsx";
 
 export default [
     // Admin
@@ -22,9 +27,8 @@ export default [
         path: "/admin",
         element: <AdminLayout />,
         errorElement: <ErrorPage />,
-        loader: isAdminAuthLoader,
         children: [
-            { path: "/admin/dashboard", element: <AdminDashboardPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/dashboard", element: <AdminDashboardPage />, errorElement: <ErrorPage />, loader: isAdminAuthLoader },
         ]
     },
 
@@ -70,6 +74,13 @@ export default [
             { path: "/admin/product/create", element: <ProductCreatePage />, errorElement: <ErrorPage /> },
             { path: "/admin/product/find/:productID/:productSlug", element: <ProductDetailsPage />, errorElement: <ErrorPage /> },
             { path: "/admin/product/edit/:productID/:productSlug", element: <ProductEditPage />, errorElement: <ErrorPage /> },
+
+            // Product SKU
+            { path: "/admin/product/create/:productID/:productSlug/sku", element: <ProductSKUCreatePage />, errorElement: <ErrorPage /> },
+            { path: "/admin/product/edit/:productID/:productSlug/sku/:skuID/:skuSlug", element: <ProductSKUEditPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/product/find/:productID/:productSlug/sku/:skuID/:skuSlug", element: <ProductSKUDetailsPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/product/find/:productID/:productSlug/sku/:skuID/:skuSlug/images", element: <ProductSKUImagePage />, errorElement: <ErrorPage /> },
+            { path: "/admin/product/find/:productID/:productSlug/sku/:skuID/:skuSlug/options", element: <ProductSKUOptionPage />, errorElement: <ErrorPage /> },
         ]
     },
 

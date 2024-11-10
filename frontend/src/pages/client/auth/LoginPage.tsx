@@ -51,11 +51,7 @@ const LoginPage: FC = () => {
             setIsLoading(false);
             toast.success("Logged In Successfully!");
 
-            if (result.isAdmin) {
-                return navigate("/admin/dashboard");
-            }
-
-            return navigate("/user/profile");
+            navigate("/auth/login/redirect");
         } catch (error) {
             console.log(error);
         }

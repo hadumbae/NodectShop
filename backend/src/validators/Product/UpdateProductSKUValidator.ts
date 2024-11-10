@@ -8,11 +8,12 @@ import createError from "http-errors";
 
 export default [
     body('supplier')
-        .exists().withMessage("supplier is required")
-        .isString().withMessage("supplier ID must be a string.")
+        .exists().withMessage("Supplier ID is required")
+        .not().isEmpty().withMessage("Supplier ID is required.")
+        .isString().withMessage("Supplier ID must be a string.")
         .custom(async (value) => {
             if(! Types.ObjectId.isValid(value)) {
-                return Promise.reject("Product ID is not a valid ID.")
+                return Promise.reject("Supplier ID is not a valid ID.")
             }
 
             const supplier = await SupplierService.findByID(value);
@@ -21,11 +22,14 @@ export default [
             }
         }),
     body('code')
-        .exists().withMessage("Code is required")
-        .notEmpty().withMessage("Code is required")
+        .exists().withMessage("Code is required.")
+        .notEmpty().withMessage("Code is required.")
         .custom(async (value, {req}) => {
             const {skuID} = req.params;
             const sku = await ProductSKUService.findOne({code: value});
+
+            console.log("New SKU : ", skuID);
+            console.log("Old SKU : ", sku._id.toString());
 
             if (sku && sku._id.toString() != skuID) {
                 return Promise.reject('Product SKU code must be unique.');

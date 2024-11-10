@@ -19,6 +19,7 @@ const ProductAttributeOptionSchema = new mongoose.Schema<IProductAttributeOption
 // Middleware
 
 ProductAttributeOptionSchema.post('save', {document: true, query: false}, async function(next) {
+	await ProductAttribute.updateMany({}, {pull: {options: this._id}});
 	await ProductAttribute.updateOne({_id: this.attribute}, {$push: {options: this._id}});
 });
 

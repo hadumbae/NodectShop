@@ -21,7 +21,7 @@ export default async function() {
     }
 
     if (!isAdmin) {
-        console.error("Unauthorized!");
+        console.error("Unauthorized! Not an admin!");
         return redirect("/");
     }
 

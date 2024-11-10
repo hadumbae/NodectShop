@@ -5,14 +5,15 @@ interface LoaderProps {
     loading: boolean;
     colour?: string;
     cssOverride?: CSSProperties;
+    size?: number;
 }
 
-const Loader: FC<LoaderProps> = ({loading, colour, cssOverride}) => {
+const Loader: FC<LoaderProps> = ({loading, colour, cssOverride, size = 150}) => {
     return  <ClipLoader
         color={colour}
         loading={loading}
         cssOverride={cssOverride}
-        size={150}
+        size={size}
         aria-label="Loading Spinner"
         data-testid="loader"
     />;

@@ -12,6 +12,19 @@ export default {
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({message: "Validation failed.", errors: errors.array()});
 
+            const attributes = await ProductAttributeService.fetchPopulatedAttributes();
+            return res.status(200).json({ message: "Product attributes fetched.", data: attributes });
+        } catch (error) {
+            if (!isHttpError(error)) res.status(500);
+            next(error);
+        }
+    },
+
+    async getPaginatedAttributes(req: Request, res: Response, next: NextFunction) {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) return res.status(400).json({message: "Validation failed.", errors: errors.array()});
+
             const currentPage = req.query.page || 1;
             const perPage = req.query.perPage || 15;
 

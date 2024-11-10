@@ -53,12 +53,6 @@ const AttributeListPage: FC = () => {
         }
     }
 
-    // create - component - ProductAttributeListCard (w-1/2 list)
-    // create - component - ProductAttributeOptionCreateForm
-
-    // ProductAttributeListCard - dblclick (switch title, edit form)
-    // ProductAttributeListCard - Option List/Create Form
-
     return (
         <div>
             <div className="flex justify-between mt-5">

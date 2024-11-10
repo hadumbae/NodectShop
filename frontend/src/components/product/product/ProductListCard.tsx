@@ -24,13 +24,13 @@ const ProductListCard: FC<Props> = ({product}) => {
     }
 
     return (
-        <div className="bg-white shadow-md border rounded-lg">
-            <div className="rounded-t-lg bg-gray-400 h-32 flex justify-center items-center overflow-hidden">
+        <div className="bg-white shadow-md border rounded-lg h-96">
+            <div className="rounded-t-lg bg-gray-400 h-1/3 flex justify-center items-center overflow-hidden">
                 {image.current ? <img src={image.current} className="object-cover" /> : <span>No Image</span>}
             </div>
 
 
-            <div className="p-3 flex flex-col justify-between space-y-3">
+            <div className="p-3 h-2/3 flex flex-col justify-between space-y-3">
                 <div>
                     <h1 className="text-lg line-clamp-2 text-justify">{product.title}</h1>
                     {product.category && <span className="text-sm text-gray-400 relative bottom-1">{product.category.category}</span>}

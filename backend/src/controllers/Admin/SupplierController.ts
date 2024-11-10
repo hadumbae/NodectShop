@@ -1,13 +1,15 @@
-import createHttpError, { isHttpError } from 'http-errors';
-import { validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
 import SupplierService from '../../services/Supplier/SupplierService.js';
 import SupplierRepository from "../../repositories/SupplierRepository.js";
 import asyncHandler from "../../middleware/asyncHandler.js";
-import ProductService from "../../services/ProductService.js";
 import ProductRepository from "../../repositories/ProductRepository.js";
 
 export const getSuppliers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+	const suppliers = await SupplierRepository.find();
+	return res.status(200).json({ message: "Suppliers fetched successfully.", data: suppliers });
+});
+
+export const getPaginatedSuppliers = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 	const page = req.query.page || 1;
 	const perPage = req.query.perPage || 15;
 
@@ -19,9 +21,6 @@ export const getSuppliers = asyncHandler(async (req: Request, res: Response, nex
 
 export const createSupplier = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 	const data = req.body;
-
-	console.log(data);
-
 	const supplier = await SupplierRepository.create(data);
 	return res.status(200).json({ message: "Supplier created successfully.", data: supplier });
 });
@@ -29,7 +28,6 @@ export const createSupplier = asyncHandler(async (req: Request, res: Response, n
 export const getSupplierByID = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 	const supplierID = req.params.supplierID;
 	const supplier = await SupplierRepository.existsOr404Lean(supplierID);
-
 	return res.status(200).json({ message: "Supplier fetched sucessfully.", data: supplier });
 });
 

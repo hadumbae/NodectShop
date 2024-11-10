@@ -1,4 +1,4 @@
-import {FC} from 'react';
+import {FC, useRef} from 'react';
 import {ProductSKU} from "../../../types/ProductTypes.ts";
 import {CiBoxes} from "react-icons/ci";
 
@@ -7,10 +7,14 @@ interface Props {
 }
 
 const SupplierProductDetailsCard: FC<Props> = ({product}) => {
+    const image = useRef<string | null>(
+        product.images.length > 0 ? product.images[0].secure_url : null
+    );
+
     return (
         <div className="bg-white shadow-md rounded-xl grid grid-cols-3">
-            <div className="bg-gray-400 rounded-l-xl flex justify-center items-center">
-                <span>Image</span>
+            <div className="rounded-l-xl bg-gray-400 flex justify-center items-center overflow-hidden">
+                {image.current ? <img src={image.current} className="object-cover h-full" /> : <span>No Image</span>}
             </div>
             <div className=" p-3 rounded-r-xl col-span-2 flex flex-col space-y-4">
                 <div className="flex justify-between">

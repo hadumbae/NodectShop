@@ -17,8 +17,8 @@ const SupplierContactPersonsList: FC<Props> = ({supplier}) => {
         <div className="flex flex-col space-y-2
         sm:flex-row sm:space-x-2 sm:space-y-0
         lg:flex-col lg:space-y-4 lg:space-x-0">
-            {contacts.map((contact: any) => <div className="sm:w-1/2 lg:w-full">
-                <SupplierContactPersonDetailsCard key={contact._id} supplier={supplier} contact={contact} onDelete={contactDeleted} />
+            {contacts.map((contact: any) => <div className="sm:w-1/2 lg:w-full" key={contact._id}>
+                <SupplierContactPersonDetailsCard supplier={supplier} contact={contact} onDelete={contactDeleted} />
             </div>)}
         </div>
     );

@@ -1,6 +1,4 @@
 import { body } from 'express-validator';
-import CategoryService from '../services/CategoryService.js';
-import createError from 'http-errors';
 import getCategoryPaginatedValidator from "./Category/GetCategoryPaginatedValidator.js";
 import CategoryRepository from "../repositories/CategoryRepository.js";
 
