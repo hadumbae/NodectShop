@@ -2,7 +2,7 @@ import {FC, useState} from 'react';
 import FormFileMultiInput from "../../../inputs/FormFileMultiInput.tsx";
 import Button from "../../../inputs/Button.tsx";
 import FormFileInputList from "../../../inputs/FormFileInputList.tsx";
-import ProductSKUImageService from "../../../../services/product/ProductSKUImageService.ts";
+import ProductSKUImageService from "../../../../services/product/sku/ProductSKUImageService.ts";
 import useAdminToken from "../../../../hooks/useAdminToken.ts";
 import {toast} from "react-toastify";
 import {fetchValidationError} from "../../../../utils/FormUtils.ts";

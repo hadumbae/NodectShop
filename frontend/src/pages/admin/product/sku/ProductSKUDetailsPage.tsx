@@ -5,7 +5,7 @@ import useFetchProductSKU from "../../../../hooks/product/useFetchProductSKU.ts"
 import HeaderText from "../../../../components/header/HeaderText.tsx";
 import PageHeaderLink from "../../../../components/header/PageHeaderLink.tsx";
 import PageHeaderButton from "../../../../components/header/PageHeaderButton.tsx";
-import ProductSKUService from "../../../../services/product/ProductSKUService.ts";
+import ProductSKUService from "../../../../services/product/sku/ProductSKUService.ts";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 

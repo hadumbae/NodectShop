@@ -28,11 +28,8 @@ const ProductSKUImagePage: FC = () => {
                     <span className="text-gray-600 text-sm font-extralight">{sku!.product.title}</span>
                 </div>
                 <div className="flex justify-end space-x-4">
-                    <PageHeaderLink link={`/admin/product/find/${productID}/${productSlug}`}>
-                        Product
-                    </PageHeaderLink>
                     <PageHeaderLink link={`/admin/product/find/${productID}/${productSlug}/sku/${skuID}/${skuSlug}`}>
-                        SKU
+                        &lt; SKU
                     </PageHeaderLink>
                 </div>
             </div>}

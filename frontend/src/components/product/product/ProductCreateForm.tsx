@@ -70,6 +70,8 @@ const ProductCreateForm: FC<Props> = ({product}) => {
                 </div>
 
                 <form className="flex flex-col space-y-5" onSubmit={submitHandler}>
+                    <p>{category}</p>
+
                         <FormInput
                             label={"Product Title"}
                             inputType={"text"}

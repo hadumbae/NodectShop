@@ -28,11 +28,11 @@ const CategoryListPgae = () => {
 
     const fetchData = async () => {
         try {
-            const {response, result} = await CategoryService.fetchPaginatedCategories(page, perPage, token);
-            if (response.status != 200) return toast.error("Error! Please Try Again!");
+            const {status, payload} = await CategoryService.fetchPaginatedCategories(page, perPage, token);
+            if (status != 200) return toast.error("Error! Please Try Again!");
 
-            setTotalCount(result.data.totalItems);
-            setCategories(result.data.categories);
+            setTotalCount(payload.data.totalItems);
+            setCategories(payload.data.categories);
         } catch (error) {
             console.error(error);
         }

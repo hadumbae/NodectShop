@@ -1,5 +1,5 @@
 import {FC, useState} from 'react';
-import {ProductAttributeOptionType} from "../../../types/ProductAttributeTypes.ts";
+import {ProductAttributeOption} from "../../../types/ProductAttributeTypes.ts";
 import FormInputWithButton from "../../inputs/FormInputWithButton.tsx";
 import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
@@ -8,7 +8,7 @@ import {fetchValidationError} from "../../../utils/FormUtils.ts";
 
 interface props {
     attributeID: string;
-    pushOption: (option: ProductAttributeOptionType) => void;
+    pushOption: (option: ProductAttributeOption) => void;
 }
 
 const ProductAttributeOptionCreateSingleLineForm: FC<props> = ({attributeID, pushOption}) => {

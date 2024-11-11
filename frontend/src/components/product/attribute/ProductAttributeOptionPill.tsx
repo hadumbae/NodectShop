@@ -2,11 +2,11 @@ import {FC, useState} from "react";
 import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
 
-import {ProductAttributeOptionType} from "../../../types/ProductAttributeTypes.ts";
+import {ProductAttributeOption} from "../../../types/ProductAttributeTypes.ts";
 import ProductAttributeOptionService from "../../../services/product/attribute/ProductAttributeOptionService.ts"
 
 interface props {
-    option: ProductAttributeOptionType,
+    option: ProductAttributeOption,
     onDelete: (id: string) => void
 }
 

@@ -2,9 +2,9 @@ import {FC, useRef, useState} from 'react';
 import {Product, ProductSKU} from "../../../types/ProductTypes.ts";
 import {FaMagnifyingGlass, FaPencil} from "react-icons/fa6";
 import {FaTrash} from "react-icons/fa";
-import {ProductAttributeOptionType} from "../../../types/ProductAttributeTypes.ts";
+import {ProductAttributeOption} from "../../../types/ProductAttributeTypes.ts";
 import Pill from "../../container/Pill.tsx";
-import ProductSKUService from "../../../services/product/ProductSKUService.ts";
+import ProductSKUService from "../../../services/product/sku/ProductSKUService.ts";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import {toast} from "react-toastify";
 import {Link} from "react-router-dom";
@@ -49,7 +49,7 @@ const ProductSKUListCard: FC<Props> = ({sku, product, onDelete}) => {
     // Template
 
     return (
-        <div className="bg-white shadow-md rounded-xl flex h-60">
+        <div className="bg-white shadow-md rounded-xl flex">
 
             {/* Image */}
 
@@ -71,16 +71,16 @@ const ProductSKUListCard: FC<Props> = ({sku, product, onDelete}) => {
 
                 {/* Stock And Options */}
 
-                <div className="flex justify-between items-center">
-                    <div>
+                <div className="grid grid-cols-3">
+                    <div className="flex items-center">
                         <h1 className="text-2xl font-semibold">
                             {sku.unitStock} <span className="text-xs">/ {sku.reorderLevel}</span> units
                         </h1>
                     </div>
-                    <div className="flex flex-wrap space-x-2">
+                    <div className="col-span-2 flex flex-wrap justify-end space-x-2">
                         {
                             sku.options.length > 0 ?
-                                sku.options.map((option: ProductAttributeOptionType) => <Pill key={option._id}>{option.name}</Pill>) :
+                                sku.options.map((option: ProductAttributeOption) => <Pill key={option._id} textClasses={"mb-2"}>{option.name}</Pill>) :
                                 <Pill textClasses="text-red-500" borderClasses="border-red-500">No Options</Pill>
                         }
                     </div>

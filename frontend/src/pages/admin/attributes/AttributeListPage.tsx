@@ -9,7 +9,7 @@ import ProductAttributeCreateForm
 
 import ProductAttributeService from "../../../services/product/attribute/ProductAttributeService.ts";
 import ProductAttributeDetailsCard from "../../../components/product/attribute/ProductAttributeDetailsCard.tsx";
-import {ProductAttributeType} from "../../../types/ProductAttributeTypes.ts";
+import {ProductAttribute} from "../../../types/ProductAttributeTypes.ts";
 
 const AttributeListPage: FC = () => {
     const navigate = useNavigate();
@@ -21,7 +21,7 @@ const AttributeListPage: FC = () => {
 
     const [error, setError] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [attributes, setAttributes] = useState<ProductAttributeType[]>([]);
+    const [attributes, setAttributes] = useState<ProductAttribute[]>([]);
     const [refetch, setRefetch] = useState<boolean>(false);
 
     const [totalItems, setTotalItems] = useState<number>(0);
@@ -72,7 +72,7 @@ const AttributeListPage: FC = () => {
 
             {!isLoading && <div className="mt-5 border-t">
                     <div className="mt-5 px-5 grid grid-cols-3 gap-4">
-                        {attributes.map((attribute: ProductAttributeType) => <div key={attribute._id}>
+                        {attributes.map((attribute: ProductAttribute) => <div key={attribute._id}>
                             <ProductAttributeDetailsCard attribute={attribute} onDelete={() => setRefetch(!refetch)} />
                         </div>)}
                     </div>

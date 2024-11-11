@@ -1,7 +1,7 @@
 import {FC, useState} from 'react';
 import {ProductSKUImage} from "../../../../types/ProductTypes.ts";
 import {FaCheck, FaStar, FaTrash} from "react-icons/fa";
-import ProductSKUImageService from "../../../../services/product/ProductSKUImageService.ts";
+import ProductSKUImageService from "../../../../services/product/sku/ProductSKUImageService.ts";
 import useAdminToken from "../../../../hooks/useAdminToken.ts";
 import {toast} from "react-toastify";
 import Loader from "../../../utils/Loader.tsx";

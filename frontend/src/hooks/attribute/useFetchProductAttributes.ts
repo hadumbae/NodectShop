@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
-import {ProductAttributeType} from "../../types/ProductAttributeTypes.ts";
+import {ProductAttribute} from "../../types/ProductAttributeTypes.ts";
 import ProductAttributeService from "../../services/product/attribute/ProductAttributeService.ts";
 import {toast} from "react-toastify";
 
 export default function useFetchProductAttributes(token: string) {
-    const [attributes, setAttributes] = useState<ProductAttributeType[] | null>(null)
+    const [attributes, setAttributes] = useState<ProductAttribute[]>([])
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 

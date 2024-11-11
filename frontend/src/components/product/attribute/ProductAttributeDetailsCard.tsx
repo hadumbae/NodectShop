@@ -3,18 +3,18 @@ import { FaTrash } from "react-icons/fa";
 import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import ProductAttributeService from "../../../services/product/attribute/ProductAttributeService.ts";
-import {ProductAttributeOptionType, ProductAttributeType} from "../../../types/ProductAttributeTypes.ts";
+import {ProductAttributeOption, ProductAttribute} from "../../../types/ProductAttributeTypes.ts";
 import ProductAttributeOptionCreateSingleLineForm from "./ProductAttributeOptionCreateSingleLineForm.tsx";
 import ProductAttributeOptionPill from "./ProductAttributeOptionPill.tsx";
 
 interface props {
-    attribute: ProductAttributeType,
+    attribute: ProductAttribute,
     onDelete: Function
 }
 
 const ProductAttributeDetailsCard: FC<props> = ({attribute, onDelete}) => {
     const {token, isAdmin} = useSelector((state: any) => state.authUser);
-    const [options, setOptions] = useState<ProductAttributeOptionType[]>([...attribute.options]);
+    const [options, setOptions] = useState<ProductAttributeOption[]>([...attribute.options]);
 
     const deleteAttribute = async () => {
         if (!token || !isAdmin) return toast.error("Unauthorized!")
@@ -30,7 +30,7 @@ const ProductAttributeDetailsCard: FC<props> = ({attribute, onDelete}) => {
         }
     }
 
-    const pushOption = (option: ProductAttributeOptionType) => {
+    const pushOption = (option: ProductAttributeOption) => {
         setOptions([...options, option]);
     }
 

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {ProductSKU} from "../../types/ProductTypes.ts";
-import ProductSKUService from "../../services/product/ProductSKUService.ts";
+import ProductSKUService from "../../services/product/sku/ProductSKUService.ts";
 
 export default function useFetchProductSKUWithImages(productID: string, skuID: string, token: string) {
     const [sku, setSKU] = useState<ProductSKU | null>(null);

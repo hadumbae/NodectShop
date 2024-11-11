@@ -1,3 +1,5 @@
+import queryAPI from "../../utils/queryAPI.ts";
+
 export default {
     /**
      * Fetch the paginated list of categories.
@@ -7,14 +9,8 @@ export default {
      * @returns The response from the API call and the parsed body.
      */
     async fetchPaginatedCategories (page: number, perPage: number, authToken: string) {
-        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/paginated?page=${page}&perPage=${perPage}`;
-        const response = await fetch(apiLink, {
-            method: "GET",
-            headers: {Authorization: `Bearer ${authToken}`, "Content-Type": "application/json"}
-        });
-
-        const result = await response.json();
-        return {response, result};
+        const link = `${import.meta.env.VITE_API_URL}/admin/categories/paginated?page=${page}&perPage=${perPage}`;
+        return queryAPI(link, "GET", authToken);
     },
 
     async fetchCategories(authToken: string) {

@@ -1,11 +1,11 @@
-export interface ProductAttributeType {
-    readonly _id?: string;
+export interface ProductAttribute {
+    readonly _id: string;
     name: string;
-    options: ProductAttributeOptionType[];
+    options: ProductAttributeOption[];
 }
 
-export interface ProductAttributeOptionType {
-    readonly _id?: string;
+export interface ProductAttributeOption {
+    readonly _id: string;
     name: string;
     attribute: string;
 }

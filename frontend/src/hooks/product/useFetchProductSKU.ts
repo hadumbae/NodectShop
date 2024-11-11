@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {ProductSKU} from "../../types/ProductTypes.ts";
-import ProductSKUService from "../../services/product/ProductSKUService.ts";
+import ProductSKUService from "../../services/product/sku/ProductSKUService.ts";
 
 export default function useFetchProductSKU(productID: string, skuID: string, token: string) {
     const [sku, setSKU] = useState<ProductSKU | null>(null);
@@ -9,21 +9,23 @@ export default function useFetchProductSKU(productID: string, skuID: string, tok
     const [refetch, setRefetch] = useState<boolean>(false);
 
     useEffect(() => {
-        setIsLoading(isLoading);
+        setIsLoading(true);
 
         const fetchProductSKU = async () => {
             const {status, payload} = await ProductSKUService.fetchProductSKU(productID, skuID, token);
 
             if (status === 200) {
                 setSKU(payload.data);
+                setIsLoading(false);
             } else {
                 setError(`${status} : ${payload.message}`);
                 setSKU(null);
+
+                setIsLoading(false);
             }
         }
 
         fetchProductSKU();
-        setIsLoading(false);
     }, [refetch]);
 
     return {

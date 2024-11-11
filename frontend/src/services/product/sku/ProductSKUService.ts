@@ -1,4 +1,4 @@
-import queryAPI from "../../utils/queryAPI.ts";
+import queryAPI from "../../../utils/queryAPI.ts";
 
 export  default {
     async fetchPaginatedSKUsByProduct(productID: string, page: number, perPage: number, authToken: string){

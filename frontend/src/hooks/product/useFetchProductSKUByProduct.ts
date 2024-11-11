@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {ProductSKU} from "../../types/ProductTypes.ts";
-import ProductSKUService from "../../services/product/ProductSKUService.ts";
+import ProductSKUService from "../../services/product/sku/ProductSKUService.ts";
 
 export default function useFetchProductSKUByProduct(productID: string, token: string) {
     const [page, setPage] = useState(1);

@@ -7,7 +7,7 @@ import Button from "../../inputs/Button.tsx";
 import FormSelect from "../../inputs/FormSelect.tsx";
 import {Supplier} from "../../../types/SupplierTypes.ts";
 import {fetchValidationError} from "../../../utils/FormUtils.ts";
-import ProductSKUService from "../../../services/product/ProductSKUService.ts";
+import ProductSKUService from "../../../services/product/sku/ProductSKUService.ts";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {ProductSKU} from "../../../types/ProductTypes.ts";
