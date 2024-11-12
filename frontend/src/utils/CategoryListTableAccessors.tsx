@@ -19,7 +19,7 @@ export const CategoryListAccessors: TableAccessorType[] = [
         headerStyles: "",
         generateRowStyles: () => "max-w-12 text-center",
         accessor: (item: any) => (
-            <Link to={`/admin/category/find/${item._id}/${_.kebabCase(item.category)}`}
+            <Link to={`/admin/category/find/${item._id}/${_.kebabCase(item.category)}/details`}
                   className="text-sm text-blue-600 hover:underline hover:underline-offset-8">
                 View
             </Link>

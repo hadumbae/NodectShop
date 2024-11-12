@@ -2,11 +2,11 @@ import CategoryService from "../../services/category/CategoryService.ts";
 import {useQuery} from "@tanstack/react-query";
 import {FetchError} from "../../utils/CustomErrors.ts";
 
-export default function useFetchAllCategories(token: string) {
+export default function useFetchPaginatedCategories(page: number, perPage: number, token: string) {
 
-    const {isLoading, error, data: categories, status} = useQuery({
+    const {isLoading, error, status, refetch, data} = useQuery({
         queryFn: async () => {
-            const response = await CategoryService.fetchCategories(token);
+            const response = await CategoryService.fetchPaginatedCategories(page, perPage, token);
             const { message, data } = await response.json();
 
             if (response.ok) {
@@ -15,8 +15,9 @@ export default function useFetchAllCategories(token: string) {
                 throw new FetchError(response, message);
             }
         },
-        queryKey: ['all_categories'],
-    });
+        queryKey: ["paginated"],
+    })
 
-    return {categories, isLoading, error, status};
+
+    return {data, isLoading, error, status, refetch};
 }

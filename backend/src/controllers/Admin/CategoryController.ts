@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import CategoryService from '../../services/CategoryService.js';
 import CategoryRepository from "../../repositories/CategoryRepository.js";
@@ -18,7 +18,7 @@ export const getPaginatedCategories = asyncHandler(async (req: Request, res: Res
 	const totalItems = await CategoryRepository.count();
 	const categories = await CategoryRepository.paginatedLean(currentPage, perPage);
 
-	return res.json({ data: {categories, totalItems} });
+	return res.json({ message: "Categories fetched.", data: {categories, totalItems} });
 });
 
 export const createCategory = asyncHandler(async (req: Request, res: Response) => {

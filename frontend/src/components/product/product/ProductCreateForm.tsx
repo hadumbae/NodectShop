@@ -2,7 +2,6 @@ import {FC, useState} from 'react';
 import {GiCycle} from "react-icons/gi";
 import FormInput from "../../inputs/FormInput.tsx";
 import useFetchAllCategories from "../../../hooks/category/useFetchAllCategories.ts";
-import CategoryType from "../../../types/CategoryType.ts";
 import Button from "../../inputs/Button.tsx";
 import {toast} from "react-toastify";
 import ProductService from "../../../services/product/ProductService.ts";
@@ -13,6 +12,8 @@ import FormSelect from "../../inputs/FormSelect.tsx";
 import {Product} from "../../../types/ProductTypes.ts";
 import {useNavigate} from "react-router-dom";
 import _ from "lodash";
+import Loader from "../../utils/Loader.tsx";
+import {CategoryType} from "../../../schema/CategorySchema.ts";
 
 interface Props  {
     product?: Product;
@@ -22,7 +23,7 @@ const ProductCreateForm: FC<Props> = ({product}) => {
     const navigate = useNavigate();
 
     const {token} = useAdminToken();
-    const {categories} = useFetchAllCategories();
+    const {categories, isLoading, error} = useFetchAllCategories(token);
     const [validationErrors, setValidationErrors] = useState([]);
 
     const [title, setTitle] = useState(product ? product.title : "");
@@ -64,14 +65,16 @@ const ProductCreateForm: FC<Props> = ({product}) => {
             <div className="bg-white shadow-md rounded-lg p-5 flex flex-col space-y-3">
                 <div className="flex justify-between items-center">
                     <h1 className="text-xl">{product ? "Update" : "Create"} Product</h1>
-                    <button onClick={clear} className="text-gray-400 hover:text-green-500 hover:animate-spin">
-                        <GiCycle/>
-                    </button>
+                    {
+                        !isLoading &&
+                        <button onClick={clear} className="text-gray-400 hover:text-green-500 hover:animate-spin">
+                            <GiCycle/>
+                        </button>
+                    }
                 </div>
 
-                <form className="flex flex-col space-y-5" onSubmit={submitHandler}>
-                    <p>{category}</p>
-
+                {(!isLoading && !error) ?
+                    <form className="flex flex-col space-y-5" onSubmit={submitHandler}>
                         <FormInput
                             label={"Product Title"}
                             inputType={"text"}
@@ -108,9 +111,16 @@ const ProductCreateForm: FC<Props> = ({product}) => {
                         <div className="text-right">
                             <Button type={"submit"}>{product ? "Update" : "Create"}</Button>
                         </div>
-                </form>
+                    </form> :
+                    <div className="text-center">
+                       <Loader loading={isLoading || error !== null} />
+                    </div>}
+
+                {error && <div className="text-center text-red-500">
+                    {error.message ? error.message : "Oops. Something bad happened."}
+                </div>}
             </div>
-            );
+    );
 };
 
 export default ProductCreateForm;

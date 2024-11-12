@@ -1,78 +1,55 @@
-import CategoryCreateForm from "../../../components/category/CategoryCreateForm.tsx";
-import {useSelector} from "react-redux";
+import CategoryForm from "../../../components/category/CategoryForm.tsx";
 import {useEffect, useRef, useState} from "react";
-import {toast} from "react-toastify";
 import Pagination from "../../../components/utils/pagination/Pagination.tsx";
 import ListTable from "../../../components/utils/ListTable.tsx";
 
-import CategoryService from "../../../services/category/CategoryService.ts";
 import {CategoryListAccessors} from "../../../utils/CategoryListTableAccessors.tsx";
+import useAdminToken from "../../../hooks/useAdminToken.ts";
+import useFetchPaginatedCategories from "../../../hooks/category/useFetchPaginatedCategories.ts";
+import Loader from "../../../components/utils/Loader.tsx";
 
 const CategoryListPgae = () => {
-    const {token} = useSelector((state: any) => state.authUser);
-
-    const [totalCount, setTotalCount] = useState(0);
+    const {token} = useAdminToken();
     const [page, setPage] = useState(1);
-    const [categories, setCategories] = useState([]);
 
-    // @ts-ignore
-    const [perPage, setPerPage] = useState(15);
-    // @ts-ignore
-    const [refetch, setRefetch] = useState(false);
+    const {data, isLoading, error, refetch} = useFetchPaginatedCategories(page, 15, token);
 
     const accessors = useRef(CategoryListAccessors);
 
     useEffect(() => {
-        fetchData();
-    }, [page, perPage])
-
-    const fetchData = async () => {
-        try {
-            const {status, payload} = await CategoryService.fetchPaginatedCategories(page, perPage, token);
-            if (status != 200) return toast.error("Error! Please Try Again!");
-
-            setTotalCount(payload.data.totalItems);
-            setCategories(payload.data.categories);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+        refetch();
+    }, [page])
 
     return (
         <div className="flex flex-row">
             <div className="w-1/2 p-5">
-                <CategoryCreateForm />
+                <CategoryForm />
             </div>
             <div className="w-1/2 p-5">
-                <div className="bg-white shadow-md rounded p-5">
-                    <div className="flex flex-row justify-between items-center mb-5">
-                        <div>
+                {
+                    (isLoading || error) ?
+                        <div className="mt-5 flex justify-center">
+                            <div className="flex flex-col items-center p-5 space-y-5">
+                                <Loader loading={isLoading} />
+                                {
+                                    error && <span className="text-red-500">
+                                        {error.message ? error.message : `Oops. Something bad happened!`}
+                                    </span>
+                                }
+                            </div>
+                        </div> :
+                        <div className="bg-white shadow-md rounded p-5">
                             <h1 className="text-xl font-bold mb-2">Category</h1>
                             <p>List of categories with a count of their products.</p>
-                        </div>
-                        <div>
-                            <select
-                                name="perPage"
-                                id="perPage"
-                                value={perPage}
-                                className="p-2 shadow-md bg-white border"
-                                onChange={(e) => setPerPage(parseInt(e.target.value))}
-                            >
-                                <option value="5">5</option>
-                                <option value="10">10</option>
-                                <option value="15">15</option>
-                                <option value="20">20</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <ListTable accessors={accessors.current} data={categories} />
-                    <div className="mt-3">
-                        <Pagination totalItems={totalCount} currentPage={page} perPage={perPage} setPage={setPage} />
-                    </div>
-                </div>
+                            <ListTable accessors={accessors.current} data={data.categories} />
+                            <div className="mt-3">
+                                {
+                                    data.totalItems > 15 && <Pagination totalItems={data.totalItems} currentPage={page} perPage={15} setPage={setPage} />
+                                }
+                            </div>
+                        </div>
+                }
             </div>
         </div>
     );

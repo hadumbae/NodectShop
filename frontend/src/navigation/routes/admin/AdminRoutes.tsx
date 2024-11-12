@@ -2,7 +2,7 @@ import ErrorPage from "../../../pages/ErrorPage.tsx";
 import AdminLayout from "../../../layouts/AdminLayout.tsx";
 import CategoryListPage from "../../../pages/admin/category/CategoryListPage.tsx";
 import AdminDashboardPage from "../../../pages/admin/AdminDashboardPage.tsx";
-import CategoryShowPage from "../../../pages/admin/category/CategoryShowPage.tsx";
+import CategoryDetailsPage from "../../../pages/admin/category/CategoryDetailsPage.tsx";
 import CategoryUpdatePage from "../../../pages/admin/category/CategoryUpdatePage.tsx";
 import AttributeListPage from "../../../pages/admin/attributes/AttributeListPage.tsx";
 import SupplierListPage from "../../../pages/admin/supplier/SupplierListPage.tsx";
@@ -20,6 +20,8 @@ import ProductSKUEditPage from "../../../pages/admin/product/sku/ProductSKUEditP
 import ProductSKUDetailsPage from "../../../pages/admin/product/sku/ProductSKUDetailsPage.tsx";
 import ProductSKUImagePage from "../../../pages/admin/product/sku/ProductSKUImagePage.tsx";
 import ProductSKUOptionPage from "../../../pages/admin/product/sku/ProductSKUOptionPage.tsx";
+import CategorySKUPage from "../../../pages/admin/category/CategorySKUPage.tsx";
+import CategoryProductsPage from "../../../pages/admin/category/CategoryProductsPage.tsx";
 
 export default [
     // Admin
@@ -40,7 +42,9 @@ export default [
         loader: isAdminAuthLoader,
         children: [
             { path: "/admin/category/list", element: <CategoryListPage />, errorElement: <ErrorPage /> },
-            { path: "/admin/category/find/:categoryID/:categorySlug", element: <CategoryShowPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/category/find/:categoryID/:categorySlug/details", element: <CategoryDetailsPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/category/find/:categoryID/:categorySlug/skus", element: <CategorySKUPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/category/find/:categoryID/:categorySlug/products", element: <CategoryProductsPage />, errorElement: <ErrorPage /> },
             { path: "/admin/category/edit/:categoryID/:categorySlug", element: <CategoryUpdatePage />, errorElement: <ErrorPage /> },
         ]
     },

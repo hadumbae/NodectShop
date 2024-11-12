@@ -1,3 +1,4 @@
+import fetchQuery from "../../utils/fetchQuery.ts";
 import queryAPI from "../../utils/queryAPI.ts";
 
 export default {
@@ -10,18 +11,12 @@ export default {
      */
     async fetchPaginatedCategories (page: number, perPage: number, authToken: string) {
         const link = `${import.meta.env.VITE_API_URL}/admin/categories/paginated?page=${page}&perPage=${perPage}`;
-        return queryAPI(link, "GET", authToken);
+        return fetchQuery(link, "GET", authToken);
     },
 
     async fetchCategories(authToken: string) {
         const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories`;
-        const response = await fetch(apiLink, {
-            method: "GET",
-            headers: {Authorization: `Bearer ${authToken}`, "Content-Type": "application/json"}
-        });
-
-        const payload = await response.json();
-        return {status: response.status, payload};
+        return fetchQuery(apiLink, "GET", authToken)
     },
 
     async fetchCategory(categoryID: string, authToken: string) {
@@ -46,14 +41,14 @@ export default {
         return {status: response.status, payload};
     },
 
-    async updateCategory(categoryID: string, formData: FormData, authToken: string) {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/admin/categories/category/${categoryID}`, {
-            method: "PATCH", headers: { "Authorization": `Bearer ${authToken}`, "Content-Type": "application/json" },
-            body: JSON.stringify({category: formData.get('category')})
-        });
+    async createCategory(data: any, authToken: string) {
+        const link = `${import.meta.env.VITE_API_URL}/admin/categories`;
+        return queryAPI(link, "POST", authToken, data);
+    },
 
-        const payload = await response.json();
-        return {status: response.status, payload}
+    async updateCategory(categoryID: string, data: any, authToken: string) {
+        const link = `${import.meta.env.VITE_API_URL}/admin/categories/category/${categoryID}`;
+        return queryAPI(link, "PATCH", authToken, data);
     },
 
     async deleteCategory(categoryID: string, authToken: string) {

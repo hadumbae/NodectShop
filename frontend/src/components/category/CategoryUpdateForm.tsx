@@ -6,10 +6,10 @@ import Button from "../inputs/Button.tsx";
 import Loader from "../utils/Loader.tsx";
 
 import {fetchValidationError} from "../../utils/FormUtils.ts";
-import CategoryType from "../../types/CategoryType.ts";
 import CategoryService from "../../services/category/CategoryService.ts";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
+import {CategoryType} from "../../schema/CategorySchema.ts";
 
 interface CategoryCreateForm {
     category: CategoryType,
@@ -30,7 +30,7 @@ const CategoryCreateForm: FC<CategoryCreateForm> = ({category, token}) => {
             const formData = new FormData(event.target);
             setIsLoading(true);
 
-            const {status, payload} = await CategoryService.updateCategory(category._id, formData, token);
+            const {status, payload} = await CategoryService.updateCategory(category._id!, formData, token);
 
             if (status === 200) {
                 setError(null);

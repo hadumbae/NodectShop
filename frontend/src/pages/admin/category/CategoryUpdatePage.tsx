@@ -1,36 +1,21 @@
 import _ from "lodash";
 import {useEffect, useState} from "react";
-import {Link, useNavigate, useParams} from "react-router-dom";
-
-import {RootState} from "../../../state/store.ts";
-import {useSelector} from "react-redux";
+import {Link, useNavigate} from "react-router-dom";
 import CategoryType from "../../../types/CategoryType.ts";
 import CategoryService from "../../../services/category/CategoryService.ts";
 
 import Loader from "../../../components/utils/Loader.tsx";
-import CategoryUpdateForm from "../../../components/category/CategoryUpdateForm.tsx";
 import {toast} from "react-toastify";
+import CategoryForm from "../../../components/category/CategoryForm.tsx";
+import useCategoryParam from "../../../hooks/category/useCategoryParam.ts";
+import useAdminToken from "../../../hooks/useAdminToken.ts";
 
 const CategoryUpdatePage = () => {
     const navigate = useNavigate();
-    const {categoryID} = useParams();
+    const {categoryID} = useCategoryParam();
 
-    if (!categoryID) {
-        alert("Invalid category");
-        navigate('/admin/category/list');
-    }
+    const { token } = useAdminToken();
 
-    const { token, isAdmin } = useSelector((state: RootState) => state.authUser);
-
-    if (!token) {
-        alert("Unauthorized");
-        navigate('/auth/login');
-    }
-
-    if (!isAdmin) {
-        alert("Unauthorized");
-        navigate('/');
-    }
 
     const [category, setCategory] = useState<CategoryType | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -79,7 +64,7 @@ const CategoryUpdatePage = () => {
                     </Link>
                 </div>
                 <div className="mt-5">
-                    <CategoryUpdateForm category={category} token={token!} />
+                    <CategoryForm category={category} />
                 </div>
             </div>}
         </div>
