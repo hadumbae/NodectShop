@@ -91,15 +91,13 @@ export default class BaseRepository {
     }
 
     async findByIdAndUpdate(_id: Types.ObjectId | string, data: any) {
-        return this.model.findByIdAndUpdate(_id, data, {new: true});
-    }
-
-    async deleteOne(_id: Types.ObjectId | string) {
         const entity = await this.existsOr404(_id);
-        await entity.deleteOne();
+        await entity.updateOne(data);
+        return entity;
     }
 
     async findByIdAndDelete(_id: Types.ObjectId | string) {
-        return this.model.findByIdAndDelete(_id);
+        const entity = await this.existsOr404(_id);
+        await entity.deleteOne();
     }
 }

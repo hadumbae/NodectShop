@@ -8,7 +8,7 @@ import Loader from "../utils/Loader.tsx";
 
 import {setHookError} from "../../utils/FormUtils.ts";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {CategorySchema, CategoryType} from "../../schema/CategorySchema.ts";
+import {CategorySubmitSchema, CategorySubmitType, CategoryType} from "../../schema/CategorySchema.ts";
 import HookFormInput from "../inputs/HookFormInput.tsx";
 import {useNavigate} from "react-router-dom";
 import _ from "lodash";
@@ -26,12 +26,12 @@ const CategoryForm: FC<Props> = ({category}) => {
         formState: {errors, isSubmitting}
     } = useForm({
                 defaultValues: {category: category ? category.category : ""},
-                resolver: zodResolver(CategorySchema)
+                resolver: zodResolver(CategorySubmitSchema)
             });
 
     const [formError, setFormError] = useState<string|null>(null)
 
-    const onSubmit: SubmitHandler<CategoryType> = async (data: FieldValues) => {
+    const onSubmit: SubmitHandler<CategorySubmitType> = async (data: FieldValues) => {
         setFormError(null);
 
         const {status, payload} = category ?
@@ -42,7 +42,7 @@ const CategoryForm: FC<Props> = ({category}) => {
             toast.success("Category created successfully.");
             reset();
 
-            navigate(`/admin/category/find/${payload.data._id}/${_.kebabCase(payload.data.category)}/details`)
+            navigate(`/admin/category/find/${payload.data._id}/${_.kebabCase(payload.data.category)}`)
         } else if (status == 400) {
             setHookError("category", setError, payload.errors);
         } else {

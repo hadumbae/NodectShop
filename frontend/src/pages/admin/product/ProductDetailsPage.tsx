@@ -3,7 +3,7 @@ import useProductParam from "../../../hooks/product/useProductParam.ts";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import useFetchProduct from "../../../hooks/product/useFetchProduct.ts";
 import HeaderText from "../../../components/header/HeaderText.tsx";
-import PageHeaderLink from "../../../components/header/PageHeaderLink.tsx";
+import PageHeaderLink from "../../../components/navigation/PageHeaderLink.tsx";
 import PageHeaderButton from "../../../components/header/PageHeaderButton.tsx";
 import ProductService from "../../../services/product/ProductService.ts";
 import {toast} from "react-toastify";
@@ -85,13 +85,13 @@ const ProductDetailsPage: FC = () => {
                         </div>
                     </div>
 
-                    {viewMode === "SKU" && <div>
+                    <div className={viewMode === "SKU" ? "" : "hidden"}>
                         <ProductSKUCardList product={product} />
-                    </div>}
+                    </div>
 
-                    {viewMode === "Orders" && <div>
+                    <div className={viewMode === "Orders" ? "" : "hidden"}>
                         Orders
-                    </div>}
+                    </div>
                 </div>
             </div>}
 

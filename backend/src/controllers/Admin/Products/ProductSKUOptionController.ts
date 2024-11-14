@@ -2,7 +2,7 @@ import {Request, Response, NextFunction} from "express";
 import {isHttpError} from "http-errors";
 import {validationResult} from "express-validator";
 
-import ProductSKUOptionService from "../../../services/Product/ProductSKUOptionService.js";
+import ProductSKUOptionService from "../../../services/SKU/product.sku.option.admin.service.js";
 
 export default {
     async addOptionToSKU(req: Request, res: Response, next: NextFunction) {

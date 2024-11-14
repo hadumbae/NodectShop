@@ -3,13 +3,13 @@ import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import { isHttpError } from 'http-errors';
 
-import ProductAttributeOptionService from "../../../services/Product/ProductAttributeOptionService.js";
+import ProductAttributeOptionAdminService from "../../../services/Attributes/product.attribute.option.admin.service.js";
 
 export default {
     async getAttributeOptions(req: Request, res: Response, next: NextFunction) {
         try {
             const {attributeID} = req.params;
-            const options = await ProductAttributeOptionService.find({attribute: attributeID});
+            const options = await ProductAttributeOptionAdminService.find({attribute: attributeID});
             return res.status(200).json({ message: "Attribute options fetched.", data: options });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -25,7 +25,7 @@ export default {
             const { attributeID } = req.params;
             const { name } = req.body;
 
-            const option = await ProductAttributeOptionService.create(name, attributeID);
+            const option = await ProductAttributeOptionAdminService.create(name, attributeID);
             return res.status(200).json({ message: "Attribute option created successfully.", data: option });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -40,7 +40,7 @@ export default {
                 return res.status(400).json({ message: 'Invalid ID.' });
             }
 
-            const option = await ProductAttributeOptionService.existsOr404(optionID);
+            const option = await ProductAttributeOptionAdminService.existsOr404(optionID);
             return res.status(200).json({ message: "Attribute option retrieved.", data: option });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -57,7 +57,7 @@ export default {
             const { optionID } = req.params;
             const { name } = req.body;
 
-            const option = await ProductAttributeOptionService.update(optionID, name);
+            const option = await ProductAttributeOptionAdminService.update(optionID, name);
             res.status(200).json({ message: 'Attribute option Updated.', data: option });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
@@ -68,7 +68,7 @@ export default {
     async deleteAttributeOption(req: Request, res: Response, next: NextFunction)  {
         try {
             const { optionID } = req.params;
-            await ProductAttributeOptionService.delete(optionID);
+            await ProductAttributeOptionAdminService.delete(optionID);
             res.status(200).json({ message: 'Attribute option deleted.' });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);

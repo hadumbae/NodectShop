@@ -1,4 +1,4 @@
-import {FC, useId} from 'react';
+import {FC, useId, ChangeEvent} from 'react';
 
 interface FormInputProps {
     className?: string;
@@ -14,6 +14,13 @@ interface FormInputProps {
 const FormFileInput: FC<FormInputProps> = ({className, label, changeHandler, errors = [], required = false, disabled = false}) => {
     const forID = useId();
 
+    const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            console.log(event.target.files[0])
+            changeHandler(event.target.files[0])
+        }
+    }
+
     return (
         <div className={className}>
             {label && <label htmlFor={forID}
@@ -21,7 +28,7 @@ const FormFileInput: FC<FormInputProps> = ({className, label, changeHandler, err
             <input type="file" id={forID}
                    disabled={disabled}
                    required={required}
-                   onChange={(e) => changeHandler(e.target.files)}
+                   onChange={handleFile}
                    className={
                        "bg-gray-50 border border-gray-300 text-gray-900 disabled:text-gray-400 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                    }

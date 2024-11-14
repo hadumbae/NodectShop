@@ -9,14 +9,14 @@ import useAdminToken from "../../../hooks/useAdminToken.ts";
 import {fetchValidationError} from "../../../utils/FormUtils.ts";
 import FormTextArea from "../../inputs/FormTextArea.tsx";
 import FormSelect from "../../inputs/FormSelect.tsx";
-import {Product} from "../../../types/ProductTypes.ts";
 import {useNavigate} from "react-router-dom";
 import _ from "lodash";
 import Loader from "../../utils/Loader.tsx";
 import {CategoryType} from "../../../schema/CategorySchema.ts";
+import FormFileInput from "../../inputs/FormFileInput.tsx";
 
 interface Props  {
-    product?: Product;
+    product?: any;
 }
 
 const ProductCreateForm: FC<Props> = ({product}) => {
@@ -26,39 +26,48 @@ const ProductCreateForm: FC<Props> = ({product}) => {
     const {categories, isLoading, error} = useFetchAllCategories(token);
     const [validationErrors, setValidationErrors] = useState([]);
 
-    const [title, setTitle] = useState(product ? product.title : "");
-    const [description, setDescription] = useState(product ? product.description : "");
-    const [category, setCategory] = useState(product ? product.category!._id : "");
+    const [title, setTitle] = useState<string>("");
+    const [description, setDescription] = useState<string>("");
+    const [type, setType] = useState<string>("");
+    const [tags, setTags] = useState<string>("");
+    const [category, setCategory] = useState<string>("");
+    const [image, setImage] = useState(null);
 
     const clear = () => {
         setTitle("");
         setDescription("");
         setCategory("");
+        setType("");
+        setTags("");
+        setImage(null);
     }
 
     const submitHandler = async (event: any) => {
         event.preventDefault();
 
-        try {
-            const {status, payload} = product ?
-                await ProductService.updateProduct(product._id, {title, description, category}, token) :
-                await ProductService.createProduct({title, description, category}, token);
+        const data: any = new FormData();
+        data.append("title", title);
+        data.append("description", description);
+        data.append("tags", tags);
 
-            if (status === 200) {
-                const productID = product ? product._id : payload._id;
-                const productTitle = product ? product.title : payload.title;
+        if (category != "") data.append("category", category);
+        if (image != null) data.append("image", image);
 
-                toast.success(`Product ${product ? "updated" : "created"} succcessfully.`);
-                return navigate(`/admin/product/find/${productID}/${_.kebabCase(productTitle)}`);
-            } else {
-                payload.errors && setValidationErrors(payload.errors);
-                console.error(`${status} : ${payload.message}`)
-            }
+        const {status, payload} = product ?
+            await ProductService.updateProduct(product._id, data, token) :
+            await ProductService.createProduct(data, token);
 
-        } catch (error) {
-            toast.error("Oops. Something bad happened.");
-            console.error(error);
+        if (status === 200) {
+            const productID = product ? product._id : payload.data._id;
+            const productTitle = product ? product.title : payload.data.title;
+
+            toast.success(`Product ${product ? "updated" : "created"} succcessfully.`);
+            return navigate(`/admin/product/find/${productID}/${_.kebabCase(productTitle)}`);
+        } else {
+            payload.errors && setValidationErrors(payload.errors);
+            console.error(`${status} : ${payload.message}`)
         }
+
     }
 
     return (
@@ -84,6 +93,15 @@ const ProductCreateForm: FC<Props> = ({product}) => {
                             errors={fetchValidationError("title", validationErrors)}
                         />
 
+                        <FormInput
+                            label={"Product Type"}
+                            inputType={"text"}
+                            name={"type"}
+                            value={type}
+                            changeHandler={setType}
+                            errors={fetchValidationError("type", validationErrors)}
+                        />
+
                         <FormTextArea
                             label={"Description"}
                             name={description}
@@ -91,6 +109,11 @@ const ProductCreateForm: FC<Props> = ({product}) => {
                             changeHandler={setDescription}
                             errors={fetchValidationError("description", validationErrors)}
                         />
+
+                        <FormFileInput
+                            label="Image"
+                            errors={fetchValidationError("image", validationErrors)}
+                            changeHandler={setImage}/>
 
                         <FormSelect
                             label={"Category"}
@@ -106,6 +129,15 @@ const ProductCreateForm: FC<Props> = ({product}) => {
                                 </option>
                             )}
                         </FormSelect>
+
+                        <FormInput
+                            label={"Tags (Separate By Commas)"}
+                            inputType={"text"}
+                            name={"tags"}
+                            value={tags}
+                            changeHandler={setTags}
+                            errors={fetchValidationError("tags", validationErrors)}
+                        />
 
 
                         <div className="text-right">

@@ -3,7 +3,7 @@ import useAdminToken from "../../../hooks/useAdminToken.ts";
 import useProductParam from "../../../hooks/product/useProductParam.ts";
 import useFetchProduct from "../../../hooks/product/useFetchProduct.ts";
 import HeaderText from "../../../components/header/HeaderText.tsx";
-import PageHeaderLink from "../../../components/header/PageHeaderLink.tsx";
+import PageHeaderLink from "../../../components/navigation/PageHeaderLink.tsx";
 import ProductCreateForm from "../../../components/product/product/ProductCreateForm.tsx";
 
 const ProductEditPage: FC = () => {

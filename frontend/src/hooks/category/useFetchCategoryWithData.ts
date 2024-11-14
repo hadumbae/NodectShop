@@ -1,15 +1,13 @@
 import {useEffect, useState} from "react";
 import CategoryService from "../../services/category/CategoryService.ts";
 import {toast} from "react-toastify";
-import {Product, ProductSKU} from "../../types/ProductTypes.ts";
 import {CategoryType} from "../../schema/CategorySchema.ts";
 
 export default function useFetchCategoryWithData(categoryID: string, token: string) {
     const [isLoading, setIsLoading] = useState(false);
 
     const [category, setCategory] = useState<CategoryType | null>(null);
-    const [skus, setSKUs] = useState<ProductSKU[]>([]);
-    const [products, setProducts] = useState<Product[]>([]);
+    const [products, setProducts] = useState<any | null>([]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -22,7 +20,6 @@ export default function useFetchCategoryWithData(categoryID: string, token: stri
                     setIsLoading(false);
 
                     setCategory(payload.data.category);
-                    setSKUs(payload.data.skus);
                     setProducts(payload.data.products);
                 } else {
                     toast.error("Error! Could not fetch category.");
@@ -38,9 +35,7 @@ export default function useFetchCategoryWithData(categoryID: string, token: stri
     }, []);
 
     return {
-        category, setCategory,
-        skus, setSKUs,
-        products, setProducts,
+        category, products,
         isLoading, setIsLoading,
     };
 }

@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction} from "express";
 import {isHttpError} from "http-errors";
 import ProductRatingRepository from "../../../repositories/ProductRatingRepository.js";
-import ProductRatingService from "../../../services/Product/ProductRatingService.js";
+import ProductRatingService from "../../../services/Ratings/product.rating.client.service.js";
 import {validationResult} from "express-validator";
 
 export default {

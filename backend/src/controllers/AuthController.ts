@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import createError, { isHttpError } from 'http-errors';
 import { validationResult } from 'express-validator';
 
-import AuthService from '../services/Auth/AuthService.js';
+import AuthService from '../services/Auth/auth.service.js';
 import UserRepository from "../repositories/UserRepository.js";
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {

@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import createError, { isHttpError } from 'http-errors';
 
-import ProductAttributeService from "../../../services/Product/ProductAttributeService.js";
+import ProductAttributeService from "../../../services/Attributes/product.attribute.admin.service.js";
 import ProductAttributeRepository from "../../../repositories/ProductAttributeRepository.js";
 
 export default {

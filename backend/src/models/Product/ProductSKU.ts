@@ -14,6 +14,7 @@ export interface IProductSKU {
     readonly id?: Types.ObjectId;
     product: Types.ObjectId | IProduct;
     supplier: Types.ObjectId;
+    name: string;
     code: string;
     unitPrice: number;
     unitStock: number;
@@ -34,6 +35,7 @@ const ProductSKUSchema = new Schema<IProductSKU>({
     product: {type: Schema.Types.ObjectId, ref: 'Product', required: true},
     supplier: {type: Schema.Types.ObjectId, ref: 'Supplier', required: false, default: null},
 
+    name: {type: String, required: true},
     code: {type: String, required: true},
     unitPrice: {type: Number, required: [true, "Unit Price required."]},
     unitStock: {type: Number, required: [true, "Unit Stock required."]},

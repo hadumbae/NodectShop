@@ -7,15 +7,15 @@ import cors from "cors";
 
 import connectDB from './configs/connectDB.js';
 
-import AuthRoutes from './routing/AuthRoutes.js';
-import UserRoutes from './routing/Admin/User/UserRoutes.js';
+import AuthRoutes from './routing/auth.routes.js';
+import UserAdminRoutes from './routing/Admin/User/user.admin.routes.js';
 
-import SupplierRoutes from './routing/Admin/SupplierRoutes.js';
-import CategoryRoutes from './routing/Admin/CategoryRoutes.js';
-import ProductRoutes from './routing/Admin/Product/ProductRoutes.js';
-import ProductAttributeRoutes from "./routing/Admin/Product/ProductAttributeRoutes.js";
-import UserProfileRoutes from "./routing/Client/User/UserProfileRoutes.js";
-import ProductSKURoutes from "./routing/Admin/Product/ProductSKURoutes.js";
+import SupplierAdminRoutes from './routing/Admin/supplier.admin.routes.js';
+import CategoryAdminRoutes from './routing/Admin/category.admin.routes.js';
+import ProductAdminRoutes from './routing/Admin/Product/product.admin.routes.js';
+import ProductAttributeAdminRoutes from "./routing/Admin/Attributes/product.attribute.admin.routes.js";
+import UserProfileRoutes from "./routing/Client/User/user.client.routes.js";
+import ProductSkuAdminRoutes from "./routing/Admin/SKU/product.sku.admin.routes.js";
 
 const app: Express = express();
 
@@ -33,12 +33,12 @@ app.use('/auth', AuthRoutes);
 app.use('/user', UserProfileRoutes);
 
 // Admin Routing
-app.use('/admin/users', UserRoutes);
-app.use('/admin/suppliers', SupplierRoutes);
-app.use('/admin/categories', CategoryRoutes);
-app.use('/admin/products', ProductRoutes);
-app.use('/admin/products', ProductSKURoutes);
-app.use('/admin/attributes', ProductAttributeRoutes);
+app.use('/admin/users', UserAdminRoutes);
+app.use('/admin/suppliers', SupplierAdminRoutes);
+app.use('/admin/categories', CategoryAdminRoutes);
+app.use('/admin/products', ProductAdminRoutes);
+app.use('/admin/products', ProductSkuAdminRoutes);
+app.use('/admin/attributes', ProductAttributeAdminRoutes);
 
 // Express Error Handler
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {

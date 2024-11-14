@@ -26,19 +26,18 @@ const SupplierListPage: FC = () => {
 
     const [suppliers, setSuppliers] = useState<Supplier[]>([]);
     const [totalItems, setTotalItems] = useState(0);
-    const [perPage, setPerPage] = useState(15);
     const [page, setPage] = useState(1);
 
     // useEffect
     useEffect(() => {
         fetchSuppliers();
-    }, [refetch, perPage, page]);
+    }, [refetch, page]);
 
     // fetchSuppliers
     const fetchSuppliers = async () => {
         try {
             setIsLoading(true);
-            const {status, payload} = await SupplierService.fetchPaginatedSuppliers(page, perPage, token);
+            const {status, payload} = await SupplierService.fetchPaginatedSuppliers(page, 15, token);
 
             if (status === 200) {
                 setSuppliers(payload.data.suppliers);
@@ -78,37 +77,26 @@ const SupplierListPage: FC = () => {
             </div>)}
 
             {(!createToggle && !isLoading) && <div className="mt-3">
-                <div className="text-right">
-                    <select
-                        name="perPage"
-                        id="perPage"
-                        value={perPage}
-                        className="p-3 shadow-md bg-white border rounded-xl"
-                        onChange={(e) => setPerPage(parseInt(e.target.value))}
-                    >
-                        <option value="5">5</option>
-                        <option value="10">10</option>
-                        <option value="15">15</option>
-                        <option value="20">20</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                    </select>
-                </div>
+                {suppliers.length > 0 ? <div>
+                    <div className="mt-5 grid grid-cols-2 gap-4">
+                        {
+                            suppliers.map((supplier) => <SupplierDetailsCard
+                                key={supplier._id}
+                                supplier={supplier}
+                                onDelete={() => setRefetch(!refetch)}
+                            />)
+                        }
+                    </div>
 
-                <div className="mt-5 grid grid-cols-2 gap-4">
-                    {suppliers.map((supplier) => <SupplierDetailsCard
-                        key={supplier._id}
-                        supplier={supplier}
-                        onDelete={() => setRefetch(!refetch)} />)}
-                </div>
-
-                {(totalItems > perPage) && <div>
-                    <Pagination totalItems={totalItems}
-                        currentPage={page}
-                        perPage={perPage}
-                        setPage={setPage}/>
+                    {(totalItems > 15) && <div>
+                        <Pagination totalItems={totalItems}
+                                    currentPage={page}
+                                    perPage={15}
+                                    setPage={setPage}/>
+                    </div>}
+                </div> : <div className="text-center">
+                    <h1 className="text-xl font-bold">No Suppliers</h1>
                 </div>}
-
             </div>}
         </div>
     );

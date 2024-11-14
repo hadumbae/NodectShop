@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import SupplierService from '../../services/Supplier/SupplierService.js';
+import SupplierAdminService from '../../services/Supplier/supplier.admin.service.js';
 import SupplierRepository from "../../repositories/SupplierRepository.js";
 import asyncHandler from "../../middleware/asyncHandler.js";
 import ProductRepository from "../../repositories/ProductRepository.js";
@@ -41,7 +41,7 @@ export const updateSupplier = asyncHandler(async (req: Request, res: Response, n
 
 export const deleteSupplier = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 	const supplierID = req.params.supplierID;
-	await SupplierRepository.deleteOne(supplierID);
+	await SupplierRepository.findByIdAndDelete(supplierID);
 
 	res.status(200).json({ message: 'Supplier Deleted.' });
 });
@@ -53,7 +53,7 @@ export const getSupplierProducts = asyncHandler(async (req: Request, res: Respon
 	const perPage = req.query.perPage || 15;
 
 	const totalItems = await ProductRepository.count({supplier: supplierID});
-	const products = await SupplierService.fetchPaginatedProducts(supplierID, page, perPage, totalItems);
+	const products = await SupplierAdminService.fetchPaginatedProducts(supplierID, page, perPage, totalItems);
 
 	return res.status(200).json({message: 'Supplier Products Retrieved.', data: {totalItems, products}});
 });

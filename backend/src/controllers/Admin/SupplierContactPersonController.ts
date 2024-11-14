@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import asyncHandler from "../../middleware/asyncHandler.js";
-import SupplierContactPersonService from "../../services/Supplier/SupplierContactPersonService.js";
+import SupplierContactPersonService from "../../services/Supplier/supplier.contactperson.service.js";
 
 export const createSupplierContactPerson = asyncHandler(async (req: Request, res: Response) => {
    const {supplierID} = req.params;

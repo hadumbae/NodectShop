@@ -1,7 +1,7 @@
 import {FC} from 'react';
 import ProductCreateForm from "../../../components/product/product/ProductCreateForm.tsx";
 import HeaderText from "../../../components/header/HeaderText.tsx";
-import PageHeaderLink from "../../../components/header/PageHeaderLink.tsx";
+import PageHeaderLink from "../../../components/navigation/PageHeaderLink.tsx";
 
 const ProductCreatePage: FC = () => {
     return (

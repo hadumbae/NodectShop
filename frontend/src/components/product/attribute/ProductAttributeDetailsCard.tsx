@@ -39,7 +39,7 @@ const ProductAttributeDetailsCard: FC<props> = ({attribute, onDelete}) => {
     }
 
     return (
-        <div className="bg-white shadow-md rounded p-5">
+        <div className="w-full h-full bg-white shadow-md rounded p-5">
             <div className="flex justify-between">
                 <h1 className="text-xl">{attribute.name}</h1>
                 <button className="text-gray-400 hover:text-red-500" onClick={deleteAttribute}>

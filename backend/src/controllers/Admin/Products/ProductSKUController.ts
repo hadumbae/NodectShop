@@ -2,7 +2,7 @@ import {Request, Response, NextFunction} from "express";
 import createError, {isHttpError} from "http-errors";
 import {validationResult} from "express-validator";
 
-import ProductSKUService from "../../../services/Product/ProductSKUService.js";
+import ProductSKUService from "../../../services/SKU/product.sku.admin.service.js";
 import asyncHandler from "../../../middleware/asyncHandler.js";
 import ProductSKURepository from "../../../repositories/ProductSKURepository.js";
 

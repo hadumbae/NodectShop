@@ -15,7 +15,7 @@ export default function useFetchPaginatedCategories(page: number, perPage: numbe
                 throw new FetchError(response, message);
             }
         },
-        queryKey: ["paginated"],
+        queryKey: ["fetch-paginated-categories"],
     })
 
 

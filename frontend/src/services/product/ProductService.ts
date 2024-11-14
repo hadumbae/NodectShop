@@ -1,4 +1,5 @@
 import queryAPI from "../../utils/queryAPI.ts";
+import queryMultipartAPI from "../../utils/queryMultipartAPI.ts";
 
 export default {
     async fetchPaginatedProducts(page: number, perPage: number, authToken: string, title: string) {
@@ -17,8 +18,8 @@ export default {
     },
 
     async createProduct(data: any, authToken: string) {
-        let apiLink = `${import.meta.env.VITE_API_URL}/admin/products/products`;
-        return queryAPI(apiLink, "POST", authToken, data);
+        let apiLink = `${import.meta.env.VITE_API_URL}/admin/products/create-product`;
+        return queryMultipartAPI(apiLink, "POST", authToken, data);
     },
 
     async updateProduct(productID: string, data: any, authToken: string) {

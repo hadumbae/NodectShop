@@ -49,7 +49,7 @@ const ProductSKUListCard: FC<Props> = ({sku, product, onDelete}) => {
     // Template
 
     return (
-        <div className="bg-white shadow-md rounded-xl flex">
+        <div className="bg-white shadow-md rounded-xl flex max-h-72">
 
             {/* Image */}
 
@@ -58,7 +58,7 @@ const ProductSKUListCard: FC<Props> = ({sku, product, onDelete}) => {
             </div>
 
 
-            <div className="p-3 w-full h-full flex flex-col justify-center space-y-4">
+            <div className="p-3 w-full h-full flex flex-col justify-between">
                 {/*Header*/}
 
                 <div className="flex justify-between items-start">

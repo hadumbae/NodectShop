@@ -3,7 +3,7 @@ import createError from 'http-errors';
 // Models
 import User from '../../models/User/User.js';
 import UserService from "./UserService.js";
-import ProductSKUService from "../Product/ProductSKUService.js";
+import ProductSKUService from "../SKU/product.sku.admin.service.js";
 import {Types} from "mongoose";
 
 export default {
