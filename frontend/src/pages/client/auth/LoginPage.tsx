@@ -7,6 +7,8 @@ import Button from "../../../components/inputs/Button.tsx";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {getExpiryDate} from "../../../utils/TimeUtils.ts";
+import {purgeStoredState} from "redux-persist";
+import {persistConfig} from "../../../state/store.ts";
 
 
 const LoginPage: FC = () => {
@@ -51,7 +53,7 @@ const LoginPage: FC = () => {
             setIsLoading(false);
             toast.success("Logged In Successfully!");
 
-            navigate("/auth/login/redirect");
+            return navigate("/auth/login/redirect");
         } catch (error) {
             console.log(error);
         }

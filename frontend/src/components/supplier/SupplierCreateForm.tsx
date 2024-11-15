@@ -5,14 +5,18 @@ import SupplierService from "../../services/supplier/SupplierService.ts";
 import {fetchValidationError} from "../../utils/FormUtils.ts";
 import Button from "../inputs/Button.tsx";
 import useAdminToken from "../../hooks/useAdminToken.ts";
+import {CategoryType} from "@/schema/CategorySchema.ts";
+import {useNavigate} from "react-router-dom";
 
 interface Props {
-    onSuccess: Function;
+    category?: CategoryType;
 }
 
-const CreateSupplierForm: FC<Props> = ({onSuccess}) => {
-    // token, isAdmin
+const SupplierCreateForm: FC<Props> = ({category}) => {
+    console.log(category);
+
     const {token} = useAdminToken();
+    const navigate = useNavigate();
     const [validationErrors, setValidationErrors] = useState([]);
 
     const [name, setName] = useState("");
@@ -55,7 +59,7 @@ const CreateSupplierForm: FC<Props> = ({onSuccess}) => {
             if (status === 200) {
                 toast.success("Supplier created.");
                 setValidationErrors([]);
-                onSuccess();
+                navigate("/admin/supplier/list");
             } else {
                 payload.errors && setValidationErrors(payload.errors);
                 console.error(`${status} : ${payload.message}`)
@@ -129,4 +133,4 @@ const CreateSupplierForm: FC<Props> = ({onSuccess}) => {
     );
 };
 
-export default CreateSupplierForm;
+export default SupplierCreateForm;

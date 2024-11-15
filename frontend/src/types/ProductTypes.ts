@@ -12,6 +12,7 @@ export interface ProductSKU {
     _id: string;
     product: Product;
     supplier: Supplier;
+    name: string;
     code: string;
     unitPrice: number;
     unitStock: number;

@@ -14,6 +14,7 @@ import Category from "../../models/Category.js";
 interface ProductSKUInputData {
     supplier: string;
     code: string;
+    name: string;
     unitPrice: number;
     unitStock: number;
     reorderLevel: number;
@@ -52,7 +53,6 @@ const ProductSKUAdminService = {
 
     /**
      * Finds the product by ID.
-     * @param id - The ID of the product.
      * @returns The product with matching ID.
      */
     async findOne(conditions = {}) {
@@ -98,6 +98,7 @@ const ProductSKUAdminService = {
             product: productID,
             supplier: data.supplier,
             code: data.code,
+            name: data.name,
             unitPrice: data.unitPrice,
             unitStock: data.unitStock,
             reorderLevel: data.reorderLevel,

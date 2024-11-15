@@ -41,24 +41,20 @@ const SupplierDetailsCard: FC<Props> = ({supplier, onDelete}) => {
     }
 
     return (
-        <div className="bg-white border rounded-lg shadow-md p-5">
-            <div className="flex justify-between items-center">
+        <div className="bg-white border rounded-lg shadow-md p-5 flex flex-col space-y-4">
+            <div className="
+                    flex flex-col justify-center items-center
+                    md:flex-row md:justify-between
+                ">
 
                 {/* Supplier Details */}
 
-                <div>
-                    <h1 className="text-2xl">{supplier.name}</h1>
-                    <span>
-                        <a href={supplier.website}
-                           className="text-sm text-gray-400 hover:text-blue-600 hover:underline">
-                            {supplier.website}
-                        </a>
-                    </span>
-                </div>
+                <h1 className="text-2xl">{supplier.name}</h1>
+
 
                 {/* Details And Delete */}
 
-                <div className="flex justify-end space-x-1 items-center">
+                <div className="flex justify-center items-center">
                     <Link to={`/admin/supplier/find/${supplier._id}/${_.kebabCase(supplier.name)}`}
                           className="text-gray-400 hover:text-yellow-500 p-3">
                         <FaMagnifyingGlass/>
@@ -67,34 +63,37 @@ const SupplierDetailsCard: FC<Props> = ({supplier, onDelete}) => {
                         <FaTrash/>
                     </button>
                 </div>
+
             </div>
 
             {/* Supplier Contact Details */}
 
-            <div className="flex justify-center items-center space-x-2 mt-2">
-                {supplier.contact.email && <a href={`mailto:${supplier.contact.email}`}
-                                              className="text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-1 hover:shadow-md hover:border-black">
+            <div className="flex justify-center items-center space-x-3 flex-wrap -mt-2">
+                <a href={supplier.website}
+                                              className="mt-2 text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-1 hover:shadow-md hover:border-black">
                     <MdAlternateEmail/>
-                    <span>{supplier.contact.email}</span>
+                    <span>Website</span>
+                </a>
+                {supplier.contact.email && <a href={`mailto:${supplier.contact.email}`}
+                                              className="mt-2 text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-1 hover:shadow-md hover:border-black">
+                    <MdAlternateEmail/>
+                    <span>Email</span>
                 </a>}
                 {supplier.contact.phone && <a href={`tel:${supplier.contact.phone}`}
-                                              className="text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-3 hover:shadow-md hover:border-black">
+                                              className="mt-2 text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-3 hover:shadow-md hover:border-black">
                     <FaPhone/>
-                    <span>{supplier.contact.phone}</span>
+                    <span>Call</span>
                 </a>}
                 {supplier.contact.fax && <a href={`fax:${supplier.contact.fax}`}
-                                            className="text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-3 hover:shadow-md hover:border-black">
+                                            className="mt-2 text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-3 hover:shadow-md hover:border-black">
                     <FaFax/>
-                    <span>{supplier.contact.fax}</span>
+                    <span>Fax</span>
                 </a>}
             </div>
 
             {/* Supplier Address */}
-            <div className="text-sm mt-3 flex justify-center space-x-3">
-                <span>{supplier.address.street}, </span>
-                <span>{supplier.address.city}, </span>
-                <span>{supplier.address.state}</span>
-                <span>{supplier.address.country}</span>
+            <div className="text-center">
+                <span className="text-sm font-extralight">{supplier.address.street}, {supplier.address.city}, {supplier.address.state}, {supplier.address.country}</span>
             </div>
         </div>
     );

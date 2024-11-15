@@ -1,6 +1,9 @@
 import {Link, NavLink, Outlet, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 
+import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar.tsx";
+import AdminSidebar from "@/components/layout/admin-sidebar.tsx";
+
 import {CiCircleChevUp} from "react-icons/ci";
 import {RiLogoutCircleRFill} from "react-icons/ri";
 import {logout} from "../state/slices/authUserSlice.ts";
@@ -35,19 +38,24 @@ const AdminLayout = () => {
     };
 
     return (
-        <div className="relative container mx-auto">
-            <div className="p-6 grid grid-cols-3">
-                <div className="felx items-center">
+        <SidebarProvider defaultOpen={false}>
+            <AdminSidebar />
+
+            <div className="relative container mx-auto">
+            <div className="p-6 grid grid-cols-1  lg:grid-cols-3">
+                <div className="flex items-center justify-between">
                     <Link to="/" className="font-orbitron text-3xl flex items-center">
                         <CiCircleChevUp className="mr-1" />
                         NoDECT
                         <span className="text-sm">
                         admin
-                    </span>
+                        </span>
                     </Link>
+
+                    <SidebarTrigger className="lg:hidden" />
                 </div>
 
-                <div className="hidden md:flex md:space-x-6 md:justify-center">
+                <div className="hidden lg:flex lg:space-x-4 lg:justify-center lg:items-center">
                     <NavLink to="/admin/dashboard" className="hover:underline hover:underline-offset-8 hover:text-black">Dashboard</NavLink>
                     <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Categories</NavLink>
                     <NavLink to="/admin/supplier/list" className="hover:underline hover:underline-offset-8 hover:text-black">Suppliers</NavLink>
@@ -56,7 +64,7 @@ const AdminLayout = () => {
                     <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Orders</NavLink>
                 </div>
 
-                <div className="hidden md:flex md:space-x-6 md:justify-end md:items-center">
+                <div className="hidden lg:flex lg:space-x-6 lg:justify-end lg:items-center">
                     <NavLink
                         to="/"
                         className="text-2xl"
@@ -77,6 +85,7 @@ const AdminLayout = () => {
                 <Outlet />
             </div>
         </div>
+        </SidebarProvider>
     );
 };
 

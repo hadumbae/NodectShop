@@ -10,6 +10,10 @@ import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {GoArrowSwitch} from "react-icons/go";
 import ProductSKUCardList from "../../../components/product/skus/ProductSKUCardList.tsx";
+import IconButtonLink from "@/components/navigation/IconButtonLink.tsx";
+import {FaPencil} from "react-icons/fa6";
+import IconButton from "@/components/navigation/IconButton.tsx";
+import {FaList, FaTrash} from "react-icons/fa";
 
 const ProductDetailsPage: FC = () => {
     const navigate = useNavigate();
@@ -32,31 +36,39 @@ const ProductDetailsPage: FC = () => {
 
     return (
         <div className="flex flex-col space-y-3">
-            {!isLoading && <div className="flex justify-between items-center">
-                <HeaderText>{product!.title}</HeaderText>
-                <div className="flex justify-end space-x-4">
-                    <PageHeaderLink link={`/admin/product/list`}>
-                        &lt; Products
-                    </PageHeaderLink>
-                    <PageHeaderLink link={`/admin/product/edit/${productID}/${productSlug}`}>
-                        Edit
-                    </PageHeaderLink>
-                    <PageHeaderButton onClick={deleteProduct}>
-                        Delete
-                    </PageHeaderButton>
-                </div>
-            </div>}
+            {!isLoading && <HeaderText>{product!.title}</HeaderText>}
 
             {error && <div className="text-center">
                 <h1 className="text-xl text-red-500">{error}</h1>
             </div>}
 
-            {(!isLoading && product) && <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {(!isLoading && product) && <div className="flex justify-center">
                 <div className="flex flex-col space-y-5">
-                    <div>
-                        <span className="text-sm text-gray-400">Category</span>
-                        <h1 className="text-xl font-medium">{product!.category?.category}</h1>
+
+                    {/*Category Header*/}
+
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <span className="text-sm text-gray-400">Category</span>
+                            <h1 className="text-xl font-medium">{product!.category?.category}</h1>
+                        </div>
+
+                        <div className="flex justify-end space-x-4">
+                            <IconButtonLink className="text-sm p-3 hover:border-green-400 hover:text-green-400"
+                                            to={`/admin/product/list`}>
+                                <FaList />
+                            </IconButtonLink>
+                            <IconButtonLink className="text-sm p-3 hover:border-blue-400 hover:text-blue-400"
+                                            to={`/admin/product/edit/${productID}/${productSlug}`}>
+                                <FaPencil/>
+                            </IconButtonLink>
+                            <IconButton className="hover:border-red-400 hover:text-red-400" onClick={deleteProduct}>
+                                <FaTrash/>
+                            </IconButton>
+                        </div>
                     </div>
+
+                    {/*Description*/}
 
                     <div>
                         <span className="text-sm text-gray-400">Description</span>
@@ -66,32 +78,31 @@ const ProductDetailsPage: FC = () => {
                             </blockquote>
                         </div>
                     </div>
-                </div>
 
-                <div className="lg:col-span-2 flex flex-col space-y-4">
                     <div className="flex justify-end">
                         <div className="border flex space-x-4 p-2 rounded-xl items-center">
                             <div>
-                                <GoArrowSwitch />
+                                <GoArrowSwitch/>
                             </div>
                             <button onClick={() => setViewMode("SKU")}
-                                className={`text-gray-400 hover:text-black hover:underline hover:underline-offset-8 ${viewMode === "SKU" && "text-black"}`}>
+                                    className={`text-gray-400 hover:text-black hover:underline hover:underline-offset-8 ${viewMode === "SKU" && "text-black"}`}>
                                 SKU
                             </button>
                             <button onClick={() => setViewMode("Orders")}
-                                className={`text-gray-400 hover:text-black hover:underline hover:underline-offset-8 ${viewMode === "Orders" && "text-black"}`}>
+                                    className={`text-gray-400 hover:text-black hover:underline hover:underline-offset-8 ${viewMode === "Orders" && "text-black"}`}>
                                 Orders
                             </button>
                         </div>
                     </div>
 
                     <div className={viewMode === "SKU" ? "" : "hidden"}>
-                        <ProductSKUCardList product={product} />
+                        <ProductSKUCardList product={product}/>
                     </div>
 
                     <div className={viewMode === "Orders" ? "" : "hidden"}>
                         Orders
                     </div>
+
                 </div>
             </div>}
 

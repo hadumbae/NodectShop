@@ -3,7 +3,7 @@ import queryMultipartAPI from "../../utils/queryMultipartAPI.ts";
 
 export default {
     async fetchPaginatedProducts(page: number, perPage: number, authToken: string, title: string) {
-        let apiLink = `${import.meta.env.VITE_API_URL}/admin/products/products?page=${page}&perPage=${perPage}`;
+        let apiLink = `${import.meta.env.VITE_API_URL}/admin/products/get-all?page=${page}&perPage=${perPage}`;
 
         if (title && title !== "") {
             apiLink += `&title=${title}`;
@@ -13,7 +13,7 @@ export default {
     },
 
     async fetchProduct(productID: string, authToken: string) {
-        let apiLink = `${import.meta.env.VITE_API_URL}/admin/products/products/${productID}`;
+        let apiLink = `${import.meta.env.VITE_API_URL}/admin/products/get-product/${productID}`;
         return queryAPI(apiLink, "GET", authToken);
     },
 

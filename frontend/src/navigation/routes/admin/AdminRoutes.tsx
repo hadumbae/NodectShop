@@ -20,6 +20,7 @@ import ProductSKUEditPage from "../../../pages/admin/product/sku/ProductSKUEditP
 import ProductSKUDetailsPage from "../../../pages/admin/product/sku/ProductSKUDetailsPage.tsx";
 import ProductSKUImagePage from "../../../pages/admin/product/sku/ProductSKUImagePage.tsx";
 import ProductSKUOptionPage from "../../../pages/admin/product/sku/ProductSKUOptionPage.tsx";
+import SupplierCreatePage from "@/pages/admin/supplier/SupplierCreatePage.tsx";
 
 export default [
     // Admin
@@ -28,7 +29,7 @@ export default [
         element: <AdminLayout />,
         errorElement: <ErrorPage />,
         children: [
-            { path: "/admin/dashboard", element: <AdminDashboardPage />, errorElement: <ErrorPage />, loader: isAdminAuthLoader },
+            { path: "/admin/dashboard", element: <AdminDashboardPage />, errorElement: <ErrorPage /> },
         ]
     },
 
@@ -53,6 +54,7 @@ export default [
         loader: isAdminAuthLoader,
         children: [
             { path: "/admin/supplier/list", element: <SupplierListPage />, errorElement: <ErrorPage />},
+            { path: "/admin/supplier/create", element: <SupplierCreatePage />, errorElement: <ErrorPage /> },
             { path: "/admin/supplier/find/:supplierID/:slug", element: <SupplierDetailsPage />, errorElement: <ErrorPage />},
             { path: "/admin/supplier/edit/:supplierID/:slug", element: <SupplierEditPage />, errorElement: <ErrorPage />},
             { path: "/admin/supplier/find/:supplierID/:slug/create-contact", element: <SupplierCreateContactPersonPage />, errorElement: <ErrorPage />},

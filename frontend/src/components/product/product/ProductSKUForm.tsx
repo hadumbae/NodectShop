@@ -28,6 +28,7 @@ const ProductSKUForm: FC<Props> = ({ productID, productSlug, sku }) => {
 
 
     const [supplier, setSupplier] = useState(sku ? sku.supplier._id : "None");
+    const [name, setName] = useState(sku ? sku.name : "");
     const [code, setCode] = useState(sku ? sku.code : "");
     const [unitPrice, setUnitPrice] = useState(sku ? sku.unitPrice : "");
     const [unitStock, setUnitStock] = useState(sku ? sku.unitStock : "");
@@ -41,6 +42,7 @@ const ProductSKUForm: FC<Props> = ({ productID, productSlug, sku }) => {
             product: productID,
             supplier: supplier === "None" ? null : supplier,
             code: code,
+            name: name,
             unitPrice: unitPrice,
             unitStock: unitStock,
             reorderLevel: reorderLevel,
@@ -65,6 +67,7 @@ const ProductSKUForm: FC<Props> = ({ productID, productSlug, sku }) => {
     const resetForm = () => {
         setSupplier("None");
         setCode("");
+        setName("");
         setUnitPrice("");
         setUnitStock("");
         setReorderLevel("");
@@ -105,6 +108,14 @@ const ProductSKUForm: FC<Props> = ({ productID, productSlug, sku }) => {
                     errors={fetchValidationError("code", validationErrors)}
                     value={code}
                     changeHandler={setCode} />
+
+                <FormInput
+                    label="Name"
+                    inputType="text"
+                    name={"name"}
+                    errors={fetchValidationError("name", validationErrors)}
+                    value={name}
+                    changeHandler={setName} />
 
                 <FormInput
                     label="Unit Price"

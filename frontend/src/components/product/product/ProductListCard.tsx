@@ -1,39 +1,28 @@
 import {FC, useRef} from 'react';
-import {Product, ProductSKU} from "../../../types/ProductTypes.ts";
 import _ from "lodash";
 import {Link} from "react-router-dom";
 import {FaMagnifyingGlass, FaPencil} from "react-icons/fa6";
+import {ProductType} from "@/schema/ProductSchema.ts";
 
 interface Props {
-    product: Product;
+    product: ProductType;
 }
 
 const ProductListCard: FC<Props> = ({product}) => {
-    const totalStock = useRef(0);
-    const image= useRef<string|undefined>(undefined);
-    const availableSKUs = useRef(product
-        .skus.filter(sku => !sku.isDiscontinued).length);
-
-    const totalUnitStock = product.skus.reduce((acc, cur) => acc + cur.unitStock, 0);
-    totalStock.current = totalUnitStock;
-
-    const imageSKUs: ProductSKU[] = product.skus.filter(sku => sku.images.length > 0);
-    const imageLink = imageSKUs.length > 0 ? imageSKUs[0].images[0].secure_url : null;
-    if (imageLink) {
-        image.current = imageLink;
-    }
+    const totalStock = useRef(product.skus.reduce((acc, cur) => acc + cur.unitStock, 0));
+    const availableSKUs = useRef(product.skus.filter(sku => !sku.isDiscontinued).length);
 
     return (
         <div className="bg-white shadow-md border rounded-lg h-96">
             <div className="rounded-t-lg bg-gray-400 h-1/3 flex justify-center items-center overflow-hidden">
-                {image.current ? <img src={image.current} className="object-cover" /> : <span>No Image</span>}
+                <img src={product.image.secure_url} className="object-cover" alt="Product Image" />
             </div>
 
 
             <div className="p-3 h-2/3 flex flex-col justify-between space-y-3">
                 <div>
                     <h1 className="text-lg line-clamp-2 text-justify">{product.title}</h1>
-                    {product.category && <span className="text-sm text-gray-400 relative bottom-1">{product.category.category}</span>}
+                    {product.category && <span className="text-sm text-gray-400 relative bottom-1">{product.category?.category}</span>}
                 </div>
 
                 <blockquote className="line-clamp-3 text-sm text-justify px-6 text-gray-400 hover:text-black">
