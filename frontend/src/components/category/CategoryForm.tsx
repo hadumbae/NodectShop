@@ -1,83 +1,167 @@
-import {FC, useState} from 'react';
-import {toast} from "react-toastify";
-import {useSelector} from "react-redux";
-import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
+import { FC } from 'react';
+import {useForm} from 'react-hook-form';
 
-import Button from "../inputs/Button.tsx";
-import Loader from "../utils/Loader.tsx";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CategorySubmitSchema, CategorySubmitType, CategoryType } from '../../schema/CategorySchema.ts';
 
-import {setHookError} from "../../utils/FormUtils.ts";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {CategorySubmitSchema, CategorySubmitType, CategoryType} from "../../schema/CategorySchema.ts";
-import HookFormInput from "../inputs/HookFormInput.tsx";
+import { Button } from "@/components/ui/button"
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {useMutation} from "@tanstack/react-query";
+import CategoryAdminService from "@/services/category/category.admin.service.ts";
+import useAdminToken from "@/hooks/useAdminToken.ts";
+import {FetchError} from "@/utils/CustomErrors.ts";
 import {useNavigate} from "react-router-dom";
 import _ from "lodash";
-import CategoryService from "../../services/category/CategoryService.ts";
+import {toast} from "react-toastify";
 
 interface Props {
-    category?: CategoryType;
+	category?: CategoryType;
 }
 
-const CategoryForm: FC<Props> = ({category}) => {
-    const {token} = useSelector((state: any) => state.authUser);
-    const navigate = useNavigate();
-    const {
-        register, handleSubmit, setError, reset,
-        formState: {errors, isSubmitting}
-    } = useForm({
-                defaultValues: {category: category ? category.category : ""},
-                resolver: zodResolver(CategorySubmitSchema)
-            });
+const CategoryForm: FC<Props> = ({ category }) => {
+	const {token} = useAdminToken();
+	const navigate = useNavigate();
 
-    const [formError, setFormError] = useState<string|null>(null)
+	const form = useForm<CategorySubmitType>({
+		resolver: zodResolver(CategorySubmitSchema),
+		defaultValues: {
+			category: category?.category || "",
+			mode: category?.mode || "MANUAL",
+			modeType: category?.modeType || "",
+			modeTags: category?.modeTags.join(",") || ""
+		}
+	});
 
-    const onSubmit: SubmitHandler<CategorySubmitType> = async (data: FieldValues) => {
-        setFormError(null);
+	const mutation = useMutation({
+		mutationFn: async (values: any) => {
+			const {response, result} = category ?
+				await CategoryAdminService.updateCategory(category._id, values, token) :
+				await CategoryAdminService.createCategory(values, token);
 
-        const {status, payload} = category ?
-            await CategoryService.updateCategory(category._id!, data, token) :
-            await CategoryService.createCategory(data, token);
+			if (response.ok) {
+				return result;
+			} else {
+				throw new FetchError(response, result.message, result.errors);
+			}
+		},
+		onSuccess: (result) => {
+			toast.success(`Category ${category ? "updated" : "created"} successfully.`);
 
-        if (status === 200) {
-            toast.success("Category created successfully.");
-            reset();
+			navigate(`/admin/category/find/${result.data._id}/${_.kebabCase(result.data.category)}`);
+		},
+		onError: (error: FetchError) => {
+			if (error.errors) {
+				for (let validationError of error.errors ) {
+					console.log(validationError);
 
-            navigate(`/admin/category/find/${payload.data._id}/${_.kebabCase(payload.data.category)}`)
-        } else if (status == 400) {
-            setHookError("category", setError, payload.errors);
-        } else {
-            setFormError(payload.message);
-        }
-    }
+					form.setError(validationError.path, {type: "manual", message: validationError.msg});
+				}
+			}
+		}
+	})
 
-    return (
-        <div>
-            {
-                isSubmitting ?
-                <div className="text-center">
-                    <Loader loading={isSubmitting}/>
-                </div> :
+	const mode = form.watch("mode");
 
-                <div className="bg-white shadow-md rounded p-5">
-                    <h1 className="text-2xl">{category ? "Update" : "Create"} Category</h1>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="mt-5">
-                            <HookFormInput
-                                label="Category"
-                                inputType="text"
-                                register={register('category', {required: true})}
-                                error={errors.category}
-                            />
-                        </div>
-                        <div className={`mt-5 flex items-center ${formError ? "justify-between" : "justify-end"}`}>
-                            {formError && <span className="text-red-500">{formError}</span>}
-                            <Button type="submit">{category ? "Update" : "Create"}</Button>
-                        </div>
-                    </form>
-                </div>
-            }
-        </div>
-    );
+	const onSubmit = (values: CategorySubmitType) => {
+		console.log(values);
+		mutation.mutate(values);
+	}
+
+	return (
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)}>
+				<Card>
+					<CardHeader>
+						<CardTitle>{category ? "Update" : "Create"} Category</CardTitle>
+					</CardHeader>
+					<CardContent className="space-y-5">
+						<FormField
+							name={"category"}
+							control={form.control}
+							render={({field}) => <FormItem>
+								<FormLabel>Category</FormLabel>
+								<FormControl>
+									<Input type="text" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>}
+						/>
+
+						<FormField
+							name={"mode"}
+							control={form.control}
+							render={({field}) => <FormItem
+								className="space-y-2"
+							>
+								<FormLabel>Category Mode</FormLabel>
+								<FormControl>
+									<RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1">
+										<FormItem className="flex items-center space-x-3 space-y-0">
+											<FormControl>
+												<RadioGroupItem value="MANUAL" />
+											</FormControl>
+											<FormLabel>Manual</FormLabel>
+										</FormItem>
+
+										<FormItem className="flex items-center space-x-3 space-y-0">
+											<FormControl>
+												<RadioGroupItem value="TYPE" />
+											</FormControl>
+											<FormLabel>By Type</FormLabel>
+										</FormItem>
+
+										<FormItem className="flex items-center space-x-3 space-y-0">
+											<FormControl>
+												<RadioGroupItem value="TAGS" />
+											</FormControl>
+											<FormLabel>By Tags</FormLabel>
+										</FormItem>
+									</RadioGroup>
+								</FormControl>
+							</FormItem>}
+						/>
+
+						{mode == "TYPE" && <FormField
+							name={"modeType"}
+							control={form.control}
+							render={({field}) => <FormItem>
+								<FormLabel>Filter Type</FormLabel>
+								<FormControl>
+									<Input type="text" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>}
+						/>}
+
+						{mode == "TAGS" && <FormField
+							name={"modeTags"}
+							control={form.control}
+							render={({field}) => <FormItem>
+								<FormLabel>Filter Tags</FormLabel>
+								<FormControl>
+									<Input type="text" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>}
+						/>}
+					</CardContent>
+					<CardFooter>
+						<Button type="submit" className="w-full">Submit</Button>
+					</CardFooter>
+				</Card>
+			</form>
+		</Form>
+	);
 };
 
 export default CategoryForm;

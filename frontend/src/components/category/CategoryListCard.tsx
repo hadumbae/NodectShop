@@ -21,7 +21,9 @@ const CategoryListCard: FC<Props> = ({category}) => {
             </div>
 
             <div className="flex justify-between">
-                <div>
+                <div className="flex space-x-2 items-end">
+                    <span className="text-lg font-light">Mode</span>
+                    <span className="text-3xl">{category.mode}</span>
                 </div>
 
                 <div className="flex space-x-2 items-end">

@@ -6,7 +6,7 @@ import Button from "../inputs/Button.tsx";
 import Loader from "../utils/Loader.tsx";
 
 import {fetchValidationError} from "../../utils/FormUtils.ts";
-import CategoryService from "../../services/category/CategoryService.ts";
+import CategoryService from "../../services/category/category.admin.service.ts";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {CategoryType} from "../../schema/CategorySchema.ts";

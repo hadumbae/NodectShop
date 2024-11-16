@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import CategoryService from "../../services/category/CategoryService.ts";
+import CategoryService from "../../services/category/category.admin.service.ts";
 import {toast} from "react-toastify";
 import {CategoryType} from "../../schema/CategorySchema.ts";
 

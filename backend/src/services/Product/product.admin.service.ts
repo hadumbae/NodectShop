@@ -29,8 +29,10 @@ const ProductAdminService = {
 	},
 
 	async createProduct(data: any, uploadImage) {
+		console.log("Before Create: ", data);
 		const tags = data.tags.split(",");
 		const result: any = ProductDataSchema.safeParse({...data, tags});
+		console.log("After Parse: ", result);
 
 		if (!result.success) {
 			const error = result.error.issues[0];
@@ -40,6 +42,33 @@ const ProductAdminService = {
 
 		result.data.image = await ProductImageAdminService.createProductImages(uploadImage);
 		return Product.create(result.data);
+	},
+
+	async updateProduct(productID: string, data: any, uploadImage) {
+		const product = await Product.findById(productID);
+		if (!product) throw createError(404, "Product Not Found.");
+
+		const tags = data.tags.split(",");
+		const result: any = ProductDataSchema.safeParse({...data, tags});
+
+		if (!result.success) {
+			const error = result.error.issues[0];
+			const errorMessage = `${error.path.join(".")} : ${error.message}`;
+			throw createHttpError(400, errorMessage)
+		}
+
+		console.log("Image: ", uploadImage)
+
+		if (uploadImage) {
+			result.data.image = await ProductImageAdminService.createProductImages(uploadImage);
+			await ProductImageAdminService.deleteProductImage(product.image);
+		} else {
+			result.data.image = product.image;
+		}
+
+		console.log(result.data);
+
+		return product.updateOne(result.data);
 	},
 
 	/**

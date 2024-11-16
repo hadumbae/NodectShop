@@ -9,7 +9,6 @@ import ProductRepository from "../../../repositories/ProductRepository.js";
 
 export const createProduct = asyncHandler(async (req: Request, res: Response) => {
 	const data = req.body;
-	console.log(data);
 	const product = await ProductAdminService.createProduct(data, req.file);
 
 	return res.status(200).json({ message: "Product created.", data: product });
@@ -25,7 +24,7 @@ export const updateProduct: RequestHandler = asyncHandler(async (req: Request, r
 	const { productID } = req.params;
 	const data = req.body;
 
-	const product = await ProductRepository.findByIdAndUpdate(productID, data);
+	const product = await ProductAdminService.updateProduct(productID, data, req.file);
 	res.status(200).json({ message: 'Product Updated.', data: product });
 });
 

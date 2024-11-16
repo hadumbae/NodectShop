@@ -1,5 +1,6 @@
 import fetchQuery from "../../utils/fetchQuery.ts";
 import queryAPI from "../../utils/queryAPI.ts";
+import {useFetch} from "@/utils/useFetch.ts";
 
 export default {
 
@@ -58,7 +59,7 @@ export default {
      */
     async createCategory(data: any, authToken: string) {
         const link = `${import.meta.env.VITE_API_URL}/admin/categories/create`;
-        return queryAPI(link, "POST", authToken, data);
+        return useFetch(link, "POST", authToken, data);
     },
 
     /**
@@ -69,7 +70,7 @@ export default {
      */
     async updateCategory(categoryID: string, data: any, authToken: string) {
         const link = `${import.meta.env.VITE_API_URL}/admin/categories/update/${categoryID}`;
-        return queryAPI(link, "PATCH", authToken, data);
+        return useFetch(link, "PATCH", authToken, data);
     },
 
     /**

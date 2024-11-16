@@ -23,8 +23,8 @@ export default {
     },
 
     async updateProduct(productID: string, data: any, authToken: string) {
-        let apiLink = `${import.meta.env.VITE_API_URL}/admin/products/products/${productID}`;
-        return queryAPI(apiLink, "PATCH", authToken, data);
+        let apiLink = `${import.meta.env.VITE_API_URL}/admin/products/update-product/${productID}`;
+        return queryMultipartAPI(apiLink, "PATCH", authToken, data);
     },
 
     async deleteProduct(productID: string, authToken: string) {

@@ -3,8 +3,6 @@ import useProductParam from "../../../hooks/product/useProductParam.ts";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import useFetchProduct from "../../../hooks/product/useFetchProduct.ts";
 import HeaderText from "../../../components/header/HeaderText.tsx";
-import PageHeaderLink from "../../../components/navigation/PageHeaderLink.tsx";
-import PageHeaderButton from "../../../components/header/PageHeaderButton.tsx";
 import ProductService from "../../../services/product/ProductService.ts";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";

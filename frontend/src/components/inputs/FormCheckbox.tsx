@@ -5,7 +5,7 @@ interface Props {
     labelClasses?: string;
     label: string;
 
-    value: boolean | undefined;
+    value: any;
     changeHandler: Function;
     errors?: string[],
 
@@ -23,6 +23,7 @@ const FormCheckbox: FC<Props> = ({className, labelClasses = "ms-2 text-sm font-m
                     id={forID}
                     type="checkbox"
                     checked={value}
+                    value={value}
                     onChange={(e) => changeHandler(e.target.checked)}
                     required={required}
                     disabled={disabled}

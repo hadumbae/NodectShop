@@ -9,8 +9,10 @@ const validate = [
         .notEmpty().withMessage('Title is required.')
         .isString().withMessage('Title must be a string.')
         .isLength({ min: 3 }).withMessage('Product title must be at least 3 letters long.')
-        .custom(async (value) => {
-            const product = await ProductRepository.findOne({title: value});
+        .custom(async (value, {req}) => {
+            const { productID } = req.params;
+
+            const product = await ProductRepository.findOne({title: value, _id: {$ne: productID}});
 
             if (product) {
                 return Promise.reject("Product title must be unique. Please try again.");
@@ -18,7 +20,7 @@ const validate = [
         }),
 
     body('type')
-        .optional()
+        .optional({checkFalsy: true, nullable: true})
         .isString().withMessage('Type must be a string.')
         .isLength({ min: 3 }).withMessage('Type must be at least three letters long.')
         .trim(),
@@ -46,8 +48,29 @@ const validate = [
 export const addProductValidator = [
     ...validate,
     check('image')
+        .exists().withMessage("Please include image upload, even if empty.")
         .custom((value, {req}) => {
             if (!req.file) throw createError(400, "Image required.");
+
+            const acceptedTypes = [
+                'image/png',
+                'image/jpg',
+                'image/jpeg',
+            ];
+
+            if(!acceptedTypes.includes(req.file.mimetype)) {
+                throw createError(400, "Invalid File Type. Only png, jpg, and jpeg files accepted.");
+            }
+
+            return true;
+        }),
+]
+
+export const updateProductValidator = [
+    ...validate,
+    check('image')
+        .custom((value, {req}) => {
+            if (!req.file) return true;
 
             const acceptedTypes = [
                 'image/png',

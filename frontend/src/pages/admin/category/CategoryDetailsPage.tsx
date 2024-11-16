@@ -2,7 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
 
-import CategoryService from "../../../services/category/CategoryService.ts";
+import CategoryService from "../../../services/category/category.admin.service.ts";
 import useCategoryParam from "../../../hooks/category/useCategoryParam.ts";
 import useFetchCategoryWithData from "../../../hooks/category/useFetchCategoryWithData.ts";
 import {FaPencil} from "react-icons/fa6";

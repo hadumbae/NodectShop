@@ -31,11 +31,21 @@ const AdminSidebar: React.FC = () => {
                     <SidebarGroupLabel>Category</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
+
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
                                     <Link to="/admin/category/list">
                                         <Rows3 />
                                         <span>Category List</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild>
+                                    <Link to="/admin/category/create">
+                                        <Rows3 />
+                                        <span>Create A Category</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -61,18 +71,18 @@ const AdminSidebar: React.FC = () => {
                     </SidebarGroupContent>
                 </SidebarGroup>
 
-                {/*Income*/}
+                {/* Products */}
 
                 <SidebarGroup>
-                    <SidebarGroupLabel>Income</SidebarGroupLabel>
+                    <SidebarGroupLabel>Product</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild>
-                                    <a href="#">
+                                    <Link to="/admin/product/list">
                                         <Rows3 />
-                                        <span>Accounts</span>
-                                    </a>
+                                        <span>Products</span>
+                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>

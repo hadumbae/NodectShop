@@ -21,6 +21,7 @@ import ProductSKUDetailsPage from "../../../pages/admin/product/sku/ProductSKUDe
 import ProductSKUImagePage from "../../../pages/admin/product/sku/ProductSKUImagePage.tsx";
 import ProductSKUOptionPage from "../../../pages/admin/product/sku/ProductSKUOptionPage.tsx";
 import SupplierCreatePage from "@/pages/admin/supplier/SupplierCreatePage.tsx";
+import CategoryCreatePage from "@/pages/admin/category/CategoryCreatePage.tsx";
 
 export default [
     // Admin
@@ -41,6 +42,7 @@ export default [
         loader: isAdminAuthLoader,
         children: [
             { path: "/admin/category/list", element: <CategoryListPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/category/create", element: <CategoryCreatePage />, errorElement: <ErrorPage /> },
             { path: "/admin/category/find/:categoryID/:categorySlug", element: <CategoryDetailsPage />, errorElement: <ErrorPage /> },
             { path: "/admin/category/edit/:categoryID/:categorySlug", element: <CategoryUpdatePage />, errorElement: <ErrorPage /> },
         ]
