@@ -6,7 +6,7 @@ import CategoryDetailsPage from "../../../pages/admin/category/CategoryDetailsPa
 import CategoryUpdatePage from "../../../pages/admin/category/CategoryEditPage.tsx";
 import AttributeListPage from "../../../pages/admin/attributes/AttributeListPage.tsx";
 import SupplierListPage from "../../../pages/admin/supplier/SupplierListPage.tsx";
-import SupplierDetailsPage from "../../../pages/admin/supplier/SupplierDetailsPage.tsx";
+import SupplierDetailsPage from "../../../pages/admin/supplier/supplier.details.page.tsx";
 import SupplierCreateContactPersonPage from "../../../pages/admin/supplier/contacts/SupplierCreateContactPersonPage.tsx";
 import SupplierEditPage from "../../../pages/admin/supplier/SupplierEditPage.tsx";
 import SupplierEditContactPersonPage from "../../../pages/admin/supplier/contacts/SupplierEditContactPersonPage.tsx";

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import {useForm} from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CategorySubmitSchema, CategorySubmitType, CategoryType } from '../../schema/CategorySchema.ts';
+import { CategorySubmitSchema, CategorySubmitType, CategoryType } from '@/schema/CategorySchema.ts';
 
 import { Button } from "@/components/ui/button"
 import {
@@ -56,14 +56,11 @@ const CategoryForm: FC<Props> = ({ category }) => {
 		},
 		onSuccess: (result) => {
 			toast.success(`Category ${category ? "updated" : "created"} successfully.`);
-
 			navigate(`/admin/category/find/${result.data._id}/${_.kebabCase(result.data.category)}`);
 		},
 		onError: (error: FetchError) => {
 			if (error.errors) {
 				for (let validationError of error.errors ) {
-					console.log(validationError);
-
 					form.setError(validationError.path, {type: "manual", message: validationError.msg});
 				}
 			}

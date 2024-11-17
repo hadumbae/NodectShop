@@ -1,18 +1,17 @@
 import CategoryService from "../../services/category/category.admin.service.ts";
 import {useQuery} from "@tanstack/react-query";
-import {FetchError} from "../../utils/CustomErrors.ts";
+import {FetchError} from "@/utils/CustomErrors.ts";
 
 export default function useFetchAllCategories(token: string) {
 
     const {isLoading, error, data: categories, status} = useQuery({
         queryFn: async () => {
-            const response = await CategoryService.fetchCategories(token);
-            const { message, data } = await response.json();
+            const {response, result} = await CategoryService.fetchCategories(token);
 
             if (response.ok) {
-                return data;
+                return result.data;
             } else {
-                throw new FetchError(response, message);
+                throw new FetchError(response, result.message, result.errors);
             }
         },
         queryKey: ['all_categories'],

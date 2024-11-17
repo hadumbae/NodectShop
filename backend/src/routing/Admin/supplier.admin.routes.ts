@@ -12,12 +12,12 @@ import SupplierContactPersonValidator from "../../validation/validators/Supplier
 const SupplierAdminRoutes = express.Router();
 
 SupplierAdminRoutes.get('/', [isAuthAdmin], getSuppliers);
-SupplierAdminRoutes.post('/', [isAuthAdmin, ...supplierValidator, validateErrors], createSupplier);
-SupplierAdminRoutes.get('/supplier/:supplierID', isAuthAdmin, getSupplierByID);
-SupplierAdminRoutes.patch('/supplier/:supplierID', [isAuthAdmin, ...supplierValidator, validateErrors], updateSupplier);
-SupplierAdminRoutes.delete('/supplier/:supplierID', isAuthAdmin, deleteSupplier);
+SupplierAdminRoutes.post('/create-supplier', [isAuthAdmin, ...supplierValidator, validateErrors], createSupplier);
+SupplierAdminRoutes.get('/get-supplier/:supplierID', isAuthAdmin, getSupplierByID);
+SupplierAdminRoutes.patch('/get-supplier/:supplierID', [isAuthAdmin, ...supplierValidator, validateErrors], updateSupplier);
+SupplierAdminRoutes.delete('/get-supplier/:supplierID', isAuthAdmin, deleteSupplier);
 
-SupplierAdminRoutes.get('/paginated', [isAuthAdmin, ...getPaginatedValidator], getPaginatedSuppliers);
+SupplierAdminRoutes.get('/get-paginated', [isAuthAdmin, ...getPaginatedValidator], getPaginatedSuppliers);
 
 SupplierAdminRoutes.get('/supplier/:supplierID/products', isAuthAdmin, getSupplierProducts);
 

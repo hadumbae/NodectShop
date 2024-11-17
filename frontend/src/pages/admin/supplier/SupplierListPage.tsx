@@ -4,8 +4,8 @@ import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {FaPlus} from "react-icons/fa";
 import SupplierService from "../../../services/supplier/SupplierService.ts";
-import {Supplier} from "../../../types/SupplierTypes.ts";
-import SupplierDetailsCard from "../../../components/supplier/SupplierDetailsCard.tsx";
+import {Supplier} from "@/types/SupplierTypes.ts";
+import SupplierListCard from "../../../components/supplier/SupplierListCard.tsx";
 import Loader from "../../../components/utils/Loader.tsx";
 import Pagination from "../../../components/utils/pagination/Pagination.tsx";
 import PageHeaderLink from "@/components/navigation/PageHeaderLink.tsx";
@@ -66,7 +66,7 @@ const SupplierListPage: FC = () => {
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            {suppliers.map((supplier: any) => <SupplierDetailsCard key={supplier._id} supplier={supplier} onDelete={() => console.log("Deleted.")} />) }
+                            {suppliers.map((supplier: any) => <SupplierListCard key={supplier._id} supplier={supplier} onDelete={() => console.log("Deleted.")} />) }
                         </div>
 
                         <div className={(totalItems <= 10) ? "hidden" : ""}>

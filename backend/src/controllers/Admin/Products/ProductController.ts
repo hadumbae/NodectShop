@@ -1,7 +1,4 @@
-import mongoose from 'mongoose';
-import {Request, Response, NextFunction, RequestHandler} from 'express';
-import { validationResult } from 'express-validator';
-import { isHttpError } from 'http-errors';
+import {Request, Response, RequestHandler} from 'express';
 
 import ProductAdminService from '../../../services/Product/product.admin.service.js';
 import asyncHandler from "../../../middleware/asyncHandler.js";

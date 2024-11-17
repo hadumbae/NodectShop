@@ -3,7 +3,7 @@ import BasicCard from "../BasicCard.tsx";
 import {Link} from "react-router-dom";
 import _ from "lodash";
 import {FaMagnifyingGlass} from "react-icons/fa6";
-import {CategoryType} from "../../schema/CategorySchema.ts";
+import {CategoryType} from "@/schema/CategorySchema.ts";
 
 interface Props {
     category: CategoryType
@@ -23,7 +23,7 @@ const CategoryListCard: FC<Props> = ({category}) => {
             <div className="flex justify-between">
                 <div className="flex space-x-2 items-end">
                     <span className="text-lg font-light">Mode</span>
-                    <span className="text-3xl">{category.mode}</span>
+                    <span className="text-3xl">{category.mode || "MANUAL"}</span>
                 </div>
 
                 <div className="flex space-x-2 items-end">

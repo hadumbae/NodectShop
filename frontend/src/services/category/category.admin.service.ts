@@ -1,5 +1,4 @@
 import fetchQuery from "../../utils/fetchQuery.ts";
-import queryAPI from "../../utils/queryAPI.ts";
 import {useFetch} from "@/utils/useFetch.ts";
 
 export default {
@@ -7,10 +6,11 @@ export default {
     /**
      * Fetch all the categories.
      * @param authToken The authorization token.
+     * @returns An object with the response and JSON result.
      */
     async fetchCategories(authToken: string) {
         const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/get-all`;
-        return fetchQuery(apiLink, "GET", authToken)
+        return useFetch(apiLink, "GET", authToken)
     },
 
     /**
@@ -48,7 +48,7 @@ export default {
      */
     async fetchCategoryWithData(categoryID: string, authToken: string) {
         const link = `${import.meta.env.VITE_API_URL}/admin/categories/get/${categoryID}/data`;
-        return queryAPI(link, "GET", authToken);
+        return useFetch(link, "GET", authToken);
     },
 
     /**

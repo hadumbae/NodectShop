@@ -32,9 +32,9 @@ const SupplierSchema = new mongoose.Schema<ISupplier>(
 		name: { type: String, required: true, unique: true },
 		website: { type: String, required: true },
 		contact: {
-			email: { type: String, required: false, default: "" },
-			phone: { type: String, required: false, default: "" },
-			fax: { type: String, required: false, default: ""},
+			email: { type: String, required: false, default: null },
+			phone: { type: String, required: false, default: null },
+			fax: { type: String, required: false, default: null},
 		},
 		contactPersons: [
 			{
@@ -55,7 +55,7 @@ const SupplierSchema = new mongoose.Schema<ISupplier>(
 	{ timestamps: true }
 );
 
-SupplierSchema.post('deleteOne', {document: true, query: false}, async function(next) {
+SupplierSchema.post('deleteOne', {document: true, query: false}, async function() {
 	await ProductSKU.updateMany({supplier: this._id}, {supplier: null});
 })
 

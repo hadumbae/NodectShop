@@ -1,41 +1,20 @@
-import {useEffect, useState} from "react";
 import CategoryService from "../../services/category/category.admin.service.ts";
-import {toast} from "react-toastify";
-import {CategoryType} from "../../schema/CategorySchema.ts";
+import {useQuery} from "@tanstack/react-query";
+import {FetchError} from "@/utils/CustomErrors.ts";
 
 export default function useFetchCategoryWithData(categoryID: string, token: string) {
-    const [isLoading, setIsLoading] = useState(false);
+    const {data, status, isLoading, isSuccess, error} = useQuery({
+        queryKey: ['fetch_single_category_with_data'],
+        queryFn: async () => {
+            const {response, result} = await CategoryService.fetchCategoryWithData(categoryID, token);
 
-    const [category, setCategory] = useState<CategoryType | null>(null);
-    const [products, setProducts] = useState<any | null>([]);
-
-    useEffect(() => {
-        setIsLoading(true);
-
-        const fetchCategory = async () => {
-            try {
-                const {status, payload} = await CategoryService.fetchCategoryWithData(categoryID, token);
-
-                if (status === 200) {
-                    setIsLoading(false);
-
-                    setCategory(payload.data.category);
-                    setProducts(payload.data.products);
-                } else {
-                    toast.error("Error! Could not fetch category.");
-                    console.error(`${status} : ${payload.message}`);
-                    setIsLoading(false);
-                }
-            } catch (error) {
-                console.error(error);
+            if (response.ok) {
+                return result.data;
+            } else {
+                throw new FetchError(response, result.message, result.errors);
             }
         }
+    });
 
-        fetchCategory();
-    }, []);
-
-    return {
-        category, products,
-        isLoading, setIsLoading,
-    };
+    return {data, status, isLoading, isSuccess, error};
 }

@@ -1,101 +1,51 @@
-import {FC, useState} from 'react';
-import {Supplier} from "../../types/SupplierTypes.ts";
-import {MdAlternateEmail} from "react-icons/md";
-import {FaPhone, FaFax, FaTrash} from "react-icons/fa";
-import {Link} from "react-router-dom";
-import {FaMagnifyingGlass} from "react-icons/fa6";
-import {useSelector} from "react-redux";
-import {toast} from "react-toastify";
-import SupplierService from "../../services/supplier/SupplierService.ts";
-import _ from "lodash";
+import {FC} from 'react';
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx";
+import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table.tsx";
+import {SupplierType} from "@/schema/supplier.schema.ts";
 
 interface Props {
-    supplier: Supplier;
-    onDelete: (supplierID: string) => void;
+    supplier: SupplierType;
 }
 
-const SupplierDetailsCard: FC<Props> = ({supplier, onDelete}) => {
-    const {token, isAdmin} = useSelector((state: any) => state.authUser);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const handleDelete = async () => {
-        if (!token || !isAdmin) {
-            toast.error("Unauthorized!");
-            return
-        }
-
-        setIsLoading(true);
-
-        const {status, payload} = await SupplierService.deleteSupplier(supplier._id!, token);
-
-
-        if (status === 200) {
-            toast.success("Supplier deleted successfully.");
-            onDelete(supplier._id!);
-        } else {
-            toast.error("Oops. Something bad happened!");
-            console.error(`${status}: ${payload.message}`);
-        }
-
-        setIsLoading(false);
-    }
-
+const SupplierDetailsCard: FC<Props> = ({supplier}) => {
     return (
-        <div className="bg-white border rounded-lg shadow-md p-5 flex flex-col space-y-4">
-            <div className="
-                    flex flex-col justify-center items-center
-                    md:flex-row md:justify-between
-                ">
-
-                {/* Supplier Details */}
-
-                <h1 className="text-2xl">{supplier.name}</h1>
-
-
-                {/* Details And Delete */}
-
-                <div className="flex justify-center items-center">
-                    <Link to={`/admin/supplier/find/${supplier._id}/${_.kebabCase(supplier.name)}`}
-                          className="text-gray-400 hover:text-yellow-500 p-3">
-                        <FaMagnifyingGlass/>
-                    </Link>
-                    <button className="text-gray-600 disabled:text-gray-200 hover:text-red-500 p-3" onClick={handleDelete} disabled={isLoading}>
-                        <FaTrash/>
-                    </button>
-                </div>
-
-            </div>
-
-            {/* Supplier Contact Details */}
-
-            <div className="flex justify-center items-center space-x-3 flex-wrap -mt-2">
-                <a href={supplier.website}
-                                              className="mt-2 text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-1 hover:shadow-md hover:border-black">
-                    <MdAlternateEmail/>
-                    <span>Website</span>
-                </a>
-                {supplier.contact.email && <a href={`mailto:${supplier.contact.email}`}
-                                              className="mt-2 text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-1 hover:shadow-md hover:border-black">
-                    <MdAlternateEmail/>
-                    <span>Email</span>
-                </a>}
-                {supplier.contact.phone && <a href={`tel:${supplier.contact.phone}`}
-                                              className="mt-2 text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-3 hover:shadow-md hover:border-black">
-                    <FaPhone/>
-                    <span>Call</span>
-                </a>}
-                {supplier.contact.fax && <a href={`fax:${supplier.contact.fax}`}
-                                            className="mt-2 text-sm border border-gray-200 rounded-xl p-2 flex justify-center items-center space-x-3 hover:shadow-md hover:border-black">
-                    <FaFax/>
-                    <span>Fax</span>
-                </a>}
-            </div>
-
-            {/* Supplier Address */}
-            <div className="text-center">
-                <span className="text-sm font-extralight">{supplier.address.street}, {supplier.address.city}, {supplier.address.state}, {supplier.address.country}</span>
-            </div>
-        </div>
+        <Card>
+            <CardHeader>
+                <CardTitle className="text-2xl font-extrabold">Details</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell className="font-bold">Name</TableCell>
+                            <TableCell>{supplier.name}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-bold">Website</TableCell>
+                            <TableCell>{supplier.website}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-bold">Email</TableCell>
+                            <TableCell>{supplier.contact.email}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-bold">Phone</TableCell>
+                            <TableCell>{supplier.contact.phone}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-bold">Fax</TableCell>
+                            <TableCell>{supplier.contact.fax}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-bold">Address</TableCell>
+                            <TableCell>
+                                {supplier.address.street}, {supplier.address.city}, {supplier.address.state}, {supplier.address.country}
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
     );
 };
 

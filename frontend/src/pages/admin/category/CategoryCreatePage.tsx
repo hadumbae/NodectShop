@@ -4,7 +4,7 @@ import PageHeaderLink from "@/components/navigation/PageHeaderLink.tsx";
 
 const CategoryCreatePage = () => {
     return (
-        <div className="flex flex-col lg:flex-row">
+        <div className="flex flex-col space-y-4">
             <section className="flex justify-between">
                 <HeaderText>Category</HeaderText>
 
@@ -13,9 +13,11 @@ const CategoryCreatePage = () => {
                 </PageHeaderLink>
             </section>
 
-            <div className="lg:w-1/2 p-5">
-                <CategoryForm />
-            </div>
+            <section className="flex justify-center">
+                <div className="w-full lg:w-1/2">
+                    <CategoryForm />
+                </div>
+            </section>
         </div>
     );
 };
