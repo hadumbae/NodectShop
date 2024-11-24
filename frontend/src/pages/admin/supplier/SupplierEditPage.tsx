@@ -1,72 +1,36 @@
-import {FC, useEffect, useState} from 'react';
-import {Link, useNavigate, useParams} from "react-router-dom";
-import {toast} from "react-toastify";
-import {Supplier} from "../../../types/SupplierTypes.ts";
-import SupplierService from "../../../services/supplier/SupplierService.ts";
+import {FC} from 'react';
+import {useParams} from "react-router-dom";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import Loader from "../../../components/utils/Loader.tsx";
-import UpdateSupplierForm from "../../../components/supplier/UpdateSupplierForm.tsx";
 import _ from "lodash";
+import useFetchSupplier from "@/hooks/supplier/useFetchSupplier.ts";
+import HeaderText from "@/components/header/HeaderText.tsx";
+import PageHeaderLink from "@/components/navigation/page.header.link.tsx";
+import SupplierForm from "@/components/forms/supplier/supplier.form.tsx";
 
 const SupplierEditPage: FC = () => {
-    const navigate = useNavigate();
     const {supplierID} = useParams();
-
-    if (!supplierID) {
-        toast.error("Empty Supplier ID");
-        navigate("/admin/supplier/list");
-    }
-
     const {token} = useAdminToken();
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [supplier, setSupplier] = useState<Supplier | null>(null);
+    const {supplier, isPending} = useFetchSupplier(supplierID!, token);
 
-    useEffect(() => {
-        const fetchSupplier = async () => {
-            setIsLoading(true);
-
-            try {
-                const {status, payload} = await SupplierService.fetchSupplier(supplierID!, token);
-
-                if (status === 200) {
-                    setSupplier(payload.data);
-                } else if (status === 404) {
-                    toast.error("Oops. Supplier not found.");
-                } else {
-                    toast.error("Oops. Something bad happened!");
-                    console.log(`${status} : ${payload.message}`);
-                }
-
-                setIsLoading(false);
-            } catch (error) {
-                toast.error("Oops. Something bad happened!");
-                console.log(error);
-            }
-        }
-
-        fetchSupplier();
-    }, []);
+    if (isPending) {
+        return (<div className="h-full flex justify-center items-center">
+            <Loader loading={isPending} />
+        </div>);
+    }
 
     return (
-        <div>
-            <div className="mt-2 flex justify-between items-center">
-                <h1 className="text-2xl">{supplier ? supplier.name : "Edit Supplier"}</h1>
-
-                <Link to={`/admin/supplier/find/${supplierID}/${_.kebabCase(supplier?.name)}`}
-                className="text-xl text-gray-400 hover:underline hover:underline-offset-8 hover:text-black">
+        <div className="space-y-5">
+            <section className="flex justify-between items-center">
+                <HeaderText>{supplier ? supplier.name : "Edit Supplier"}</HeaderText>
+                <PageHeaderLink link={`/admin/supplier/find/${supplierID}/${_.kebabCase(supplier?.name)}`}>
                     &lt; Back
-                </Link>
-            </div>
+                </PageHeaderLink>
+            </section>
 
-            {isLoading && <div className="mt-3 flex justify-center">
-                <div className="bg-white p-5 shadow-md rounded-xl">
-                    <Loader loading={isLoading} />
-                </div>
-            </div>}
-
-            {(!isLoading && supplier) && <div className="mt-4">
-                <UpdateSupplierForm supplier={supplier} />
+            {(!isPending && supplier) && <div className="mt-4">
+                <SupplierForm supplier={supplier} />
             </div>}
         </div>
     );

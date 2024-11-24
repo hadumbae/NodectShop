@@ -2,10 +2,10 @@ import {FC, useRef} from 'react';
 import _ from "lodash";
 import {Link} from "react-router-dom";
 import {FaMagnifyingGlass, FaPencil} from "react-icons/fa6";
-import {ProductType} from "@/schema/ProductSchema.ts";
+import {ZProduct} from "@/schema/product.zod.ts";
 
 interface Props {
-    product: ProductType;
+    product: ZProduct;
 }
 
 const ProductListCard: FC<Props> = ({product}) => {
@@ -22,7 +22,6 @@ const ProductListCard: FC<Props> = ({product}) => {
             <div className="p-3 h-2/3 flex flex-col justify-between space-y-3">
                 <div>
                     <h1 className="text-lg line-clamp-2 text-justify">{product.title}</h1>
-                    {product.category && <span className="text-sm text-gray-400 relative bottom-1">{product.category?.category}</span>}
                 </div>
 
                 <blockquote className="line-clamp-3 text-sm text-justify px-6 text-gray-400 hover:text-black">

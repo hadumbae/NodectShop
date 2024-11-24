@@ -1,5 +1,5 @@
 import mongoose, {Schema, Types} from 'mongoose';
-import ProductAttribute from "./ProductAttribute.js";
+import ProductAttribute from "./product.attribute.schema.js";
 import ProductSKU from "./ProductSKU.js";
 
 export interface IProductAttributeOption {

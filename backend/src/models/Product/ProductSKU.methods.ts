@@ -1,4 +1,4 @@
-import Product from "./Product.js";
+import Product from "./product.schema.js";
 import cloudinary from "../../configs/cloudinary-config.js";
 
 export const primaryImage = function () {

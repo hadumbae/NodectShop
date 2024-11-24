@@ -41,50 +41,50 @@ const AdminLayout = () => {
         <SidebarProvider defaultOpen={false}>
             <AdminSidebar />
 
-            <div className="relative container mx-auto">
-            <div className="p-6 grid grid-cols-1  lg:grid-cols-3">
-                <div className="flex items-center justify-between">
-                    <Link to="/" className="font-orbitron text-3xl flex items-center">
-                        <CiCircleChevUp className="mr-1" />
-                        NoDECT
-                        <span className="text-sm">
-                        admin
-                        </span>
-                    </Link>
+            <main className="container mx-auto flex flex-col">
+                <nav className="p-6 grid grid-cols-1 lg:grid-cols-3">
+                    <div className="flex items-center justify-between">
+                        <Link to="/" className="font-orbitron text-3xl flex items-center">
+                            <CiCircleChevUp className="mr-1" />
+                            NoDECT
+                            <span className="text-sm">
+                            admin
+                            </span>
+                        </Link>
 
-                    <SidebarTrigger className="lg:hidden" />
+                        <SidebarTrigger className="lg:hidden" />
+                    </div>
+
+                    <div className="hidden lg:flex lg:space-x-4 lg:justify-center lg:items-center">
+                        <NavLink to="/admin/dashboard" className="hover:underline hover:underline-offset-8 hover:text-black">Dashboard</NavLink>
+                        <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Categories</NavLink>
+                        <NavLink to="/admin/supplier/list" className="hover:underline hover:underline-offset-8 hover:text-black">Suppliers</NavLink>
+                        <NavLink to="/admin/product/attribute/list" className="hover:underline hover:underline-offset-8 hover:text-black">Attributes</NavLink>
+                        <NavLink to="/admin/product/list" className="hover:underline hover:underline-offset-8 hover:text-black">Products</NavLink>
+                        <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Orders</NavLink>
+                    </div>
+
+                    <div className="hidden lg:flex lg:space-x-6 lg:justify-end lg:items-center">
+                        <NavLink
+                            to="/"
+                            className="text-2xl"
+                        >
+                            <GrCycle />
+                        </NavLink>
+
+                        <button
+                            className="text-2xl"
+                            onClick={logoutHandler}
+                        >
+                            <RiLogoutCircleRFill />
+                        </button>
+                    </div>
+                </nav>
+
+                <div className="flex-1 px-3 py-2 border-t">
+                    <Outlet />
                 </div>
-
-                <div className="hidden lg:flex lg:space-x-4 lg:justify-center lg:items-center">
-                    <NavLink to="/admin/dashboard" className="hover:underline hover:underline-offset-8 hover:text-black">Dashboard</NavLink>
-                    <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Categories</NavLink>
-                    <NavLink to="/admin/supplier/list" className="hover:underline hover:underline-offset-8 hover:text-black">Suppliers</NavLink>
-                    <NavLink to="/admin/product/attribute/list" className="hover:underline hover:underline-offset-8 hover:text-black">Attributes</NavLink>
-                    <NavLink to="/admin/product/list" className="hover:underline hover:underline-offset-8 hover:text-black">Products</NavLink>
-                    <NavLink to="/admin/category/list" className="hover:underline hover:underline-offset-8 hover:text-black">Orders</NavLink>
-                </div>
-
-                <div className="hidden lg:flex lg:space-x-6 lg:justify-end lg:items-center">
-                    <NavLink
-                        to="/"
-                        className="text-2xl"
-                    >
-                        <GrCycle />
-                    </NavLink>
-
-                    <button
-                        className="text-2xl"
-                        onClick={logoutHandler}
-                    >
-                        <RiLogoutCircleRFill />
-                    </button>
-                </div>
-            </div>
-
-            <div className="px-3 py-2 border-t">
-                <Outlet />
-            </div>
-        </div>
+            </main>
         </SidebarProvider>
     );
 };

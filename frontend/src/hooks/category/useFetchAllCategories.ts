@@ -1,4 +1,4 @@
-import CategoryService from "../../services/category/category.admin.service.ts";
+import CategoryService from "../../services/category/category.service.ts";
 import {useQuery} from "@tanstack/react-query";
 import {FetchError} from "@/utils/CustomErrors.ts";
 

@@ -3,6 +3,8 @@ import asyncHandler from "../../../middleware/asyncHandler.js";
 
 import CategoryRepository from "../../../repositories/CategoryRepository.js";
 import CategoryAdminService from "../../../services/Category/category.admin.service.js";
+import ProductPaginatedAdminService from "../../../services/Product/product.paginated.admin.service.js";
+import PaginationService from "../../../services/pagination.service.js";
 
 /**
  * Find all categories.
@@ -10,19 +12,6 @@ import CategoryAdminService from "../../../services/Category/category.admin.serv
 export const getCategories: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
 	const categories = await CategoryRepository.findLean();
 	return res.json({message: "Categories fetched successfully.", data: categories});
-});
-
-/**
- * Fetch paginated categories.
- */
-export const getPaginatedCategories: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
-	const currentPage = req.query.page || 1;
-	const perPage = req.query.perPage || 15;
-
-	const totalItems = await CategoryRepository.count();
-	const categories = await CategoryRepository.paginatedLean(currentPage, perPage);
-
-	return res.json({ message: "Categories fetched.", data: {categories, totalItems} });
 });
 
 /**
@@ -39,8 +28,8 @@ export const createCategory: RequestHandler = asyncHandler(async (req: Request, 
  */
 export const getCategoryByID = asyncHandler(async (req: Request, res: Response) => {
 	const { categoryID } = req.params;
-	const category = await CategoryRepository.findById(categoryID);
-	return res.status(200).json({ data: category });
+	const category = await CategoryRepository.existsOr404Lean(categoryID);
+	return res.status(200).json({ message: "Category retrieved.", data: category });
 });
 
 /**
@@ -64,10 +53,23 @@ export const deleteCategory = asyncHandler(async (req: Request, res: Response) =
 });
 
 /**
- * Fetch
+ * Fetch paginated categories.
  */
-export const getCategoryData = asyncHandler(async (req: Request, res: Response) => {
-	const { categoryID } = req.params;
-	const {category, products} = await CategoryAdminService.fetchCategoryWithData(categoryID);
-	return res.status(200).json({ message: "Category Data Retrieved.", data: {category, products} });
+export const getPaginatedCategories: RequestHandler = asyncHandler(async (req: Request, res: Response) => {
+	const {page, perPage} = PaginationService.fetchPaginationQuery(req.query);
+
+	const totalItems = await CategoryRepository.count();
+	const categories = await CategoryAdminService.paginateCategoriesWithProductCount(page, perPage);
+
+	return res.json({ message: "Categories fetched.", data: {categories, totalItems} });
 });
+
+
+export const getPaginatedProductsByCategory = asyncHandler(async (req: Request, res: Response) => {
+	const {page, perPage} = PaginationService.fetchPaginationQuery(req.query);
+	const { categoryID } = req.params;
+
+	const {totalItems, products} = await CategoryAdminService.fetchPaginatedProductsByCategory(categoryID as string, page, perPage);
+	return res.status(200).json({message: "Paginated products by category fetched.", data: {totalItems, products}});
+});
+

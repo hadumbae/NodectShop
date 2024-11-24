@@ -6,7 +6,7 @@ import ProductAdminService from "../Product/product.admin.service.js";
 import SupplierAdminService from "../Supplier/supplier.admin.service.js";
 import ProductSKUImageAdminService from "./product.sku.image.admin.service.js";
 import createError from "http-errors";
-import Product from "../../models/Product/Product.js";
+import Product from "../../models/Product/product.schema.js";
 import SupplierRepository from "../../repositories/SupplierRepository.js";
 import ProductRepository from "../../repositories/ProductRepository.js";
 import Category from "../../models/Category.js";

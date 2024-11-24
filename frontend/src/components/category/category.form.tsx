@@ -2,7 +2,7 @@ import { FC } from 'react';
 import {useForm} from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CategorySubmitSchema, CategorySubmitType, CategoryType } from '@/schema/CategorySchema.ts';
+import { CategorySubmitSchema, CategorySubmitType, ZCategory } from '@/schema/category.zod.ts';
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input"
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {useMutation} from "@tanstack/react-query";
-import CategoryAdminService from "@/services/category/category.admin.service.ts";
+import CategoryAdminService from "@/services/category/category.service.ts";
 import useAdminToken from "@/hooks/useAdminToken.ts";
 import {FetchError} from "@/utils/CustomErrors.ts";
 import {useNavigate} from "react-router-dom";
@@ -25,7 +25,7 @@ import _ from "lodash";
 import {toast} from "react-toastify";
 
 interface Props {
-	category?: CategoryType;
+	category?: ZCategory;
 }
 
 const CategoryForm: FC<Props> = ({ category }) => {
@@ -153,7 +153,7 @@ const CategoryForm: FC<Props> = ({ category }) => {
 						/>}
 					</CardContent>
 					<CardFooter>
-						<Button type="submit" className="w-full">Submit</Button>
+						<Button type="submit" className="w-full bg-primary text-gray-600">Submit</Button>
 					</CardFooter>
 				</Card>
 			</form>

@@ -5,11 +5,12 @@ import { RegisterUserValidator, AuthPasswordUpdateValidator } from '../validatio
 
 // Validator
 import AuthLoginValidator from '../validation/validators/Auth/AuthLoginValidator.js';
+import validateErrors from "../middleware/validateErrors.js";
 
 const AuthRoutes = express.Router();
 
 AuthRoutes.post('/register', RegisterUserValidator, register);
-AuthRoutes.post('/signin', AuthLoginValidator, signin);
+AuthRoutes.post('/signin', [...AuthLoginValidator, validateErrors], signin);
 AuthRoutes.post('/update-password', AuthPasswordUpdateValidator, updatePassword);
 
 export default AuthRoutes;

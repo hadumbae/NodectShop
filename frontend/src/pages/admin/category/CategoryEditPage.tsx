@@ -1,25 +1,26 @@
 import Loader from "../../../components/utils/Loader.tsx";
-import CategoryForm from "../../../components/category/CategoryForm.tsx";
+import CategoryForm from "../../../components/category/category.form.tsx";
 import useCategoryParam from "../../../hooks/category/useCategoryParam.ts";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
-import useFetchCategoryWithData from "../../../hooks/category/useFetchCategoryWithData.ts";
 import HeaderText from "@/components/header/HeaderText.tsx";
-import PageHeaderLink from "@/components/navigation/PageHeaderLink.tsx";
+import PageHeaderLink from "@/components/navigation/page.header.link.tsx";
+import useFetchCategory from "@/hooks/category/useFetchCategory.ts";
 
 const CategoryEditPage = () => {
     const {categoryID, categorySlug} = useCategoryParam();
 
     const { token } = useAdminToken();
-    const {data, isLoading, isSuccess} = useFetchCategoryWithData(categoryID!, token);
+    const {category, isPending, isSuccess} = useFetchCategory(categoryID!, token);
+
+    if (isPending) return (<div className="h-full flex justify-center items-center">
+            <Loader loading={isPending} />
+        </div>);
 
     return (
-        <div className="md:p-5 space-y-4">
-            {isLoading && <section className="flex justify-center">
-                <Loader loading={isLoading}/>
-            </section>}
+        <div className="space-y-5">
 
             {isSuccess && <section className="flex justify-between">
-                <HeaderText>{data?.category?.category || "Category"}</HeaderText>
+                <HeaderText>Edit {category.category}</HeaderText>
 
                 <PageHeaderLink link={`/admin/category/find/${categoryID}/${categorySlug}`} >
                     &lt; Back
@@ -28,10 +29,9 @@ const CategoryEditPage = () => {
 
             {isSuccess && <section className="flex justify-center">
                 <div className="w-full md:w-2/3 xl:w-1/3">
-                    <CategoryForm category={data.category}/>
+                    <CategoryForm category={category}/>
                 </div>
             </section>}
-
         </div>
     );
 };

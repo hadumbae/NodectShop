@@ -4,6 +4,7 @@ import { validationResult } from 'express-validator';
 
 import AuthService from '../services/Auth/auth.service.js';
 import UserRepository from "../repositories/UserRepository.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -26,22 +27,14 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 	}
 };
 
-export const signin = async (req, res, next) => {
-	try {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) return res.status(400).json({ message: 'Validation failed.', errors: errors.array() });
+export const signin = asyncHandler(async (req, res, next) => {
+	const { email, password } = req.body;
 
-		const { email, password } = req.body;
+	const token = await AuthService.signin(email, password);
+	const user = await UserRepository.findOne({ email });
 
-		const token = await AuthService.signin(email, password);
-		const user = await UserRepository.findOne({ email });
-
-		return res.json({ message: 'Login successful.', token: token, isAdmin: user.isAdmin  });
-	} catch (error) {
-		if (!isHttpError) res.status(500);
-		next(error);
-	}
-};
+	return res.json({ message: 'Login successful.', data: {token: token, isAdmin: user.isAdmin}  });
+});
 
 export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
 	try {

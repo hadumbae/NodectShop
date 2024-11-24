@@ -47,9 +47,10 @@ const validate = [
 
 export const addProductValidator = [
     ...validate,
-    check('image')
-        .exists().withMessage("Please include image upload, even if empty.")
+    check('file')
         .custom((value, {req}) => {
+            console.log("File", req.file)
+
             if (!req.file) throw createError(400, "Image required.");
 
             const acceptedTypes = [

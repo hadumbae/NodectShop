@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import {FaMagnifyingGlass} from "react-icons/fa6";
 import {useSelector} from "react-redux";
 import {toast} from "react-toastify";
-import SupplierService from "../../services/supplier/SupplierService.ts";
+import SupplierService from "../../services/supplier/supplier.service.ts";
 import _ from "lodash";
 
 interface Props {

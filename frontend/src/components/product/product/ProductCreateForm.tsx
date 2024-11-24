@@ -3,24 +3,21 @@ import {GiCycle} from "react-icons/gi";
 import FormInput from "../../inputs/FormInput.tsx";
 import Button from "../../inputs/Button.tsx";
 import {toast} from "react-toastify";
-import ProductService from "../../../services/product/ProductService.ts";
+import ProductService from "../../../services/product/product.service.ts";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import {fetchValidationError} from "../../../utils/FormUtils.ts";
 import FormTextArea from "../../inputs/FormTextArea.tsx";
-import FormSelect from "../../inputs/FormSelect.tsx";
 import {useNavigate} from "react-router-dom";
 import _ from "lodash";
 import Loader from "../../utils/Loader.tsx";
-import {CategoryType} from "../../../schema/CategorySchema.ts";
 import FormFileInput from "../../inputs/FormFileInput.tsx";
-import {ProductType} from "@/schema/ProductSchema.ts";
+import {ZProduct} from "@/schema/product.zod.ts";
 
 interface Props  {
     product?: any;
-    categories: CategoryType[],
 }
 
-const ProductCreateForm: FC<Props> = ({product, categories}) => {
+const ProductCreateForm: FC<Props> = ({product}) => {
     const navigate = useNavigate();
 
     const {token} = useAdminToken();
@@ -33,7 +30,6 @@ const ProductCreateForm: FC<Props> = ({product, categories}) => {
     const [description, setDescription] = useState<string>("");
     const [type, setType] = useState<string>("");
     const [tags, setTags] = useState<string>("");
-    const [category, setCategory] = useState<string>("");
     const [image, setImage] = useState(null);
 
     useEffect(() => {
@@ -51,8 +47,7 @@ const ProductCreateForm: FC<Props> = ({product, categories}) => {
         data.append("description", description);
         data.append("tags", tags);
         data.append("image", image);
-        data.append("type", type || null);
-        data.append("category", category || null);
+        data.append("type", type);
 
         const {status, payload} = product ?
             await ProductService.updateProduct(product._id, data, token) :
@@ -72,13 +67,12 @@ const ProductCreateForm: FC<Props> = ({product, categories}) => {
         setIsLoading(false);
     }
 
-    const setValue = (values: ProductType | null = null) => {
+    const setValue = (values: ZProduct | null = null) => {
         setError(null);
         setValidationErrors([]);
 
         setTitle(values?.title || "");
         setDescription(values?.description || "");
-        setCategory(values?.category?._id || "");
         setType(values?.type || "");
         setTags(values?.tags.join(",") || "");
         setImage(null);
@@ -126,21 +120,6 @@ const ProductCreateForm: FC<Props> = ({product, categories}) => {
                         label="Image"
                         errors={fetchValidationError("image", validationErrors)}
                         changeHandler={setImage}/>
-
-                    <FormSelect
-                        label={"Category"}
-                        name={"category"}
-                        value={category}
-                        changeHandler={setCategory}
-                        errors={fetchValidationError("category", validationErrors)}
-                    >
-                        <option value="">Select A Category</option>
-                        {categories.map(
-                            (categoryItem: CategoryType) => <option key={categoryItem._id} value={categoryItem._id}>
-                                {categoryItem.category}
-                            </option>
-                        )}
-                    </FormSelect>
 
                     <FormInput
                         label={"Tags (Separate By Commas)"}

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
-import ProductService from "../../services/product/ProductService.ts";
+import ProductService from "../../services/product/product.service.ts";
 import {Product} from "../../types/ProductTypes.ts";
 import {redirect} from "react-router-dom";
 

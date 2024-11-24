@@ -1,5 +1,5 @@
 import mongoose, {Schema, Types} from 'mongoose';
-import {IProduct} from "./Product.js";
+import {IProduct} from "./product.schema.js";
 import {postSave, preDeleteImageOne, preDeleteOne, primaryImage} from "./ProductSKU.methods.js";
 import {IProductAttributeOption} from "./ProductAttributeOption.js";
 

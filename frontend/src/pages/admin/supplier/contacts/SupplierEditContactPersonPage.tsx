@@ -2,9 +2,9 @@ import {FC} from 'react';
 import {Link} from "react-router-dom";
 import SupplierUpdateContactPersonForm from "../../../../components/supplier/contactperson/SupplierUpdateContactPersonForm.tsx";
 import useAdminToken from "../../../../hooks/useAdminToken.ts";
-import useFetchSupplierContact from "../../../../hooks/supplier/useFetchSupplierContact.ts";
+import useFetchSupplierContact from "../../../../hooks/supplier/contacts/useFetchSupplierContact.ts";
 import Loader from "../../../../components/utils/Loader.tsx";
-import useSupplierContactPersonParam from "../../../../hooks/supplier/useSupplierContactPersonParam.ts";
+import useSupplierContactPersonParam from "../../../../hooks/supplier/contacts/useSupplierContactPersonParam.ts";
 
 const SupplierCreateContactPersonPage: FC = () => {
     const {supplierID, supplierSlug, contactID} = useSupplierContactPersonParam();

@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
-import ProductService from "../../services/product/ProductService.ts";
+import ProductService from "../../services/product/product.service.ts";
 
 export default function useFetchProducts(token: string) {
     const [products, setProducts] = useState([]);

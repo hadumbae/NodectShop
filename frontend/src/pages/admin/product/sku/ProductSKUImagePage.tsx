@@ -3,7 +3,7 @@ import useAdminToken from "../../../../hooks/useAdminToken.ts";
 import useProductSKUParam from "../../../../hooks/product/useProductSKUParam.ts";
 import useFetchProductSKUWithImages from "../../../../hooks/product/useFetchProductSKUWithImages.ts";
 import HeaderText from "../../../../components/header/HeaderText.tsx";
-import PageHeaderLink from "../../../../components/navigation/PageHeaderLink.tsx";
+import PageHeaderLink from "../../../../components/navigation/page.header.link.tsx";
 import ProductSKUImageUploadCard from "../../../../components/product/product/images/ProductSKUImageUploadCard.tsx";
 import {ProductSKUImage} from "../../../../types/ProductTypes.ts";
 import ProductSKUImageCard from "../../../../components/product/product/images/ProductSKUImageCard.tsx";

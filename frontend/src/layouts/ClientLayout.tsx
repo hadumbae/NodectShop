@@ -22,15 +22,15 @@ const ClientLayout = () => {
 
     return (
         <div className="relative container mx-auto">
-            <div className="p-6 grid grid-cols-3">
+            <nav className="p-6 grid grid-cols-3">
                 <div>
-                    <Link to="/" className="font-orbitron text-3xl flex items-center">
+                    <Link to="/" className="font-orbitron text-3xl font-bold flex items-center">
                         <CiCircleChevUp className="mr-1" />
                         NoDECT
                     </Link>
                 </div>
 
-                <div className="hidden md:flex md:justify-center space-x-6">
+                <div className="hidden md:flex md:justify-center items-center space-x-6">
                     <NavLink to="/" className="hover:underline hover:underline-offset-8 hover:text-black">Home</NavLink>
                     <NavLink to="/about" className="hover:underline hover:underline-offset-8 hover:text-black">About</NavLink>
                 </div>
@@ -62,7 +62,7 @@ const ClientLayout = () => {
                         <RiLogoutCircleRFill />
                     </button>}
                 </div>
-            </div>
+            </nav>
 
             <div className="px-3 py-2 border-t">
                 <Outlet />

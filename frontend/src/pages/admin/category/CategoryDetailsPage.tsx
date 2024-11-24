@@ -1,77 +1,57 @@
-import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {toast} from "react-toastify";
-
-import CategoryService from "../../../services/category/category.admin.service.ts";
-import useCategoryParam from "../../../hooks/category/useCategoryParam.ts";
-import useFetchCategoryWithData from "../../../hooks/category/useFetchCategoryWithData.ts";
-import {useState} from "react";
-import PageHeaderLink from "@/components/navigation/PageHeaderLink.tsx";
-import PageHeaderButton from "@/components/header/PageHeaderButton.tsx";
+import Loader from "@/components/utils/Loader.tsx";
 import HeaderText from "@/components/header/HeaderText.tsx";
-import CategoryDetailsCard from "@/components/category/CategoryDetailsCard.tsx";
+import PageHeaderLink from "@/components/navigation/page.header.link.tsx";
+import CategoryDetailsCard from "@/components/category/category.details.card.tsx";
+import CategoryDeleteAlert from "@/components/category/category.delete.alert.tsx";
+
+import useCategoryParam from "../../../hooks/category/useCategoryParam.ts";
+import useFetchCategory from "@/hooks/category/useFetchCategory.ts";
+import useAdminToken from "@/hooks/useAdminToken.ts";
+import HoverText from "@/components/hover.text.tsx";
+import CategoryProductList from "@/components/category/category.product.list.tsx";
 
 const CategoryDetailsPage = () => {
-
-    const navigate = useNavigate();
-
-    const {token} = useSelector((state: any) => state.authUser);
+    const {token} = useAdminToken();
     const {categoryID, categorySlug} = useCategoryParam();
-    const {data, isLoading, isSuccess} = useFetchCategoryWithData(categoryID!, token);
+    const {category, isPending, isSuccess, isError, error} = useFetchCategory(categoryID!, token);
 
-    const [deleteStatus, setDeleteStatus] = useState<"DELETING" | "ERROR" | null>(null);
+    if (isPending) {
+        return (<div className="flex justify-center items-center h-full">
+            <Loader loading={isPending} />
+        </div>);
+    }
 
-    const deleteCategory = async () => {
-        const check = confirm("Are you sure you want to delete this category?");
-        if (!check) return;
-
-        setDeleteStatus("DELETING");
-
-        try {
-            const {status, payload} = await CategoryService.deleteCategory(categoryID!, token);
-
-            if (status === 200) {
-                toast.success("Category deleted successfully.");
-                setDeleteStatus(null);
-
-                navigate("/admin/category/list");
-            } else {
-                setDeleteStatus("ERROR");
-
-                toast.error("Something went wrong.");
-                toast.error(payload.message);
-            }
-        } catch (error) {
-            alert(error);
-            setDeleteStatus("ERROR");
-        }
+    if (isError) {
+        return (<div className="flex flex-col justify-center items-center h-full">
+            <span className="text-red-500">Oops. Something bad happened!</span>
+            <span className="text-gray-400">{error!.message}</span>
+        </div>);
     }
 
     return (
-        <div className="md:p-5 space-y-5">
-            {!isLoading && <section className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <HeaderText>{data.category ? data.category.category : "Category"}</HeaderText>
+        <div className="flex flex-col space-y-2 h-full">
+            <section className="flex justify-between items-center">
+                <HeaderText>{category.category}</HeaderText>
 
                 <div className="flex justify-center space-x-1 md:space-x-5 lg:justify-end items-center">
-                    <PageHeaderLink link={`/admin/category/list`}>
-                        Index
-                    </PageHeaderLink>
                     <PageHeaderLink link={`/admin/category/edit/${categoryID}/${categorySlug}`}>
                         Edit
                     </PageHeaderLink>
-                    <PageHeaderButton onClick={deleteCategory}>
-                        Delete
-                    </PageHeaderButton>
+
+                    <CategoryDeleteAlert category={category}>
+                        <HoverText>Delete</HoverText>
+                    </CategoryDeleteAlert>
                 </div>
-            </section>}
+            </section>
 
-            {deleteStatus === "ERROR" && <section className="text-center text-red-500">
-                Oops. Something bad happened!
-            </section>}
-
-            {isSuccess && <section className="grid grid-cols-1 md:grid-cols-3">
-                <div>
-                    <CategoryDetailsCard category={data.category}/>
+            {isSuccess && <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                    <h1 className="text-2xl font-bold">Details</h1>
+                    <CategoryDetailsCard category={category}/>
+                </div>
+                <div className="md:col-span-2 space-y-2">
+                    <h1 className="text-2xl font-bold">Products</h1>
+                    <CategoryProductList categoryID={category._id} />
                 </div>
             </section>}
         </div>

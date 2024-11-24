@@ -1,33 +1,12 @@
 import createError from 'http-errors';
 
-import Product from '../../models/Product/Product.js';
+import Product from '../../models/Product/product.schema.js';
 import ProductRepository from "../../repositories/ProductRepository.js";
 import ProductImageAdminService from "./product.image.admin.service.js";
 import {ProductDataSchema} from "../../validation/schemas/product.validate.js";
 import createHttpError from "http-errors";
 
 const ProductAdminService = {
-	processPaginationQuery(pageQuery) {
-		const conditions = {};
-
-		const currentPage = pageQuery.page || 1;
-		const perPage = pageQuery.perPage || 15;
-
-		const { title } = pageQuery;
-
-		if (title) {
-			conditions['title'] = { $regex: `.*${title}.*`, $options: 'i' }
-		}
-
-		return {currentPage, perPage, conditions};
-	},
-
-	async fetchPaginatedProducts(currentPage: any = 1, perPage: any = 15, conditions = {}) {
-		if (isNaN(currentPage) || isNaN(perPage)) throw createError(400, "Invalid Pagination Error.");
-
-		return this.populateProducts(Product.find(conditions).skip((currentPage - 1) * perPage).limit(perPage));
-	},
-
 	async createProduct(data: any, uploadImage) {
 		console.log("Before Create: ", data);
 		const tags = data.tags.split(",");
@@ -56,8 +35,6 @@ const ProductAdminService = {
 			const errorMessage = `${error.path.join(".")} : ${error.message}`;
 			throw createHttpError(400, errorMessage)
 		}
-
-		console.log("Image: ", uploadImage)
 
 		if (uploadImage) {
 			result.data.image = await ProductImageAdminService.createProductImages(uploadImage);
@@ -92,8 +69,8 @@ const ProductAdminService = {
 	},
 
 	async populateProducts(query: any) {
-		return query.populate("category").populate('skus').populate('skus.options').lean();
-	}
+		return query.populate('skus').populate('skus.options').lean();
+	},
 };
 
 export default ProductAdminService;

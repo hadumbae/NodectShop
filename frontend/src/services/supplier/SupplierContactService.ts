@@ -1,9 +1,9 @@
-import queryAPI from '../../utils/queryAPI.ts';
+import queryAPI from '../../utils/query/queryAPI.ts';
 
 const baseURL = `${import.meta.env.VITE_API_URL}/admin/suppliers`;
 
 export default {
-	async getSupplierContact(supplierID: string, contactID: string, authToken: string) {
+	async getSupplierContactPerson(supplierID: string, contactID: string, authToken: string) {
 		const link = `${baseURL}/${supplierID}/contact-persons/${contactID}`;
 		return queryAPI(link, 'GET', authToken);
 	},

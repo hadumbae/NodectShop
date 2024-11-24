@@ -75,6 +75,8 @@ export default class BaseRepository {
     }
 
     async existsOr404Lean(_id: Types.ObjectId | string) {
+        if (!Types.ObjectId.isValid(_id)) throw createError(404, "404. Invalid ID.");
+
         const res = await this.model.findById(_id);
         if (!res) throw createError(404, "404. Not found.");
         return res;

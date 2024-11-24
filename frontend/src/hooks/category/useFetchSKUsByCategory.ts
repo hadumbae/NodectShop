@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
-import CategoryService from "../../services/category/category.admin.service.ts";
+import CategoryService from "../../services/category/category.service.ts";
 
 export default function useFetchSKUsByCategory(categoryID: string, token: string) {
     const [isLoading, setIsLoading] = useState(false);

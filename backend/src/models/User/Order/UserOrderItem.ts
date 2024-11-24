@@ -1,6 +1,6 @@
 import mongoose, {Schema, Types} from 'mongoose';
 import UserOrder from "./UserOrder.js";
-import {IProduct} from "../../Product/Product.js";
+import {IProduct} from "../../Product/product.schema.js";
 import {IProductSKU} from "../../Product/ProductSKU.js";
 
 export interface IUserOrderItem {

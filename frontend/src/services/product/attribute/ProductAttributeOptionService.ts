@@ -1,4 +1,4 @@
-import queryAPI from "../../../utils/queryAPI.ts";
+import queryAPI from "../../../utils/query/queryAPI.ts";
 
 export default {
 

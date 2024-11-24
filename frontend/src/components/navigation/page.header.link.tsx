@@ -11,7 +11,7 @@ const PageHeaderLink: FC<PropsWithChildren<Props>> = ({children, link, active = 
         <Link
             to={link}
             className={
-                `p-2 text-lg ${
+                `p-2 text-md md:text-lg ${
                     active ? 
                         "text-black underline underline-offset-8" : 
                         "text-gray-400 hover:underline hover:underline-offset-8 hover:text-black"

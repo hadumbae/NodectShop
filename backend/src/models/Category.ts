@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
-import {IProduct} from "./Product/Product.js";
+import {IProduct} from "./Product/product.schema.js";
 import _ from "lodash";
-import {IProductAttribute} from "./Product/ProductAttribute.js";
+import {IProductAttribute} from "./Product/product.attribute.schema.js";
 
-type CategoryMode = "MANUAL" | "TYPE" | "TAGS";
+export type CategoryMode = "MANUAL" | "TYPE" | "TAGS";
 
 export interface ICategory {
+	readonly _id: string;
 	category: string;
 	mode: CategoryMode
 

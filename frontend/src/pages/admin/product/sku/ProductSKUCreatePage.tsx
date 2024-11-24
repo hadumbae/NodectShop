@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import useProductParam from "../../../../hooks/product/useProductParam.ts";
 import HeaderText from "../../../../components/header/HeaderText.tsx";
-import PageHeaderLink from "../../../../components/navigation/PageHeaderLink.tsx";
+import PageHeaderLink from "../../../../components/navigation/page.header.link.tsx";
 import ProductSKUForm from "../../../../components/product/product/ProductSKUForm.tsx";
 
 const ProductSKUCreatePage: FC = () => {

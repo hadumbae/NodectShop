@@ -1,27 +1,17 @@
-import {useEffect, useState} from "react";
-import {Supplier} from "../../types/SupplierTypes.ts";
-import SupplierService from "../../services/supplier/SupplierService.ts";
+import SupplierService from "../../services/supplier/supplier.service.ts";
+import {useQuery} from "@tanstack/react-query";
+import {FetchError} from "@/utils/CustomErrors.ts";
 
 export default function useFetchSupplier(supplierID: string, token: string) {
-    const [supplier, setSupplier] = useState<Supplier | null>(null);
+    const {data: supplier, isPending, isSuccess, isError, error, refetch} = useQuery({
+        queryKey: ['fetch_single_supplier'],
+        queryFn: async () => {
+            const {response, result} = await SupplierService.fetchSupplier(supplierID, token);
 
-    useEffect(() => {
-        const fetchSupplier = async () => {
-            try {
-                const {status, payload} = await SupplierService.fetchSupplier(supplierID!, token);
-
-                if (status === 200) {
-                    setSupplier(payload.data);
-                } else {
-                    console.log("[useFetchSupplier] ",  `${status} : ${payload.message}`);
-                }
-            } catch (error) {
-                console.error("[useFetchSupplier] ", error);
-            }
+            if (response.ok) return result.data;
+            throw new FetchError(response, result.message, result.errors);
         }
+    });
 
-        fetchSupplier();
-    }, []);
-
-    return {supplier, setSupplier};
+    return {supplier, isPending, isSuccess, isError, error, refetch};
 }

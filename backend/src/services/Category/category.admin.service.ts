@@ -1,13 +1,14 @@
 import _ from 'lodash';
 import createError from 'http-errors';
 
-import Category from '../../models/Category.js';
-import Product from "../../models/Product/Product.js";
+import Category, {CategoryMode, ICategory} from '../../models/Category.js';
+import Product, {IProduct} from "../../models/Product/product.schema.js";
 import ProductSKU from "../../models/Product/ProductSKU.js";
 import CategoryRepository from "../../repositories/CategoryRepository.js";
-import ProductAdminService from "../Product/product.admin.service.js";
+import ProductFetchAdminService from "../Product/product.fetch.admin.service.js";
 
 const CategoryAdminService = {
+
 	async findById(categoryID: string) {
 		const category = await Category.findById(categoryID).lean();
 		if (!category) createError(404, "Category Not Found.");
@@ -18,22 +19,47 @@ const CategoryAdminService = {
 		return {category, products, skus};
 	},
 
-	async fetchCategoryWithData(categoryID: string) {
-		const category = await CategoryRepository.existsOr404(categoryID);
-		const products: {} = await ProductAdminService.fetchPopulatedProducts({category: categoryID});
+	async paginateCategoriesWithProductCount(page, perPage) {
+		const categories: any[] = await CategoryRepository.paginatedLean(page, perPage);
 
-		return {category, products};
+		return Promise.all(categories.map(async (category: ICategory) => {
+			let productCount = 0;
+
+			if (category.mode === "MANUAL") {
+				productCount = category.products.length;
+			} else if (category.mode === "TYPE") {
+				productCount = await ProductFetchAdminService.countProductsByType(category.modeType);
+			} else if (category.mode === "TAGS") {
+				productCount = await ProductFetchAdminService.countProductsByTags(category.modeTags);
+			} else {
+				throw new Error("Invalid Category Mode!");
+			}
+
+			return {...category, productCount};
+		}));
 	},
 
-	/**
-	 * Delete the category.
-	 * @param categoryID The ID of the category.
-	 */
-	async destroy(categoryID: string) {
-		const category = await Category.findById(categoryID);
-		if (!category) throw createError(404, 'Category Not Found. Verify Category ID.');
+	async fetchPaginatedProductsByCategory(categoryID: string, page: number, perPage: number) {
+		const category: ICategory = await CategoryRepository.existsOr404Lean(categoryID);
 
-		await Category.findByIdAndDelete(categoryID);
+		let findParam;
+
+		if (category.mode === "MANUAL") {
+			findParam = {category: category._id};
+		} else if (category.mode === "TYPE") {
+			findParam = {type: category.modeType}
+		} else if (category.mode === "TAGS") {
+			findParam = {tags: {$all: category.modeTags}}
+		} else {
+			throw new Error("Invalid Category Mode!");
+		}
+
+		const totalItems: number = await Product.find(findParam).countDocuments();
+		const products: IProduct[] = await Product.find(findParam)
+			.skip((page - 1) * perPage).limit(perPage)
+			.populate("skus").populate('skus.options').lean()
+
+		return {totalItems, products};
 	},
 };
 

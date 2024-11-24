@@ -15,7 +15,7 @@ import {Link} from "react-router-dom";
 const AdminSidebar: React.FC = () => {
     return (
         <Sidebar>
-            <SidebarContent>
+            <SidebarContent className="bg-white">
 
                 <SidebarHeader>
                     <Link to="/admin/dashboard" className="font-orbitron text-3xl flex justify-center items-center pt-2">

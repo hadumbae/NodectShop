@@ -1,4 +1,4 @@
-import fetchQuery from "../../utils/fetchQuery.ts";
+import fetchQuery from "../../utils/query/fetchQuery.ts";
 import {useFetch} from "@/utils/useFetch.ts";
 
 export default {
@@ -9,7 +9,7 @@ export default {
      * @returns An object with the response and JSON result.
      */
     async fetchCategories(authToken: string) {
-        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/get-all`;
+        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/all`;
         return useFetch(apiLink, "GET", authToken)
     },
 
@@ -21,8 +21,20 @@ export default {
      * @returns The response from the API call and the parsed body.
      */
     async fetchPaginatedCategories (page: number, perPage: number, authToken: string) {
-        const link = `${import.meta.env.VITE_API_URL}/admin/categories/get-paginated?page=${page}&perPage=${perPage}`;
+        const link = `${import.meta.env.VITE_API_URL}/admin/categories/paginated/all?page=${page}&perPage=${perPage}`;
         return fetchQuery(link, "GET", authToken);
+    },
+
+    /**
+     * Fetch the paginated list of categories.
+     * @param page The current page.
+     * @param perPage The number of categories per page.
+     * @param authToken The authentication token.
+     * @returns The response from the API call and the parsed body.
+     */
+    async fetchPaginatedProductsByCategory (categoryID: string, page: number, perPage: number, authToken: string) {
+        const link = `${import.meta.env.VITE_API_URL}/admin/categories/paginated/by-category/${categoryID}/products?page=${page}&perPage=${perPage}`;
+        return useFetch(link, "GET", authToken);
     },
 
     /**
@@ -31,23 +43,7 @@ export default {
      * @param authToken The authentication token.
      */
     async fetchCategory(categoryID: string, authToken: string) {
-        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/get/${categoryID}`;
-        const response = await fetch(apiLink, {
-            method: "GET",
-            headers: {Authorization: `Bearer ${authToken}`, "Content-Type": "application/json"}
-        });
-
-        const payload = await response.json();
-        return {status: response.status, payload};
-    },
-
-    /**
-     * Find product SKUs by category.
-     * @param categoryID The ID of the category.
-     * @param authToken The authentication token.
-     */
-    async fetchCategoryWithData(categoryID: string, authToken: string) {
-        const link = `${import.meta.env.VITE_API_URL}/admin/categories/get/${categoryID}/data`;
+        const link = `${import.meta.env.VITE_API_URL}/admin/categories/get/${categoryID}`;
         return useFetch(link, "GET", authToken);
     },
 
@@ -79,13 +75,7 @@ export default {
      * @param authToken The authentication token.
      */
     async deleteCategory(categoryID: string, authToken: string) {
-        const apiLink = `${import.meta.env.VITE_API_URL}/admin/categories/delete/${categoryID}`;
-        const response = await fetch(apiLink, {
-            method: "DELETE",
-            headers: {Authorization: `Bearer ${authToken}`, "Content-Type": "application/json"}
-        });
-
-        const payload = await response.json();
-        return {status: response.status, payload};
+        const link = `${import.meta.env.VITE_API_URL}/admin/categories/delete/${categoryID}`;
+        return useFetch(link, "DELETE", authToken);
     },
 }

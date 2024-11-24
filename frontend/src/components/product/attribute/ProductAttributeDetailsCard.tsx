@@ -6,6 +6,8 @@ import ProductAttributeService from "../../../services/product/attribute/Product
 import {ProductAttributeOption, ProductAttribute} from "../../../types/ProductAttributeTypes.ts";
 import ProductAttributeOptionCreateSingleLineForm from "./ProductAttributeOptionCreateSingleLineForm.tsx";
 import ProductAttributeOptionPill from "./ProductAttributeOptionPill.tsx";
+import ProductAttributeFormWrapper from "@/components/forms/attribute/product.attribute.form.wrapper.tsx";
+import {FaPencil} from "react-icons/fa6";
 
 interface props {
     attribute: ProductAttribute,
@@ -42,9 +44,18 @@ const ProductAttributeDetailsCard: FC<props> = ({attribute, onDelete}) => {
         <div className="w-full h-full bg-white shadow-md rounded p-5">
             <div className="flex justify-between">
                 <h1 className="text-xl">{attribute.name}</h1>
-                <button className="text-gray-400 hover:text-red-500" onClick={deleteAttribute}>
-                    <FaTrash />
-                </button>
+
+                <div className="space-x-10">
+                    <ProductAttributeFormWrapper onSuccess={() => onDelete()} attribute={attribute}>
+                        <button className="text-gray-400 hover:text-blue-500">
+                            <FaPencil/>
+                        </button>
+                    </ProductAttributeFormWrapper>
+
+                    <button className="text-gray-400 hover:text-red-500" onClick={deleteAttribute}>
+                        <FaTrash/>
+                    </button>
+                </div>
             </div>
             <div className="mt-5">
                 <ProductAttributeOptionCreateSingleLineForm attributeID={attribute._id!} pushOption={pushOption} />

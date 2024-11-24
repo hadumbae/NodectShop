@@ -1,26 +1,57 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   :root {
-    --radius: 0.5rem
-  ;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%}
+    --background: 54 60% 98%;
+    --foreground: 54 55% 0%;
+    --muted: 24 12% 87%;
+    --muted-foreground: 24 4% 34%;
+    --popover: 54 60% 98%;
+    --popover-foreground: 54 55% 0%;
+    --card: 54 60% 98%;
+    --card-foreground: 54 55% 0%;
+    --border: 54 12% 92%;
+    --input: 54 12% 92%;
+    --primary: 54 73% 69%;
+    --primary-foreground: 54 73% 9%;
+    --secondary: 24 73% 69%;
+    --secondary-foreground: 24 73% 9%;
+    --accent: 84 73% 69%;
+    --accent-foreground: 84 73% 9%;
+    --destructive: 11 94% 27%;
+    --destructive-foreground: 11 94% 87%;
+    --ring: 54 73% 69%;
+    --radius: 0.5rem;
+  }
+
   .dark {
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%
+    --background: 54 41% 1%;
+    --foreground: 54 40% 100%;
+    --muted: 24 12% 13%;
+    --muted-foreground: 24 4% 66%;
+    --popover: 54 41% 1%;
+    --popover-foreground: 54 40% 100%;
+    --card: 54 41% 1%;
+    --card-foreground: 54 40% 100%;
+    --border: 54 12% 15%;
+    --input: 54 12% 15%;
+    --primary: 54 73% 69%;
+    --primary-foreground: 54 73% 9%;
+    --secondary: 24 73% 69%;
+    --secondary-foreground: 24 73% 9%;
+    --accent: 84 73% 69%;
+    --accent-foreground: 84 73% 9%;
+    --destructive: 11 94% 59%;
+    --destructive-foreground: 0 0% 0%;
+    --ring: 54 73% 69%;
   }
 }
+
+.bebas-neue-regular {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+

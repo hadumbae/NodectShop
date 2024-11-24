@@ -1,5 +1,5 @@
 import createError from "http-errors";
-import ProductAttribute from "../../models/Product/ProductAttribute.js";
+import ProductAttribute from "../../models/Product/product.attribute.schema.js";
 
 const ProductAttributeAdminService = {
     async fetchPopulatedAttributes() {

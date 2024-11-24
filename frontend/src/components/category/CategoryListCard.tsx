@@ -3,10 +3,10 @@ import BasicCard from "../BasicCard.tsx";
 import {Link} from "react-router-dom";
 import _ from "lodash";
 import {FaMagnifyingGlass} from "react-icons/fa6";
-import {CategoryType} from "@/schema/CategorySchema.ts";
+import {ZCategory} from "@/schema/category.zod.ts";
 
 interface Props {
-    category: CategoryType
+    category: ZCategory
 }
 
 const CategoryListCard: FC<Props> = ({category}) => {
@@ -27,7 +27,7 @@ const CategoryListCard: FC<Props> = ({category}) => {
                 </div>
 
                 <div className="flex space-x-2 items-end">
-                    <span className="text-3xl">{category.products!.length}</span>
+                    <span className="text-3xl">{category.productCount}</span>
                     <span className="text-lg font-light">Products</span>
                 </div>
             </div>

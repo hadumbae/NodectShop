@@ -1,16 +1,16 @@
-import queryAPI from "../../utils/queryAPI.ts";
+import queryAPI from "../../utils/query/queryAPI.ts";
 import {useFetch} from "@/utils/useFetch.ts";
 
 const baseURL = `${import.meta.env.VITE_API_URL}/admin/suppliers`;
 
 export default {
     async fetchSuppliers(authToken: string) {
-      return queryAPI(baseURL, "GET", authToken);
+      return useFetch(baseURL, "GET", authToken);
     },
 
     async fetchPaginatedSuppliers(page: number, perPage: number, authToken: string) {
       const link = `${baseURL}/get-paginated?page=${page}&perPage=${perPage}`;
-      return queryAPI(link, "GET", authToken);
+      return useFetch(link, "GET", authToken);
     },
 
     async createSupplier(data: any, token: string) {
@@ -25,12 +25,12 @@ export default {
 
     async fetchSupplier(supplierID: string, authToken: string) {
         const link = `${baseURL}/get-supplier/${supplierID}`;
-        return queryAPI(link, "GET", authToken);
+        return useFetch(link, "GET", authToken);
     },
 
     async deleteSupplier(supplierID: string, authToken: string) {
         const link = `${baseURL}/get-supplier/${supplierID}`;
-        return queryAPI(link, "DELETE", authToken);
+        return useFetch(link, "DELETE", authToken);
     },
 
     async fetchPaginatedProducts(supplierID: string, page: number, perPage: number, authToken: string) {

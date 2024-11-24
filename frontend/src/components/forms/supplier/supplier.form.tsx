@@ -9,24 +9,37 @@ import {Input} from "@/components/ui/input.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {RefreshCcw} from "lucide-react";
 import {useMutation} from "@tanstack/react-query";
-import SupplierService from "@/services/supplier/SupplierService.ts";
+import SupplierService from "@/services/supplier/supplier.service.ts";
 import useAdminToken from "@/hooks/useAdminToken.ts";
 import {FetchError} from "@/utils/CustomErrors.ts";
 import {useNavigate} from "react-router-dom";
 import _ from "lodash";
+import {ZSupplier} from "@/schema/supplier.zod.ts";
 
+interface Props {
+    supplier?: ZSupplier;
+}
 
-const SupplierForm: FC = () => {
+const SupplierForm: FC<Props> = ({supplier}) => {
     const {token} = useAdminToken();
     const navigate = useNavigate();
 
     const form = useForm<SupplierSubmitType>({
         resolver: zodResolver(SupplierSubmitSchema),
         defaultValues: {
-            name: "",
-            website: "",
-            contact : { email: "", phone: "", fax: "" },
-            address: { street: "", city: "", state: "", country: "", postalCode: "" },
+            name: supplier?.name || "",
+            website: supplier?.website || "",
+            contact : {
+                email: supplier?.contact?.email || "",
+                phone: supplier?.contact?.phone || "",
+                fax: supplier?.contact?.fax || "" },
+            address: {
+                street: supplier?.address?.street || "",
+                city: supplier?.address?.city || "",
+                state: supplier?.address?.state || "",
+                country: supplier?.address?.country || "",
+                postalCode: supplier?.address?.postalCode || ""
+            },
         },
     });
 

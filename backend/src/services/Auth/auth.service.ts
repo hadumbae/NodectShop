@@ -19,12 +19,10 @@ const AuthService = {
 
 	async signin(email: string, password: string) {
 		const user = await User.findOne({ email: email });
-		if (!user) throw createError(400, 'Invalid found.');
-
-		console.log("Compare String: ", password);
+		if (!user) throw createError(404, 'Invalid credentials!');
 
 		const isEqual = await bcrypt.compare(password, user.password);
-		if (!isEqual) throw createError(400, 'Invalid!');
+		if (!isEqual) throw createError(400, 'Invalid credentials!');
 
 		return jwt.sign(
 			{

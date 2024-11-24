@@ -35,7 +35,7 @@ export const useFetchMultipart = async (link: string, method: string, authToken:
  */
 const fetchAPI = async (link: string, method: string, formData: any, fetchOptions: any) => {
     if (method != 'GET' && method != 'HEAD') {
-        fetchOptions.body = JSON.stringify(formData)
+        fetchOptions.body = formData;
     }
 
     const response = await fetch(link, fetchOptions);

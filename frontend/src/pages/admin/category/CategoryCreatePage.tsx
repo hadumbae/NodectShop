@@ -1,6 +1,6 @@
-import CategoryForm from "../../../components/category/CategoryForm.tsx";
+import CategoryForm from "../../../components/category/category.form.tsx";
 import HeaderText from "@/components/header/HeaderText.tsx";
-import PageHeaderLink from "@/components/navigation/PageHeaderLink.tsx";
+import PageHeaderLink from "@/components/navigation/page.header.link.tsx";
 
 const CategoryCreatePage = () => {
     return (

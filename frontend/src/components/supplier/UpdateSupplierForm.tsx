@@ -1,7 +1,7 @@
 import {FC, useState} from 'react';
 import {toast} from "react-toastify";
 import FormInput from "../inputs/FormInput.tsx";
-import SupplierService from "../../services/supplier/SupplierService.ts";
+import SupplierService from "../../services/supplier/supplier.service.ts";
 import {fetchValidationError} from "../../utils/FormUtils.ts";
 import Button from "../inputs/Button.tsx";
 import {Supplier} from "../../types/SupplierTypes.ts";

@@ -1,87 +1,98 @@
-import {FC, useState} from 'react';
+import {FC} from 'react';
 import {Link, useNavigate} from "react-router-dom";
-import {toast} from "react-toastify";
-import SupplierService from "../../../services/supplier/SupplierService.ts";
 import {CiGlobe} from "react-icons/ci";
 import _ from "lodash";
 import useSupplierParam from "../../../hooks/supplier/useSupplierParam.ts";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import useFetchSupplier from "../../../hooks/supplier/useFetchSupplier.ts";
-import SupplierDetailsCard from "@/components/supplier/SupplierDetailsCard.tsx";
+import SupplierDetailsCollapsible from "@/components/supplier/SupplierDetailsCollapsible.tsx";
 import Loader from "@/components/utils/Loader.tsx";
+import SupplierDetailsBarCard from "@/components/supplier/SupplierDetailsBarCard.tsx";
+import {useMutation} from "@tanstack/react-query";
+import SupplierService from "@/services/supplier/supplier.service.ts";
+import {FetchError} from "@/utils/CustomErrors.ts";
+import {toast} from "react-toastify";
 
 const SupplierDetailsPage: FC = () => {
     const navigate = useNavigate();
 
     const {token} = useAdminToken();
     const {supplierID} = useSupplierParam();
+    const { supplier, isPending, isSuccess, isError, error} = useFetchSupplier(supplierID!, token);
 
-    const {supplier} = useFetchSupplier(supplierID!, token);
-    const [isLoading, setIsLoading] = useState(false);
+    const {mutate, isPending: isDeleting} = useMutation({
+        mutationKey: ["delete_single_supplier"],
+        mutationFn: async () => {
+            const {response, result} = await SupplierService.deleteSupplier(supplierID!, token);
 
-    const handleDelete = async () => {
-        setIsLoading(true);
-        const {status, payload} = await SupplierService.deleteSupplier(supplier!._id!, token);
-
-        if (status === 200) {
+            if (response.ok) return result;
+            throw new FetchError(response, result.message, result.errors);
+        },
+        onSuccess: () => {
             toast.success("Supplier deleted successfully.");
-            navigate("/admin/supplier/list")
-        } else {
-            toast.error("Oops. Something bad happened!");
-            console.error(`${status}: ${payload.message}`);
+            return navigate("/admin/supplier/list");
+        },
+        onError: () => {
+            toast.error("Oops. Something bad happened. Supplier not deleted.");
         }
+    });
 
-        setIsLoading(false);
-    }
+    if (isPending) {
+        return (<div className="flex justify-center items-center h-full">
+            <Loader loading={true}/>
+        </div>);
+    };
+
+    if (isError) {
+        return (<div className="flex flex-col justify-center items-center h-full">
+            <span className="text-red-500">Oops. Something bad happened!</span>
+            <span className="text-gray-400">{error!.message}</span>
+        </div>);
+    };
 
     return (
-       <div className="space-y-5">
+        <div className="flex flex-col space-y-5 h-full">
+            {isSuccess && <section
+                className="flex flex-col space-y-3 md:flex-row md:justify-between md:items-center md:space-y-0">
+                <div className="flex flex-col">
+                    <h1 className="text-3xl truncate">{supplier.name}</h1>
+                    <a href={supplier.website}
+                       target="_blank"
+                       rel='noopener noreferrer'
+                       className="text-sm flex items-center space-x-1 text-gray-400 hover:text-black hover:underline hover:underline-offset-8">
+                        <CiGlobe/>
+                        <span>Website</span>
+                    </a>
+                </div>
 
-            <section className="flex flex-col space-y-3 md:flex-row md:justify-between md:items-center md:space-y-0">
-               <div>
-                   <h1 className="text-3xl truncate">{supplier?.name || "Category"}</h1>
-                   <div>
-                       {supplier && <a href={supplier.website}
-                                       target="_blank"
-                                       rel='noopener noreferrer'
-                                       className="text-sm flex items-center space-x-1 text-gray-400 hover:text-black hover:underline hover:underline-offset-8">
-                           <CiGlobe/>
-                           <span>Website</span>
-                       </a>}
-                   </div>
-               </div>
+                <div className="flex justify-center space-x-2 items-center">
+                    <Link to={`/admin/supplier/find/${supplier._id}/${_.kebabCase(supplier.name)}/contacts`}
+                          className="p-2 text-gray-400 text-lg hover:text-black hover:underline hover:underline-offset-8">
+                        Contacts
+                    </Link>
+                    <Link to={`/admin/supplier/edit/${supplier._id}/${_.kebabCase(supplier.name)}`}
+                          className="p-2 text-gray-400 text-lg hover:text-black hover:underline hover:underline-offset-8">
+                        Edit
+                    </Link>
+                    <button disabled={isDeleting} onClick={() => mutate()}
+                            className="p-2 text-gray-400 text-lg hover:text-red-500">
+                        Delete
+                    </button>
+                </div>
+            </section>}
 
-               {supplier && <div className="flex justify-center space-x-2 items-center">
-                   <Link to="/admin/supplier/list"
-                         className="p-2 text-gray-400 text-lg hover:text-black hover:underline hover:underline-offset-8">
-                       &lt; Index
-                   </Link>
-                   <Link to={`/admin/supplier/find/${supplier._id}/${_.kebabCase(supplier.name)}/contacts`}
-                         className="p-2 text-gray-400 text-lg hover:text-black hover:underline hover:underline-offset-8">
-                       Contacts
-                   </Link>
-                   <Link to={`/admin/supplier/edit/${supplier._id}/${_.kebabCase(supplier.name)}`}
-                         className="p-2 text-gray-400 text-lg hover:text-black hover:underline hover:underline-offset-8">
-                       Edit
-                   </Link>
-                   <button disabled={isLoading} onClick={handleDelete}
-                           className="p-2 text-gray-400 text-lg hover:text-red-500">
-                       Delete
-                   </button>
-               </div>}
+            <section className="max-lg:hidden">
+                <SupplierDetailsBarCard supplier={supplier}/>
             </section>
 
-           {isLoading && <section className="text-center">
-               <Loader loading={isLoading}/>
-           </section>}
+            <section className="lg:hidden">
+                <SupplierDetailsCollapsible supplier={supplier}/>
+            </section>
 
-           {!isLoading && <section className="grid grid-cols-1 md:grid-cols-3 md:gap-4">
-               <div>
-                   {supplier && <SupplierDetailsCard supplier={supplier}/>}
-               </div>
-           </section>}
-
-       </div>
+            <section className='flex-1 flex justify-center items-center'>
+                <span>#TODO Reserved For Stock Order System</span>
+            </section>
+        </div>
     );
 };
 

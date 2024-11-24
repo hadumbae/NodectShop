@@ -3,7 +3,7 @@ import useAdminToken from "../../../../hooks/useAdminToken.ts";
 import useProductSKUParam from "../../../../hooks/product/useProductSKUParam.ts";
 import useFetchProductSKU from "../../../../hooks/product/useFetchProductSKU.ts";
 import HeaderText from "../../../../components/header/HeaderText.tsx";
-import PageHeaderLink from "../../../../components/navigation/PageHeaderLink.tsx";
+import PageHeaderLink from "../../../../components/navigation/page.header.link.tsx";
 import PageHeaderButton from "../../../../components/header/PageHeaderButton.tsx";
 import ProductSKUService from "../../../../services/product/sku/ProductSKUService.ts";
 import {toast} from "react-toastify";

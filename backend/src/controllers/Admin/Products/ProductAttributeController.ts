@@ -30,7 +30,7 @@ export default {
 
             const totalItems = await ProductAttributeRepository.count();
             const attributes = await ProductAttributeService.fetchPaginatedAttributes(currentPage, perPage);
-            return res.status(200).json({ message: "Product attributes fetched.", totalItems, data: attributes });
+            return res.status(200).json({ message: "Product attributes fetched.", data: {totalItems, attributes} });
         } catch (error) {
             if (!isHttpError(error)) res.status(500);
             next(error);

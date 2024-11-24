@@ -1,7 +1,7 @@
 import {FC, useEffect, useState} from 'react';
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import {toast} from "react-toastify";
-import SupplierService from "../../../services/supplier/SupplierService.ts";
+import SupplierService from "../../../services/supplier/supplier.service.ts";
 import Loader from "../../utils/Loader.tsx";
 import SupplierProductDetailsCard from "./SupplierProductDetailsCard.tsx";
 import {ProductSKU} from "../../../types/ProductTypes.ts";

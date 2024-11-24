@@ -1,11 +1,11 @@
 import ErrorPage from "../../../pages/ErrorPage.tsx";
 import AdminLayout from "../../../layouts/AdminLayout.tsx";
-import CategoryListPage from "../../../pages/admin/category/CategoryListPage.tsx";
+import CategoryListPage from "../../../pages/admin/category/category.list.page.tsx";
 import AdminDashboardPage from "../../../pages/admin/AdminDashboardPage.tsx";
 import CategoryDetailsPage from "../../../pages/admin/category/CategoryDetailsPage.tsx";
 import CategoryUpdatePage from "../../../pages/admin/category/CategoryEditPage.tsx";
-import AttributeListPage from "../../../pages/admin/attributes/AttributeListPage.tsx";
-import SupplierListPage from "../../../pages/admin/supplier/SupplierListPage.tsx";
+import ProductAttributeListPage from "../../../pages/admin/attributes/product.attribute.list.page.tsx";
+import SupplierListPage from "../../../pages/admin/supplier/supplier.list.page.tsx";
 import SupplierDetailsPage from "../../../pages/admin/supplier/supplier.details.page.tsx";
 import SupplierCreateContactPersonPage from "../../../pages/admin/supplier/contacts/SupplierCreateContactPersonPage.tsx";
 import SupplierEditPage from "../../../pages/admin/supplier/SupplierEditPage.tsx";
@@ -95,7 +95,7 @@ export default [
         errorElement: <ErrorPage />,
         loader: isAdminAuthLoader,
         children: [
-            { path: "/admin/product/attribute/list", element: <AttributeListPage />, errorElement: <ErrorPage /> },
+            { path: "/admin/product/attribute/list", element: <ProductAttributeListPage />, errorElement: <ErrorPage /> },
         ]
     }
 ];

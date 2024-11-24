@@ -6,8 +6,6 @@
  * @param formData FormData
  */
 export default async (link: string, method: string, authToken: string, formData: any = {}) =>{
-    console.log(formData)
-
     const fetchOptions: any = {
         method: method,
         headers: {
@@ -18,8 +16,6 @@ export default async (link: string, method: string, authToken: string, formData:
     if (method != 'GET' && method != 'HEAD') {
         fetchOptions.body = formData;
     }
-
-    console.log(fetchOptions);
 
     const response = await fetch(link, fetchOptions);
     const payload = await response.json();

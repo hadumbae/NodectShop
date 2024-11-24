@@ -1,31 +1,17 @@
-import {useEffect, useState} from "react";
-import {ProductAttribute} from "../../types/ProductAttributeTypes.ts";
-import ProductAttributeService from "../../services/product/attribute/ProductAttributeService.ts";
-import {toast} from "react-toastify";
+import {useQuery} from "@tanstack/react-query";
+import ProductAttributeService from "@/services/product/attribute/ProductAttributeService.ts";
+import {FetchError} from "@/utils/CustomErrors.ts";
 
 export default function useFetchProductAttributes(token: string) {
-    const [attributes, setAttributes] = useState<ProductAttribute[]>([])
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    const {data: attributes, isPending, isSuccess, isError, error, refetch} = useQuery({
+        queryKey: ['fetch_all_product_attributes'],
+        queryFn: async () => {
+            const {response, result} = await ProductAttributeService.fetchProductAttributes(token);
 
-    useEffect(() => {
-        const fetchAttributes = async () => {
-            setIsLoading(true);
-            const {status, payload} = await ProductAttributeService.fetchProductAttributes(token);
-
-            if (status === 200) {
-                setAttributes(payload.data);
-            } else {
-                toast.error("Oops. Something bad happened!");
-                console.error(`${status} : ${payload.message}`);
-                setError(payload.message);
-            }
-
-            setIsLoading(false);
+            if (response.ok) return result.data;
+            throw new FetchError(response, result.message, result.errors);
         }
+    });
 
-        fetchAttributes();
-    }, []);
-
-    return {attributes, isLoading, error};
+    return {attributes, isPending, isSuccess, isError, error, refetch};
 }

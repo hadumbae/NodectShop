@@ -4,7 +4,7 @@ import useFetchProductAttributes from "../../../../hooks/attribute/useFetchProdu
 import useFetchProductSKU from "../../../../hooks/product/useFetchProductSKU.ts";
 import useProductSKUParam from "../../../../hooks/product/useProductSKUParam.ts";
 import HeaderText from "../../../../components/header/HeaderText.tsx";
-import PageHeaderLink from "../../../../components/navigation/PageHeaderLink.tsx";
+import PageHeaderLink from "../../../../components/navigation/page.header.link.tsx";
 import ProductSKUOptionList from "../../../../components/product/product/options/ProductSKUOptionList.tsx";
 import ProductSKUAttributeOptionSelector
     from "../../../../components/product/product/options/ProductSKUAttributeOptionSelector.tsx";

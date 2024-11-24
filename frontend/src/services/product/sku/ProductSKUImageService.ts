@@ -1,5 +1,5 @@
-import queryAPI from "../../../utils/queryAPI.ts";
-import queryMultipartAPI from "../../../utils/queryMultipartAPI.ts";
+import queryAPI from "../../../utils/query/queryAPI.ts";
+import queryMultipartAPI from "../../../utils/query/queryMultipartAPI.ts";
 
 export  default {
     async uploadSKUImages(data: any, authToken: string){
