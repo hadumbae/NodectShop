@@ -2,7 +2,7 @@ import { FC } from 'react';
 import {useForm} from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CategorySubmitSchema, CategorySubmitType, ZCategory } from '@/schema/category.zod.ts';
+import { ZCategory } from '@/schema/category.validate.schema.ts';
 
 import { Button } from "@/components/ui/button"
 import {
@@ -16,13 +16,14 @@ import {
 import { Input } from "@/components/ui/input"
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 import CategoryAdminService from "@/services/category/category.service.ts";
 import useAdminToken from "@/hooks/useAdminToken.ts";
 import {FetchError} from "@/utils/CustomErrors.ts";
 import {useNavigate} from "react-router-dom";
 import _ from "lodash";
 import {toast} from "react-toastify";
+import {CategorySubmitSchema, CategorySubmitType} from "@/schema/category.validate.submit.ts";
 
 interface Props {
 	category?: ZCategory;
@@ -31,14 +32,20 @@ interface Props {
 const CategoryForm: FC<Props> = ({ category }) => {
 	const {token} = useAdminToken();
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 
 	const form = useForm<CategorySubmitType>({
 		resolver: zodResolver(CategorySubmitSchema),
-		defaultValues: {
-			category: category?.category || "",
-			mode: category?.mode || "MANUAL",
-			modeType: category?.modeType || "",
-			modeTags: category?.modeTags.join(",") || ""
+		defaultValues: category ?  {
+			category: category.category,
+			mode: category.mode,
+			modeTypes: category.modeTags.join(","),
+			modeTags: category.modeTags.join(",")
+		} :  {
+			category: "",
+			mode: "MANUAL",
+			modeTypes: "",
+			modeTags: ""
 		}
 	});
 
@@ -48,14 +55,13 @@ const CategoryForm: FC<Props> = ({ category }) => {
 				await CategoryAdminService.updateCategory(category._id, values, token) :
 				await CategoryAdminService.createCategory(values, token);
 
-			if (response.ok) {
-				return result;
-			} else {
-				throw new FetchError(response, result.message, result.errors);
-			}
+			if (response.ok) return result;
+			throw new FetchError(response, result.message, result.errors);
 		},
 		onSuccess: (result) => {
 			toast.success(`Category ${category ? "updated" : "created"} successfully.`);
+			queryClient.invalidateQueries({queryKey: ['fetch_paginated_products_by_category']})
+
 			navigate(`/admin/category/find/${result.data._id}/${_.kebabCase(result.data.category)}`);
 		},
 		onError: (error: FetchError) => {
@@ -129,7 +135,7 @@ const CategoryForm: FC<Props> = ({ category }) => {
 						/>
 
 						{mode == "TYPE" && <FormField
-							name={"modeType"}
+							name={"modeTypes"}
 							control={form.control}
 							render={({field}) => <FormItem>
 								<FormLabel>Filter Type</FormLabel>

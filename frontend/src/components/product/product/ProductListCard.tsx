@@ -1,16 +1,106 @@
 import {FC, useRef} from 'react';
 import _ from "lodash";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {FaMagnifyingGlass, FaPencil} from "react-icons/fa6";
-import {ZProduct} from "@/schema/product.zod.ts";
+import {ZProduct} from "@/schema/product.validate.ts";
+
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardContent,
+} from "@/components/ui/card.tsx";
+
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription
+} from "@/components/ui/dialog.tsx";
+import {Badge} from "@/components/ui/badge.tsx";
+import {ChevronsUpDown} from "lucide-react";
 
 interface Props {
     product: ZProduct;
 }
 
 const ProductListCard: FC<Props> = ({product}) => {
+    const navigate = useNavigate();
     const totalStock = useRef(product.skus.reduce((acc, cur) => acc + cur.unitStock, 0));
     const availableSKUs = useRef(product.skus.filter(sku => !sku.isDiscontinued).length);
+
+    const onClick = () => {
+        navigate(`/admin/product/find/${product._id}/${_.kebabCase(product.title)}`);
+    };
+
+    return (<Card className="rounded-lg hover:cursor-pointer" onClick={onClick}>
+        <div className="grid grid-cols-4 h-full">
+            <div className="rounded-l-lg flex justify-center items-center">
+                <img src={product.image.secure_url} className="object-cover h-full" alt="Product Image" />
+            </div>
+            <div className="col-span-3">
+                <CardHeader className="p-4">
+                    <CardTitle>{product.title}</CardTitle>
+                </CardHeader>
+
+                <CardContent className="p-4 pt-0 space-y-4">
+                    <div className="flex justify-between">
+                        Description
+
+                        <Dialog>
+                            <DialogTrigger>
+                                <ChevronsUpDown />
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Description</DialogTitle>
+                                    <DialogDescription className="text-justify">
+                                        {product.description}
+                                    </DialogDescription>
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
+
+                    <div className="flex flex-col space-y-2">
+                        <span className="font-bold">Types</span>
+                        <div className="flex flex-wrap space-x-2 -mt-2">
+                            {
+                                product.types.length === 0 ?
+                                    <Badge>None</Badge> :
+                                    product.types.map((type: string, index: number) => <Badge
+                                        key={index}
+                                        variant="outline"
+                                        className="border-secondary text-secondary mt-2"
+                                    >
+                                        {type}
+                                    </Badge>)
+                            }
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col space-y-2">
+                        <span className="font-bold">Tags</span>
+                        <div className="flex flex-wrap space-x-2 -mt-2">
+                            {
+                                product.tags.length === 0 ?
+                                    <Badge>None</Badge> :
+                                    product.tags.map((tag: string, index: number) => <Badge
+                                        key={index}
+                                        variant="outline"
+                                        className="border-secondary text-secondary mt-2 uppercase"
+                                    >
+                                        {tag}
+                                    </Badge>)
+                            }
+                        </div>
+                    </div>
+                </CardContent>
+            </div>
+        </div>
+    </Card>);
 
     return (
         <div className="bg-white shadow-md border rounded-lg h-96">

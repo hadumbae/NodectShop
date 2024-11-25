@@ -1,15 +1,22 @@
 import {FC} from 'react';
 import ProductListCard from "./ProductListCard.tsx";
-import {Product} from "../../../types/ProductTypes.ts";
+import {ZProduct} from "@/schema/product.validate.ts";
 
 interface Props {
-    products: Product[];
+    products: ZProduct[];
 }
 
 const ProductCardList: FC<Props> = ({products}) => {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {products.map((product: Product) => <ProductListCard key={product._id} product={product} />)}
+            {
+                products.map(
+                    (product: ZProduct) => <ProductListCard
+                        key={product._id}
+                        product={product}
+                    />
+                )
+            }
         </div>
     );
 };

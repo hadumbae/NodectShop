@@ -1,5 +1,5 @@
 import {body, check} from 'express-validator';
-import Category from "../../../../models/Category.js";
+import Category from "../../../../models/category.schema.js";
 import createError from "http-errors";
 
 import ProductRepository from "../../../../repositories/ProductRepository.js";
@@ -19,11 +19,11 @@ const validate = [
             }
         }),
 
-    body('type')
-        .optional({checkFalsy: true, nullable: true})
-        .isString().withMessage('Type must be a string.')
-        .isLength({ min: 3 }).withMessage('Type must be at least three letters long.')
-        .trim(),
+    body('types')
+        .isArray().withMessage('Types must be an array.'),
+
+    body('types.*')
+        .isString().withMessage('Types must be strings.'),
 
     body('description')
         .notEmpty().withMessage('Description is required.')
@@ -31,9 +31,10 @@ const validate = [
         .isLength({ min: 10 }).withMessage('Description must be at least ten letters long.'),
 
     body('tags')
-        .optional()
-        .isString().withMessage('Description must be a string.')
-        .trim(),
+        .isArray().withMessage('Tags must be an array.'),
+
+    body('tags.*')
+        .isString().withMessage('Tags must be strings.'),
 
     body('category')
         .optional({checkFalsy: true, nullable: true})
@@ -49,8 +50,6 @@ export const addProductValidator = [
     ...validate,
     check('file')
         .custom((value, {req}) => {
-            console.log("File", req.file)
-
             if (!req.file) throw createError(400, "Image required.");
 
             const acceptedTypes = [

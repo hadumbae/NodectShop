@@ -1,5 +1,5 @@
 import {FC} from 'react';
-import {ZSupplier} from "@/schema/supplier.zod.ts";
+import {ZSupplier} from "@/schema/supplier.validate.schema.ts";
 
 interface Props {
     supplier: ZSupplier;

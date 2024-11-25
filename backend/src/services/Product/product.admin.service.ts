@@ -3,14 +3,13 @@ import createError from 'http-errors';
 import Product from '../../models/Product/product.schema.js';
 import ProductRepository from "../../repositories/ProductRepository.js";
 import ProductImageAdminService from "./product.image.admin.service.js";
-import {ProductDataSchema} from "../../validation/schemas/product.validate.js";
+import {ProductDataSchema} from "../../schemas/product.zod.schema.js";
 import createHttpError from "http-errors";
 
 const ProductAdminService = {
 	async createProduct(data: any, uploadImage) {
 		console.log("Before Create: ", data);
-		const tags = data.tags.split(",");
-		const result: any = ProductDataSchema.safeParse({...data, tags});
+		const result: any = ProductDataSchema.safeParse(data);
 		console.log("After Parse: ", result);
 
 		if (!result.success) {
@@ -26,9 +25,7 @@ const ProductAdminService = {
 	async updateProduct(productID: string, data: any, uploadImage) {
 		const product = await Product.findById(productID);
 		if (!product) throw createError(404, "Product Not Found.");
-
-		const tags = data.tags.split(",");
-		const result: any = ProductDataSchema.safeParse({...data, tags});
+		const result: any = ProductDataSchema.safeParse(data);
 
 		if (!result.success) {
 			const error = result.error.issues[0];
@@ -43,9 +40,7 @@ const ProductAdminService = {
 			result.data.image = product.image;
 		}
 
-		console.log(result.data);
-
-		return product.updateOne(result.data);
+		return Product.findByIdAndUpdate(product._id, result.data, {new: true}).lean();
 	},
 
 	/**

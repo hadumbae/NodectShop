@@ -3,7 +3,7 @@ import BasicCard from "../BasicCard.tsx";
 import {Link} from "react-router-dom";
 import _ from "lodash";
 import {FaMagnifyingGlass} from "react-icons/fa6";
-import {ZCategory} from "@/schema/category.zod.ts";
+import {ZCategory} from "@/schema/category.validate.schema.ts";
 
 interface Props {
     category: ZCategory

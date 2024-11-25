@@ -9,7 +9,7 @@ import createError from "http-errors";
 import Product from "../../models/Product/product.schema.js";
 import SupplierRepository from "../../repositories/SupplierRepository.js";
 import ProductRepository from "../../repositories/ProductRepository.js";
-import Category from "../../models/Category.js";
+import Category from "../../models/category.schema.js";
 
 interface ProductSKUInputData {
     supplier: string;

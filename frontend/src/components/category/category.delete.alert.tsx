@@ -1,5 +1,5 @@
 import {FC, PropsWithChildren} from 'react';
-import {ZCategory} from "@/schema/category.zod.ts";
+import {ZCategory} from "@/schema/category.validate.schema.ts";
 
 import {
     AlertDialog,

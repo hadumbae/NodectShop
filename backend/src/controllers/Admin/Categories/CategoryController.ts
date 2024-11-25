@@ -5,6 +5,7 @@ import CategoryRepository from "../../../repositories/CategoryRepository.js";
 import CategoryAdminService from "../../../services/Category/category.admin.service.js";
 import ProductPaginatedAdminService from "../../../services/Product/product.paginated.admin.service.js";
 import PaginationService from "../../../services/pagination.service.js";
+import CategoryProductsAdminService from "../../../services/Category/category.products.admin.service.js";
 
 /**
  * Find all categories.
@@ -59,7 +60,7 @@ export const getPaginatedCategories: RequestHandler = asyncHandler(async (req: R
 	const {page, perPage} = PaginationService.fetchPaginationQuery(req.query);
 
 	const totalItems = await CategoryRepository.count();
-	const categories = await CategoryAdminService.paginateCategoriesWithProductCount(page, perPage);
+	const categories = await CategoryProductsAdminService.paginateCategoriesWithProductCount(page, perPage);
 
 	return res.json({ message: "Categories fetched.", data: {categories, totalItems} });
 });
@@ -69,7 +70,7 @@ export const getPaginatedProductsByCategory = asyncHandler(async (req: Request, 
 	const {page, perPage} = PaginationService.fetchPaginationQuery(req.query);
 	const { categoryID } = req.params;
 
-	const {totalItems, products} = await CategoryAdminService.fetchPaginatedProductsByCategory(categoryID as string, page, perPage);
+	const {totalItems, products} = await CategoryProductsAdminService.fetchPaginatedProductsByCategory(categoryID as string, page, perPage);
 	return res.status(200).json({message: "Paginated products by category fetched.", data: {totalItems, products}});
 });
 

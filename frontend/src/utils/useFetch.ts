@@ -22,7 +22,7 @@ export const useFetch = async (link: string, method: string, authToken: string, 
  * @param formData FormData
  */
 export const useFetchMultipart = async (link: string, method: string, authToken: string, formData: any = {}) => {
-    const fetchOptions: any = { method: method, headers: { "Authorization": `Bearer ${authToken}` } };
+    const fetchOptions: any = { method: method, headers: { "Authorization": `Bearer ${authToken}` }, body: formData };
     return await fetchAPI(link, method, formData, fetchOptions);
 }
 
@@ -34,8 +34,8 @@ export const useFetchMultipart = async (link: string, method: string, authToken:
  * @param fetchOptions Options for FetchAPI
  */
 const fetchAPI = async (link: string, method: string, formData: any, fetchOptions: any) => {
-    if (method != 'GET' && method != 'HEAD') {
-        fetchOptions.body = formData;
+    if (method != 'GET' && method != 'HEAD' && !fetchOptions.body) {
+        fetchOptions.body = JSON.stringify(formData);
     }
 
     const response = await fetch(link, fetchOptions);

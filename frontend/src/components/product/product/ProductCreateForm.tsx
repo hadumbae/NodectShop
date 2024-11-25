@@ -11,7 +11,7 @@ import {useNavigate} from "react-router-dom";
 import _ from "lodash";
 import Loader from "../../utils/Loader.tsx";
 import FormFileInput from "../../inputs/FormFileInput.tsx";
-import {ZProduct} from "@/schema/product.zod.ts";
+import {ZProduct} from "@/schema/product.validate.ts";
 
 interface Props  {
     product?: any;

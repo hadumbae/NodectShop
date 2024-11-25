@@ -15,7 +15,7 @@ const ProductDetailsPage: FC = () => {
     const navigate = useNavigate();
     const {token} = useAdminToken();
     const {productID, productSlug} = useProductParam();
-    const {product, isLoading} = useFetchProduct(productID!, token);
+    const {product, isPending} = useFetchProduct(productID!, token);
 
 
     const deleteProduct = async () => {
@@ -29,8 +29,8 @@ const ProductDetailsPage: FC = () => {
         }
     };
 
-    if (isLoading) return (<div className="h-full flex justify-center items-center">[
-        <Loader loading={isLoading} />
+    if (isPending) return (<div className="h-full flex justify-center items-center">[
+        <Loader loading={isPending} />
     </div>);
 
     return (
@@ -57,7 +57,7 @@ const ProductDetailsPage: FC = () => {
                 </div>
             </section>
 
-            <section className="grid grid-cols-2 gap-4">
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-red-500">
                         <ProductSKUCardList product={product!}/>
                     </div>

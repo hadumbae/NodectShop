@@ -22,6 +22,7 @@ export const updateProduct: RequestHandler = asyncHandler(async (req: Request, r
 	const data = req.body;
 
 	const product = await ProductAdminService.updateProduct(productID, data, req.file);
+	console.log("Product: ", product);
 	res.status(200).json({ message: 'Product Updated.', data: product });
 });
 

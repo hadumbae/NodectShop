@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
-import {ZCategory} from "../../schema/category.zod.ts";
+import {ZCategory} from "../../schema/category.validate.schema.ts";
 import CategoryService from "../../services/category/category.service.ts";
 
 export default function useFetchProductsByCategory(categoryID: string, token: string) {

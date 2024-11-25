@@ -1,7 +1,7 @@
 import {FC} from 'react';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form.tsx";
 import {useForm} from "react-hook-form";
-import {SupplierSubmitSchema, SupplierSubmitType} from "@/schema/supplier.validation.ts";
+import {SupplierSubmitSchema, SupplierSubmitType} from "@/schema/supplier.validate.submit.ts";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "@/components/ui/card.tsx";
 import {Separator} from "@/components/ui/separator.tsx";
@@ -14,7 +14,7 @@ import useAdminToken from "@/hooks/useAdminToken.ts";
 import {FetchError} from "@/utils/CustomErrors.ts";
 import {useNavigate} from "react-router-dom";
 import _ from "lodash";
-import {ZSupplier} from "@/schema/supplier.zod.ts";
+import {ZSupplier} from "@/schema/supplier.validate.schema.ts";
 
 interface Props {
     supplier?: ZSupplier;

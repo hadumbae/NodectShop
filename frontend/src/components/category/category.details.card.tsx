@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import {ZCategory} from "@/schema/category.zod.ts";
+import {ZCategory} from "@/schema/category.validate.schema.ts";
 import {Card, CardContent} from "@/components/ui/card.tsx";
 
 interface Props {

@@ -1,7 +1,7 @@
 import {FC, useState} from 'react';
 import {Card, CardContent} from "@/components/ui/card.tsx";
 import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table.tsx";
-import {ZSupplier} from "@/schema/supplier.zod.ts";
+import {ZSupplier} from "@/schema/supplier.validate.schema.ts";
 
 import { ChevronsUpDown } from "lucide-react"
 

@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import useFetchPaginatedCategories from "../../../hooks/category/useFetchPaginatedCategories.ts";
-import {ZCategory} from "@/schema/category.zod.ts";
+import {ZCategory} from "@/schema/category.validate.schema.ts";
 import Pagination from "../../../components/utils/pagination/Pagination.tsx";
 import Loader from "../../../components/utils/Loader.tsx";
 import CategoryListCard from "../../../components/category/CategoryListCard.tsx";
@@ -27,7 +27,7 @@ const CategoryListPage = () => {
     </div>);
 
     return (
-        <div className="md:p-5 space-y-5">
+        <div className="h-full flex flex-col space-y-5">
             <section className="flex justify-between items-center">
                 <HeaderText className="text-2xl font-bold">Categories</HeaderText>
                 <PageHeaderLink link="/admin/category/create">
@@ -35,14 +35,8 @@ const CategoryListPage = () => {
                 </PageHeaderLink>
             </section>
 
-            {isPending && <section className="flex justify-center">
-                <div className="flex flex-col items-center space-y-10">
-                    <Loader loading={isPending} />
-
-                    {error && <span className="text-red-500">
-                        Oops. Something bad happened!
-                    </span>}
-                </div>
+            {(isSuccess && data.categories.length === 0) && <section className="flex-1 flex justify-center items-center">
+                <span className="text-gray-500">There are no categories.</span>
             </section>}
 
             {isSuccess && <section className="space-y-5">

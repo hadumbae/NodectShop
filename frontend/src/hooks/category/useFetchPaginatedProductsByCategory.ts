@@ -4,7 +4,7 @@ import {FetchError} from "@/utils/CustomErrors.ts";
 
 export default function useFetchPaginatedProductsByCategory(categoryID: string, page: number, perPage: number, token: string) {
     const {data, isPending, isSuccess, isError, error, refetch} = useQuery({
-        queryKey: ['fetch_paginated_products_by_category'],
+        queryKey: [`fetch_paginated_products_by_category_${categoryID}`],
         queryFn: async () => {
             const {response, result} = await CategoryService.fetchPaginatedProductsByCategory(categoryID, page, perPage, token);
 
