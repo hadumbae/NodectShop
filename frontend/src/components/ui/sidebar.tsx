@@ -152,6 +152,7 @@ const SidebarProvider = React.forwardRef<
     )
   }
 )
+
 SidebarProvider.displayName = "SidebarProvider"
 
 const Sidebar = React.forwardRef<

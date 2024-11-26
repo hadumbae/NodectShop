@@ -5,6 +5,8 @@ import User from '../../models/User/User.js';
 import UserService from "./UserService.js";
 import ProductSKUService from "../SKU/product.sku.admin.service.js";
 import {Types} from "mongoose";
+import ProductSKURepository from "../../repositories/ProductSKURepository.js";
+import UserRepository from "../../repositories/UserRepository.js";
 
 export default {
 	/**
@@ -39,8 +41,8 @@ export default {
 	 */
 	async addToUserCart(userID: string, skuID: string, quantity: number): Promise<any> {
 		try {
-			const user = await UserService.existsOr404(userID);
-			const sku = await ProductSKUService.existsOr404(skuID);
+			const user = await UserRepository.existsOr404(userID);
+			const sku = await ProductSKURepository.existsOr404(skuID);
 
 			const itemIndex = user.cart.findIndex(i => i.sku.toString() == skuID);
 
@@ -67,7 +69,7 @@ export default {
 	 */
 	async removeFromUserCart(userID, skuID, quantity) {
 		try {
-			const sku = await ProductSKUService.existsOr404(skuID);
+			const sku = await ProductSKURepository.existsOr404(skuID);
 			const user = await User.findOne({_id: userID, "cart.sku": skuID});
 			if (!user) throw createError(404, 'Item not found.');
 

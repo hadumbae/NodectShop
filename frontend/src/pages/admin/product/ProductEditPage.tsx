@@ -5,7 +5,7 @@ import useFetchProduct from "../../../hooks/product/useFetchProduct.ts";
 import HeaderText from "../../../components/header/HeaderText.tsx";
 import PageHeaderLink from "../../../components/navigation/page.header.link.tsx";
 import Loader from "@/components/utils/Loader.tsx";
-import {ZProduct} from "@/schema/product.validate.ts";
+import {ZProduct} from "@/schema/product.validate.schema.ts";
 import {useNavigate} from "react-router-dom";
 import _ from "lodash";
 import ProductEditForm from "@/components/forms/product/product.edit.form.tsx";

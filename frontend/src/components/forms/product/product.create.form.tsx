@@ -4,7 +4,6 @@ import {Loader} from "lucide-react";
 import {useForm} from "react-hook-form";
 import {useMutation} from "@tanstack/react-query";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {ProductSubmitSchema, ProductSubmitType, ZProduct} from "@/schema/product.validate.ts";
 
 import {Form} from "@/components/ui/form.tsx";
 import {Button} from "@/components/ui/button.tsx";
@@ -18,6 +17,8 @@ import useAdminToken from "@/hooks/useAdminToken.ts";
 import {FetchError} from "@/utils/CustomErrors.ts";
 
 import ProductService from "@/services/product/product.service.ts";
+import {ZProduct} from "@/schema/product.validate.schema.ts";
+import {ProductSubmitSchema, ProductSubmitType} from "@/schema/product.validate.submit.ts";
 
 interface Props {
     onSuccess: (product: ZProduct) => void;

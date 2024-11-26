@@ -19,6 +19,7 @@ export interface IProductSKU {
     unitPrice: number;
     unitStock: number;
     reorderLevel: number;
+    shouldReorder: boolean;
     isDiscontinued: boolean;
     images: IProductSKUImage[];
     options: IProductAttributeOption[];
@@ -40,6 +41,7 @@ const ProductSKUSchema = new Schema<IProductSKU>({
     unitPrice: {type: Number, required: [true, "Unit Price required."]},
     unitStock: {type: Number, required: [true, "Unit Stock required."]},
     reorderLevel: {type: Number, required: [true, "Reorder Level required."]},
+    shouldReorder: {type: Boolean, default: false, required: false},
     isDiscontinued: {type: Boolean, default: false, required: [true, "Discontinued Status required."]},
 
     images: {type: [ProductSKUImageSchema], default: []},

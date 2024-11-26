@@ -58,7 +58,7 @@ const ProductDetailsPage: FC = () => {
             </section>
 
             <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-red-500">
+                    <div>
                         <ProductSKUCardList product={product!}/>
                     </div>
 

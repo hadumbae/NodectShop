@@ -2,7 +2,6 @@ import {FC, useState} from 'react';
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import {GiCycle} from "react-icons/gi";
 import FormInput from "../../inputs/FormInput.tsx";
-import useFetchSuppliers from "../../../hooks/supplier/useFetchSuppliers.ts";
 import Button from "../../inputs/Button.tsx";
 import FormSelect from "../../inputs/FormSelect.tsx";
 import {Supplier} from "../../../types/SupplierTypes.ts";
@@ -12,17 +11,18 @@ import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import {ProductSKU} from "../../../types/ProductTypes.ts";
 import FormCheckbox from "../../inputs/FormCheckbox.tsx";
+import {ZSupplier} from "@/schema/supplier.validate.schema.ts";
 
 interface Props {
     productID: string;
     productSlug: string;
     sku?: ProductSKU;
+    suppliers: ZSupplier[];
 }
 
-const ProductSKUForm: FC<Props> = ({ productID, productSlug, sku }) => {
+const ProductSKUForm: FC<Props> = ({ productID, productSlug, sku, suppliers }) => {
     const navigate = useNavigate();
     const {token} = useAdminToken();
-    const {suppliers} = useFetchSuppliers(token);
 
     const [validationErrors, setValidationErrors] = useState([]);
 

@@ -6,7 +6,7 @@ import ProductRepository from "../../../repositories/ProductRepository.js";
 import ProductFilterService from "../../../services/Product/product.filter.service.js";
 
 export const getFilteredProducts = asyncHandler(async (req: Request, res: Response) => {
-    const { currentPage, perPage, conditions } = ProductPaginatedAdminService.processPaginationQuery(req.query);
+    const { currentPage, perPage, conditions } = await ProductPaginatedAdminService.processPaginationQuery(req.query);
 
     const totalItems = await ProductRepository.count(conditions);
     const products = await ProductPaginatedAdminService.fetchPaginatedProducts(currentPage, perPage, conditions);

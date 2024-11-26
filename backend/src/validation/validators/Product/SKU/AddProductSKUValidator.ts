@@ -6,6 +6,7 @@ import SupplierAdminService from "../../../../services/Supplier/supplier.admin.s
 import ProductSKUService from "../../../../services/SKU/product.sku.admin.service.js";
 import createError from "http-errors";
 import SupplierRepository from "../../../../repositories/SupplierRepository.js";
+import ProductSKURepository from "../../../../repositories/ProductSKURepository.js";
 
 export default [
     body('supplier')
@@ -29,7 +30,7 @@ export default [
         .notEmpty().withMessage("Code is required.")
         .trim()
         .custom(async (value) => {
-            const sku = await ProductSKUService.findOne({code: value});
+            const sku = await ProductSKURepository.findOne({code: value});
 
             if (sku) {
                 return Promise.reject('Product SKU code must be unique.');

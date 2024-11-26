@@ -46,20 +46,14 @@ export const fetchProductSKU = asyncHandler(async (req: Request, res: Response, 
     return res.status(200).json({ message: "Product SKU fetched successfully.", data: sku });
 });
 
-export const createProductSKU = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-    try{
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) return res.status(400).json({message: "Validation failed.", errors: errors.array()});
+export const createProductSKU = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+    const {productID} = req.params;
+    const data = req.body;
+    const sku = await ProductSKUService.create(productID, data);
 
-        const {productID} = req.params;
-        const data = req.body;
-        const sku = await ProductSKUService.create(productID, data);
-        return res.status(200).json({ message: "Product SKU created successfully.", data: sku });
-    } catch (error) {
-        if (!isHttpError(error)) res.status(500);
-        next(error);
-    }
-}
+    console.log(sku);
+    return res.status(200).json({ message: "Product SKU created successfully.", data: sku });
+});
 
 
 

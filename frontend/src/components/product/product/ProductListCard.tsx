@@ -2,7 +2,7 @@ import {FC, useRef} from 'react';
 import _ from "lodash";
 import {Link, useNavigate} from "react-router-dom";
 import {FaMagnifyingGlass, FaPencil} from "react-icons/fa6";
-import {ZProduct} from "@/schema/product.validate.ts";
+import {ZProduct} from "@/schema/product.validate.schema.ts";
 
 import {
     Card,

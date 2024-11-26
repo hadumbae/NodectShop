@@ -19,7 +19,7 @@ const ProductSKUOptionAdminService = {
     },
 
     async removeOptionFromSKU(skuID: string, optionID: string) {
-        await ProductSKUService.existsOr404(skuID);
+        await ProductSKURepository.existsOr404(skuID);
         await ProductAttributeOptionService.existsOr404(optionID);
 
         return ProductSKU

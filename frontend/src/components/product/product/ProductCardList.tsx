@@ -1,6 +1,6 @@
 import {FC} from 'react';
 import ProductListCard from "./ProductListCard.tsx";
-import {ZProduct} from "@/schema/product.validate.ts";
+import {ZProduct} from "@/schema/product.validate.schema.ts";
 
 interface Props {
     products: ZProduct[];

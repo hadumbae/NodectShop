@@ -1,44 +1,17 @@
-import {useEffect, useState} from "react";
-import {ProductSKU} from "../../types/ProductTypes.ts";
 import ProductSKUService from "../../services/product/sku/ProductSKUService.ts";
+import {useQuery} from "@tanstack/react-query";
+import {FetchError} from "@/utils/CustomErrors.ts";
 
-export default function useFetchProductSKUByProduct(productID: string, token: string) {
-    const [page, setPage] = useState(1);
-    const [perPage, setPerPage] = useState(10);
-    const [totalItems, setTotalItems] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
+export default function useFetchProductSKUByProduct(productID: string, page: number, perPage: number, token: string) {
+    const {data, isPending, isSuccess, isError, error, refetch} = useQuery({
+        queryKey: ["fetch_paginated_product_skus_by_product_id"],
+        queryFn: async () => {
+            const {response, result} = await ProductSKUService.fetchPaginatedSKUsByProduct(productID, page, perPage, token);
 
-    const [skus, setSKUs] = useState<ProductSKU[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [refetch, setRefetch] = useState<boolean>(false);
-
-
-    useEffect(() => {
-        setIsLoading(isLoading);
-
-        const fetchProductSKUs = async () => {
-            const {status, payload} = await ProductSKUService.fetchPaginatedSKUsByProduct(productID, page, perPage, token);
-
-            if (status === 200) {
-                setSKUs(payload.data.skus);
-                setTotalItems(payload.data.totalItems);
-            } else {
-                setError(`${status} : ${payload.message}`);
-                setSKUs([]);
-                setTotalItems(0);
-            }
+            if (response.ok) return result.data;
+            throw new FetchError(response, result.message, result.errors);
         }
+    });
 
-        fetchProductSKUs();
-        setIsLoading(false);
-    }, [page, perPage, refetch]);
-
-    return {
-        page, setPage,
-        perPage, setPerPage,
-        error, setError,
-        skus, setSKUs,
-        totalItems, setTotalItems,
-        refetch, setRefetch,
-        isLoading};
+    return {data, isPending, isSuccess, isError, error, refetch};
 }

@@ -10,6 +10,8 @@ import Product from "../../models/Product/product.schema.js";
 import SupplierRepository from "../../repositories/SupplierRepository.js";
 import ProductRepository from "../../repositories/ProductRepository.js";
 import Category from "../../models/category.schema.js";
+import {ProductSKUDataSchema} from "../../schemas/product.sku.zod.schema.js";
+import createHttpError from "http-errors";
 
 interface ProductSKUInputData {
     supplier: string;
@@ -50,15 +52,6 @@ const ProductSKUAdminService = {
             .lean();
     },
 
-
-    /**
-     * Finds the product by ID.
-     * @returns The product with matching ID.
-     */
-    async findOne(conditions = {}) {
-        return ProductSKU.findOne(conditions);
-    },
-
     /**
      * Throws a 404 error if product SKU does not exist.
      * @param id - The ID of the supplier.
@@ -93,19 +86,14 @@ const ProductSKUAdminService = {
         await ProductRepository.existsOr404Lean(productID);
         await SupplierRepository.existsOr404Lean(data.supplier);
 
+        const result = ProductSKUDataSchema.safeParse({...data, product: productID});
+
+        if (!result.success) {
+            throw createHttpError(400, "Product SKU Parse Failed!");
+        }
+
         // Create
-        return ProductSKU.create({
-            product: productID,
-            supplier: data.supplier,
-            code: data.code,
-            name: data.name,
-            unitPrice: data.unitPrice,
-            unitStock: data.unitStock,
-            reorderLevel: data.reorderLevel,
-            isDiscontinued: data.isDiscontinued,
-            options: [],
-            images: [],
-        });
+        return ProductSKU.create(result.data);
     },
 
     /**

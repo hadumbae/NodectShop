@@ -1,3 +1,5 @@
+import {FetchError} from "@/utils/CustomErrors.ts";
+
 /**
  * Query the provided API link.
  * @param link API Link
@@ -8,7 +10,10 @@
 export const useFetch = async (link: string, method: string, authToken: string, formData: any = {}) => {
     const fetchOptions: any = {
         method: method,
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${authToken}` }
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`
+        }
     };
 
     return await fetchAPI(link, method, formData, fetchOptions);
@@ -39,7 +44,13 @@ const fetchAPI = async (link: string, method: string, formData: any, fetchOption
     }
 
     const response = await fetch(link, fetchOptions);
-    const result = await response.json();
+    let result;
+
+    try {
+        result = await response.json();
+    } catch (error) {
+        throw new FetchError(response, `${response.status} ${response.statusText}`, null);
+    }
 
     return {response, result};
 }

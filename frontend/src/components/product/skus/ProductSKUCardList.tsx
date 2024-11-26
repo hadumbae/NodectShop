@@ -1,13 +1,15 @@
-import {FC} from 'react';
+import {FC, useRef, useState} from 'react';
 import useAdminToken from "../../../hooks/useAdminToken.ts";
 import useFetchProductSKUByProduct from "../../../hooks/product/useFetchProductSKUByProduct.ts";
-import Loader from "../../utils/Loader.tsx";
-import {Product, ProductSKU} from "../../../types/ProductTypes.ts";
 import ProductSKUListCard from "./ProductSKUListCard.tsx";
 import Pagination from "../../utils/pagination/Pagination.tsx";
 import {Link} from "react-router-dom";
 import {FaPlus} from "react-icons/fa";
 import _ from "lodash";
+
+import {Product, ProductSKU} from "@/types/ProductTypes.ts";
+import PageLoader from "@/components/utils/PageLoader.tsx";
+import PageError from "@/components/utils/PageError.tsx";
 
 interface Props {
     product: Product;
@@ -15,52 +17,45 @@ interface Props {
 
 const ProductSKUCardList: FC<Props> = ({product}) => {
     const {token} = useAdminToken();
-    const {
-        skus,
-        page,
-        setPage,
-        perPage,
-        totalItems,
-        error,
-        isLoading,
-        refetch,
-        setRefetch
-    } = useFetchProductSKUByProduct(product._id, token);
+    const [page, setPage] = useState<number>(1);
+    const perPage = useRef<number>(15);
+
+    const {data, isPending, isSuccess, isError, error, refetch} = useFetchProductSKUByProduct(product._id, page, perPage.current, token);
+
+    if (isPending) return <PageLoader />
+    if (isError) return <PageError message={error!.message} />
 
     return (
         <div className="flex flex-col space-y-3">
-            {isLoading && <div className="flex justify-center">
-                <Loader loading={isLoading}/>
-            </div>}
+            <section className="flex justify-between items-center">
+                <h1 className="text-xl font-bold">SKUs</h1>
 
-            {error && <div className="text-center">
-                <h1 className="text-red-500 text-md">
-                    Oops. Something bad happened!
-                </h1>
-                <h1 className="text-red-500 text-xl">
-                    {error}
-                </h1>
-            </div>}
+                <Link className="border rounded-3xl p-2 hover:bg-black hover:text-white"
+                      to={`/admin/product/create/${product._id}/${_.kebabCase(product.title)}/sku`}>
+                    <FaPlus />
+                </Link>
+            </section>
 
-            {(!isLoading && !error) && <div className="flex flex-col space-y-2">
-                <div className="flex justify-between">
-                    <h1 className="text-xl font-bold">SKUs</h1>
-                    <Link className="border rounded-3xl p-3 hover:bg-black hover:text-white"
-                          to={`/admin/product/create/${product._id}/${_.kebabCase(product.title)}/sku`}>
-                        <FaPlus />
-                    </Link>
-                </div>
+            {isSuccess && <section className="space-y-3">
+                {
+                    data.skus.map((sku: ProductSKU) =>
+                        <ProductSKUListCard
+                            onDelete={refetch}
+                            sku={sku}
+                            product={product}
+                            key={sku._id}
+                        />)
+                }
 
-                <div className="grid grid-cols-1 gap-4">
-                    {skus.map((sku: ProductSKU) => <ProductSKUListCard
-                        onDelete={() => setRefetch(!refetch)}
-                        sku={sku} product={product} key={sku._id}
-                    />)}
-                </div>
-            </div>}
-
-            {(!isLoading && (totalItems > perPage)) &&
-                <Pagination totalItems={totalItems} currentPage={page} perPage={perPage} setPage={setPage}/>}
+                {
+                    (data.totalItems > perPage) &&
+                        <Pagination
+                            totalItems={data.totalItems}
+                            currentPage={page}
+                            perPage={perPage.current}
+                            setPage={setPage}/>
+                }
+            </section>}
         </div>
     );
 };

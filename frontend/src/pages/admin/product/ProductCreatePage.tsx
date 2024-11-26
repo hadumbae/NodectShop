@@ -3,7 +3,7 @@ import HeaderText from "../../../components/header/HeaderText.tsx";
 import PageHeaderLink from "../../../components/navigation/page.header.link.tsx";
 import ProductCreateForm from "@/components/forms/product/product.create.form.tsx";
 import {useNavigate} from "react-router-dom";
-import {ZProduct} from "@/schema/product.validate.ts";
+import {ZProduct} from "@/schema/product.validate.schema.ts";
 import _ from "lodash";
 
 const ProductCreatePage: FC = () => {
